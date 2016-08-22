@@ -1,0 +1,11 @@
+@model IList<Articles.Models.Core.PostTag>
+
+@foreach (PostTag ptag in Model)
+{
+    <div class="tags-div">
+       <a asp-action="Tag" asp-controller="Blog" asp-route-tag=@ptag.Tag.UrlSlug>@ptag.Tag.Name</a>
+
+    </div>
+
+}
+

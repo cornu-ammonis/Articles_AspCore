@@ -1,0 +1,55 @@
+﻿@model Articles.Models.Post
+
+<div class="post">
+    <div class="post-meta">
+        <div class="row">
+
+            <!--Heading-->
+            <div class="post-title">
+                <h2><a asp-action="Post" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+   asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug>@Model.Title</a></h2>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <!--Category-->
+            <div class="post-category">
+               <a asp-action="Category" asp-controller="Blog" asp-route-category=@Model.Category.UrlSlug>@Model.Category.Name</a> 
+            </div>
+
+            <!--Tags-->
+            <div class="post-tags">
+                <span>Tags: @foreach (PostTag pt in Model.PostTags) { 
+                    <a asp-action="Tag" asp-controller="Blog" asp-route-tag=@pt.Tag.UrlSlug> @pt.Tag.Name</a>
+                }  </span>
+            </div>
+
+            <!--Posted date-->
+            <div class="posted-date">
+                @Model.PostedOn
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--Short Description-->
+    <div class="post-body">
+        @Html.Raw(Model.ShortDescription)
+    </div>
+
+    <div class="post-foot">
+        @Html.ActionLink("continue...", "post", "blog",
+        new
+        {
+            year = Model.PostedOn.Year,
+            month = Model.PostedOn.Month,
+            day = Model.PostedOn.Day,
+            ti = Model.UrlSlug
+        },
+        new { title = "continue..." }
+    )
+    </div>
+</div>

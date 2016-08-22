@@ -1,0 +1,23 @@
+﻿@model IList<Articles.Models.Post>
+
+<div class="sidebar">
+    <h3>Recent Posts </h3>
+    
+    @if (Model.Count > 0 )
+    {
+        <ul>
+            @foreach (var post in Model) {
+            
+                
+              <li> <a asp-action="Post" asp-controller="Blog" asp-route-year=@post.PostedOn.Year 
+                      asp-route-month=@post.PostedOn.Month asp-route-ti =@post.UrlSlug>@post.Title</a></li>
+                
+
+            } 
+        </ul>
+    }
+    else
+    {
+        <p>No posts found</p>
+    }
+</div>

@@ -10,7 +10,7 @@ namespace Articles.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Posts", "Blog");
         }
 
         public IActionResult About()

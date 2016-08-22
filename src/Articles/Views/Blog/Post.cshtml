@@ -1,0 +1,41 @@
+﻿@model Articles.Models.Post
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<div id="content">
+    <div class="post">
+        <div class="post-meta">
+            <div class="row">
+
+                <div class="post-title">
+                    <h1><a asp-action="Post" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+   asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug>@Model.Title</a></h1>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="post-category">
+                    <span>Category:</span> <a asp-action="Category" asp-controller="Blog" 
+                                              asp-route-category=@Model.Category.UrlSlug>@Model.Category.Name</a>
+                </div>
+
+                <div class="post-tags">
+                    <span>Tags:</span> @Html.Partial("_PostTags", Model.PostTags)
+                </div>
+
+                <div class="posted-date">
+                    @Model.PostedOn
+                </div>
+
+            </div>
+        </div>
+
+        <div class="post-body">
+            @Html.Raw(Model.Description)
+        </div>
+
+    </div>
+</div>
