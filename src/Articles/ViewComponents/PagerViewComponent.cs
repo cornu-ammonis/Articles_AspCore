@@ -54,6 +54,12 @@ namespace Articles.ViewComponents
                 pagerViewModel.p = string.Format("{0}&{1}", c, pagerViewModel.p);
                 pagerViewModel.n = string.Format("{0}&{1}", c, pagerViewModel.n);
             }
+            else if (RouteData.Values["action"].ToString().Equals("tag", StringComparison.OrdinalIgnoreCase))
+            {
+                var t = string.Format("?tag={0}", queryStrings["tag"]);
+                pagerViewModel.p = string.Format("{0}&{1}", t, pagerViewModel.p);
+                pagerViewModel.n = string.Format("{0}&{1}", t, pagerViewModel.n);
+            }
             else
             {
                 pagerViewModel.p = string.Concat("?", pagerViewModel.p);
