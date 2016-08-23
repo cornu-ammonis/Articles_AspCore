@@ -1,0 +1,17 @@
+﻿@model Articles.Models.BlogViewModels.PaginationViewModel
+
+
+
+
+<div class="pager">
+
+    <a href="@Model.previous_page" title="Previous" class="previous"
+       style="visibility:@(Model.p_visible ? "visible" : "collapse")"><< previous</a>
+
+    <a href="@Model.next_page" title="Next" class="next"
+       style="visibility:@(Model.n_visible ? "visible" : "collapse")">next >></a>
+
+    <p>current page: @Model.current_page of @Model.total_pages</p>
+
+</div>
+

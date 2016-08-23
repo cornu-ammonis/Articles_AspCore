@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Articles.Models;
 using Microsoft.AspNetCore.WebUtilities;
-
-
+using Articles.Models.Core;
 
 namespace Articles.Controllers
 {
@@ -34,6 +33,22 @@ namespace Articles.Controllers
             var viewModel = new ListViewModel(_blogRepository, p);
             ViewBag.Title = "Latest Posts";
             return View("List", viewModel);
+        }
+
+        public IActionResult CustomPosts(int p = 1)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+              string user_name = User.Identity.Name;
+               
+              var viewModel = new ListViewModel(_blogRepository, p, user_name);
+                ViewBag.Title = String.Format(@"{0} user posts", user_name);
+              return View("List", viewModel);
+            }
         }
 
         public IActionResult Category(string category, int p = 1)

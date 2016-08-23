@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Articles.Models;
 using Articles.Models.Core;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace Articles.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -18,6 +20,10 @@ namespace Articles.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet <Tag> Tags { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<BlogUser> BlogUser { get; set; }
+        public DbSet<CategoryBlogUser> CategoryBlogUser { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -42,6 +48,20 @@ namespace Articles.Data
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Posts);
 
+            builder.Entity<CategoryBlogUser>()
+                .HasKey(c => new { c.CategoryId, c.BlogUserId });
+
+            builder.Entity<CategoryBlogUser>()
+                .HasOne(cb => cb.Category)
+                .WithMany(cb => cb.CategoryBlogUsers)
+                .HasForeignKey(cb => cb.CategoryId);
+
+            builder.Entity<CategoryBlogUser>()
+                .HasOne(cb => cb.BlogUser)
+                .WithMany(b => b.CategoryBlogUsers)
+                .HasForeignKey(cb => cb.BlogUserId);
+
+            
          
         }
 
@@ -109,7 +129,7 @@ namespace Articles.Data
             string generic_description = generic_short_description + "<p> this is a second paragraph which will only display with the full post";
 
 
-            for (int i = 1; i < 35; i++)
+            for (int i = 1; i < 10; i++)
             {
                 Post post = new Post();
                 post.Title = "seed post" + i.ToString();
@@ -128,7 +148,20 @@ namespace Articles.Data
                     post.PostTags.Add(pt);
                     context.Add(pt);
                 }
-                post.Category = seed_cat;
+
+                if (i < 4)
+                {
+                    post.Category = seed_cat;
+                }
+                else if (i < 8)
+                {
+                    post.Category = second_seed_category;
+                }
+                else
+                {
+                    post.Category = third_seed_category;
+                }
+                
 
                 post.ShortDescription = generic_short_description;
                 post.Description = generic_description;
@@ -139,7 +172,11 @@ namespace Articles.Data
 
             }
 
-            context.SaveChanges();
+
+          
+
+
+        context.SaveChanges();
         }
     }
 

@@ -114,6 +114,69 @@ namespace Articles.Models
             return posts;
         }
 
+        public IList<Post> PostsForUser(string user_name, int pageNo, int pageSize)
+        {
+            /*BlogUser bloguser = new BlogUser();
+            bloguser.user_name = user_name;
+            bloguser.CategoryBlogUsers = new List<CategoryBlogUser>();
+
+            CategoryBlogUser cbu1 = new CategoryBlogUser();
+            cbu1.BlogUser = bloguser;
+            cbu1.Category = db.Categories.FirstOrDefault(c => c.UrlSlug == "seed_category_three");
+
+            CategoryBlogUser cbu2 = new CategoryBlogUser();
+            cbu2.BlogUser = bloguser;
+            cbu2.Category = db.Categories.FirstOrDefault(c => c.UrlSlug == "slug_one");
+
+            bloguser.CategoryBlogUsers.Add(cbu1);
+            bloguser.CategoryBlogUsers.Add(cbu2);
+            db.CategoryBlogUser.Add(cbu1);
+            db.CategoryBlogUser.Add(cbu2);
+
+            db.BlogUser.Add(bloguser);
+            db.SaveChanges(); */
+            
+            
+
+
+            List<Post> posts = new List<Post>();
+
+            IEnumerable<Post> post_query = 
+                (from p in db.Posts
+                 where p.Published == true &&
+                 p.Category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name)
+                 orderby p.PostedOn descending
+                 select p).Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, Category>(p => p.Category)
+                .Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag);
+
+            foreach(Post post in post_query)
+            {
+                posts.Add(post);
+            }
+
+            return posts;
+
+        }
+
+        public int TotalPostsForUser(string user_name)
+        {
+            int totalPosts = 0;
+            IEnumerable<Post> post_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 p.Category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name)
+                 select p);
+
+            foreach (Post post in post_query)
+            {
+                totalPosts = totalPosts + 1;
+            }
+
+            return totalPosts;
+        }
+
         public int TotalPosts(bool checkIsPublished = true)
         {
             int total = 0;

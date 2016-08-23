@@ -21,6 +21,14 @@ namespace Articles.Models
             Category = blogRepository.Category(categorySlug);
         } */
 
+        public ListViewModel(IBlogRepository _blogrepository, int p, string user_name)
+        {
+
+            Posts = _blogrepository.PostsForUser(user_name, p - 1, 10);
+            TotalPosts = _blogrepository.TotalPostsForUser(user_name);
+
+        }
+
         public ListViewModel(IBlogRepository blogRepository, string text, string type, int p)
         {
             switch(type)

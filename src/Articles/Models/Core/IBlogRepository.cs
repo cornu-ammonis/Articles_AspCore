@@ -27,6 +27,9 @@ namespace Articles.Models
         IList<Post> PostsForSearch(string search, int pageNo, int pageSize);
         int TotalPostsForSearch(string search);
 
+        IList<Post> PostsForUser(string user_name, int pageNo, int pageSize);
+        int TotalPostsForUser(string user_name);
+
         //returns a post for full display identified via year/month posted and title slug 
         Post Post(int year, int month, string titleSlug);
 

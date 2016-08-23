@@ -8,65 +8,66 @@ using System.Threading.Tasks;
 
 namespace Articles.ViewComponents
 {
-    public class PagerViewComponent : ViewComponent
+    public class PaginationViewComponent : ViewComponent
     {
 
         public async Task<IViewComponentResult> InvokeAsync(int total_posts)
         {
-            PagerViewModel pagerViewModel = new PagerViewModel();
-            pagerViewModel.n_visible = false;
-            pagerViewModel.p_visible = false;
+            PaginationViewModel paginationViewModel = new PaginationViewModel();
+            paginationViewModel.n_visible = false;
+            paginationViewModel.p_visible = false;
+
             var queryStrings = Request.Query;
             var keys = queryStrings.Keys;
             if (keys.Contains("p"))
             {
-                pagerViewModel.CurrentPage = int.Parse(queryStrings["p"]);
+                paginationViewModel.current_page = int.Parse(queryStrings["p"]);
             }
             else
             {
-                pagerViewModel.CurrentPage = 1;
+                paginationViewModel.current_page = 1;
             }
 
-            pagerViewModel.TotalPages = Math.Ceiling((double)total_posts / 10);
+            paginationViewModel.total_pages = Math.Ceiling((double)total_posts / 10);
 
-            if (pagerViewModel.CurrentPage > 1 )
+            if (paginationViewModel.current_page > 1 )
             {
-                pagerViewModel.p_visible = true;
+                paginationViewModel.p_visible = true;
             }
 
-            if (pagerViewModel.CurrentPage < pagerViewModel.TotalPages)
+            if (paginationViewModel.current_page < paginationViewModel.total_pages)
             {
-                pagerViewModel.n_visible = true;
+                paginationViewModel.n_visible = true;
             }
 
-            pagerViewModel.p = string.Format("p={0}", pagerViewModel.CurrentPage - 1);
-            pagerViewModel.n = string.Format("p={0}", pagerViewModel.CurrentPage + 1);
+            paginationViewModel.previous_page = string.Format("p={0}", paginationViewModel.current_page - 1);
+            paginationViewModel.next_page = string.Format("p={0}", paginationViewModel.current_page + 1);
 
             if (RouteData.Values["action"].ToString().Equals("search", StringComparison.OrdinalIgnoreCase))
             {
                 var s = string.Format("?s={0}", queryStrings["s"]);
-                pagerViewModel.p = string.Format("{0}&{1}", s, pagerViewModel.p);
-                pagerViewModel.n = string.Format("{0}&{1}", s, pagerViewModel.n);
+                paginationViewModel.previous_page = string.Format("{0}&{1}", s, paginationViewModel.previous_page);
+                paginationViewModel.next_page = string.Format("{0}&{1}", s, paginationViewModel.next_page);
             }
             else if(RouteData.Values["action"].ToString().Equals("category", StringComparison.OrdinalIgnoreCase))
             {
                 var c = string.Format("?category={0}", queryStrings["category"]);
-                pagerViewModel.p = string.Format("{0}&{1}", c, pagerViewModel.p);
-                pagerViewModel.n = string.Format("{0}&{1}", c, pagerViewModel.n);
+                paginationViewModel.previous_page = string.Format("{0}&{1}", c, paginationViewModel.previous_page);
+                paginationViewModel.next_page = string.Format("{0}&{1}", c, paginationViewModel.next_page);
             }
             else if (RouteData.Values["action"].ToString().Equals("tag", StringComparison.OrdinalIgnoreCase))
             {
                 var t = string.Format("?tag={0}", queryStrings["tag"]);
-                pagerViewModel.p = string.Format("{0}&{1}", t, pagerViewModel.p);
-                pagerViewModel.n = string.Format("{0}&{1}", t, pagerViewModel.n);
+                paginationViewModel.previous_page = string.Format("{0}&{1}", t, paginationViewModel.previous_page);
+                paginationViewModel.next_page = string.Format("{0}&{1}", t, paginationViewModel.next_page);
             }
             else
             {
-                pagerViewModel.p = string.Concat("?", pagerViewModel.p);
-                pagerViewModel.n = string.Concat("?", pagerViewModel.n);
+                paginationViewModel.previous_page = string.Concat("?", paginationViewModel.previous_page);
+                paginationViewModel.next_page = string.Concat("?", paginationViewModel.next_page);
             }
 
-            return View(pagerViewModel);
+            return View(paginationViewModel);
         }
     }
 }
