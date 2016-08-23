@@ -13,54 +13,54 @@ namespace Articles.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(int total_posts)
         {
-            PagerViewModel pvm = new PagerViewModel();
-            pvm.n_visible = false;
-            pvm.p_visible = false;
+            PagerViewModel pagerViewModel = new PagerViewModel();
+            pagerViewModel.n_visible = false;
+            pagerViewModel.p_visible = false;
             var queryStrings = Request.Query;
             var keys = queryStrings.Keys;
             if (keys.Contains("p"))
             {
-                pvm.CurrentPage = int.Parse(queryStrings["p"]);
+                pagerViewModel.CurrentPage = int.Parse(queryStrings["p"]);
             }
             else
             {
-                pvm.CurrentPage = 1;
+                pagerViewModel.CurrentPage = 1;
             }
 
-            pvm.TotalPages = Math.Ceiling((double)total_posts / 10);
+            pagerViewModel.TotalPages = Math.Ceiling((double)total_posts / 10);
 
-            if (pvm.CurrentPage > 1 )
+            if (pagerViewModel.CurrentPage > 1 )
             {
-                pvm.p_visible = true;
+                pagerViewModel.p_visible = true;
             }
 
-            if (pvm.CurrentPage < pvm.TotalPages)
+            if (pagerViewModel.CurrentPage < pagerViewModel.TotalPages)
             {
-                pvm.n_visible = true;
+                pagerViewModel.n_visible = true;
             }
 
-            pvm.p = string.Format("p={0}", pvm.CurrentPage - 1);
-            pvm.n = string.Format("p={0}", pvm.CurrentPage + 1);
+            pagerViewModel.p = string.Format("p={0}", pagerViewModel.CurrentPage - 1);
+            pagerViewModel.n = string.Format("p={0}", pagerViewModel.CurrentPage + 1);
 
             if (RouteData.Values["action"].ToString().Equals("search", StringComparison.OrdinalIgnoreCase))
             {
                 var s = string.Format("?s={0}", queryStrings["s"]);
-                pvm.p = string.Format("{0}&{1}", s, pvm.p);
-                pvm.n = string.Format("{0}&{1}", s, pvm.n);
+                pagerViewModel.p = string.Format("{0}&{1}", s, pagerViewModel.p);
+                pagerViewModel.n = string.Format("{0}&{1}", s, pagerViewModel.n);
             }
             else if(RouteData.Values["action"].ToString().Equals("category", StringComparison.OrdinalIgnoreCase))
             {
                 var c = string.Format("?category={0}", queryStrings["category"]);
-                pvm.p = string.Format("{0}&{1}", c, pvm.p);
-                pvm.n = string.Format("{0}&{1}", c, pvm.n);
+                pagerViewModel.p = string.Format("{0}&{1}", c, pagerViewModel.p);
+                pagerViewModel.n = string.Format("{0}&{1}", c, pagerViewModel.n);
             }
             else
             {
-                pvm.p = string.Concat("?", pvm.p);
-                pvm.n = string.Concat("?", pvm.n);
+                pagerViewModel.p = string.Concat("?", pagerViewModel.p);
+                pagerViewModel.n = string.Concat("?", pagerViewModel.n);
             }
 
-            return View(pvm);
+            return View(pagerViewModel);
         }
     }
 }
