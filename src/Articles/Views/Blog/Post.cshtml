@@ -13,8 +13,20 @@
     else if (ViewBag.Type == "Custom"){
     <a asp-action="CustomPosts" asp-controller="Blog">Your Feed  </a>
     }
-    <a asp-action="Category" asp-controller="Blog" asp-route-category="@Model.Category.UrlSlug">&#062 @Model.Category.Name  </a>
-    <a asp-action="Post" asp-controller="Blog">&#062 @Model.Title</a>
+
+    @if (ViewBag.RefererTag)
+    {
+        <a asp-action="Tag" asp-controller ="Blog" asp-route-tag="@ViewBag.Slug">&#062 @ViewBag.Name</a>
+
+    }
+    else
+    {
+        <a asp-action="Category" asp-controller="Blog" asp-route-category="@Model.Category.UrlSlug">&#062 @Model.Category.Name  </a>
+
+    }
+ 
+    <a asp-action="Post" asp-controller="Blog" asp-route-year="@Model.PostedOn.Year" asp-route-month="@Model.PostedOn.Month"
+       asp-route-ti="@Model.UrlSlug">&#062 @Model.Title</a>
 
     <div class="post">
         <div class="post-meta">

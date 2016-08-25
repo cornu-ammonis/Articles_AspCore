@@ -77,24 +77,34 @@ namespace Articles.Data
 
             Category seed_cat = new Category();
             seed_cat.Description = "A category crrated for seeding";
-            seed_cat.Name = "category one";
+            seed_cat.Name = "category 1";
             seed_cat.UrlSlug = "slug_one";
             context.Categories.Add(seed_cat);
 
             Category second_seed_category = new Category();
             second_seed_category.Description = "a second category for fewer posts";
-            second_seed_category.Name = "seed two";
+            second_seed_category.Name ="category 2";
             second_seed_category.UrlSlug = "seed_two";
             context.Categories.Add(second_seed_category);
 
             Category third_seed_category = new Category();
             third_seed_category.Description = "third category for seed";
-            third_seed_category.Name = "seed category 3";
+            third_seed_category.Name = "category 3";
             third_seed_category.UrlSlug = "seed_category_three";
             context.Categories.Add(third_seed_category);
 
+            Category fourth_seed_category = new Category();
+            fourth_seed_category.Description = "category 4";
+            fourth_seed_category.Name = "category 4";
+            fourth_seed_category.UrlSlug = "seed_category_four";
+            context.Categories.Add(fourth_seed_category);
 
 
+            Category fifth_seed_category = new Category();
+            fifth_seed_category.Description = "category 5";
+            fifth_seed_category.Name = "category 5";
+            fifth_seed_category.UrlSlug = "seed_category_five";
+            context.Categories.Add(fifth_seed_category);
 
             Tag seed_tag = new Tag();
             seed_tag.Name = "seed tag";
@@ -129,7 +139,7 @@ namespace Articles.Data
             string generic_description = generic_short_description + "<p> this is a second paragraph which will only display with the full post";
 
 
-            for (int i = 1; i <32; i++)
+            for (int i = 1; i <42; i++)
             {
                 Post post = new Post();
                 post.Title = "seed post" + i.ToString();
@@ -157,9 +167,17 @@ namespace Articles.Data
                 {
                     post.Category = second_seed_category;
                 }
-                else
+                else if(i < 32)
                 {
                     post.Category = third_seed_category;
+                }
+                else if(i < 38) {
+
+                    post.Category = fourth_seed_category;
+                }
+                else
+                {
+                    post.Category = fifth_seed_category;
                 }
                 
 

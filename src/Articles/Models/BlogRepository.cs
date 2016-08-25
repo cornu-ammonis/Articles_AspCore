@@ -119,7 +119,21 @@ namespace Articles.Models
         public void UpdateCustomization(CustomizeViewModel viewModel, string user_name)
         {
             IList<Category> all_categories = this.Categories();
-            BlogUser user = db.BlogUser.Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers).Single(c => c.user_name == user_name);
+
+            BlogUser user;
+            if (!db.BlogUser.Any(c => c.user_name == user_name))
+            {
+                 user = new BlogUser();
+                user.user_name = user_name;
+                user.CategoryBlogUsers = new List<CategoryBlogUser>();
+                db.BlogUser.Add(user);
+            }
+            else
+            {
+                user = db.BlogUser.Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers).Single(c => c.user_name == user_name);
+                
+            }
+
             
             foreach(var key in viewModel.categories.Keys)
             {
@@ -153,7 +167,7 @@ namespace Articles.Models
                          db.SaveChanges(); */
 
                         CategoryBlogUser cbu1 = new CategoryBlogUser();
-                        cbu1.BlogUser = db.BlogUser.Single(c => c.user_name == user_name);
+                        //cbu1.BlogUser = db.BlogUser.Single(c => c.user_name == user_name);
                         cbu1.Category = db.Categories.FirstOrDefault(c => c.UrlSlug == category.UrlSlug);
                         user.CategoryBlogUsers.Add(cbu1);
                         db.CategoryBlogUser.Add(cbu1);

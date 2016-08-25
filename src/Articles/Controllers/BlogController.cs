@@ -123,7 +123,7 @@ namespace Articles.Controllers
         public IActionResult Post(int year, int month, string ti)
         {
             var post = _blogRepository.Post(year, month, ti);
-
+            ViewBag.RefererTag = false;
 
             if (post == null)
                 return new StatusCodeResult(402);
@@ -140,7 +140,22 @@ namespace Articles.Controllers
                 ViewBag.Type = "All Posts";
             }
 
-            return View(post);
+            if (Request.Headers["Referer"].ToString().Contains("tag") || Request.Headers["Referer"].ToString().Contains("Tag"))
+            {
+                ViewBag.RefererTag = true;
+               
+                
+                foreach(PostTag ptag in post.PostTags)
+                {
+                    if(Request.Headers["Referer"].ToString().ToLower().Contains(ptag.Tag.UrlSlug.ToLower()))
+                    {
+                        ViewBag.Name = ptag.Tag.Name;
+                        ViewBag.Slug = ptag.Tag.UrlSlug;
+                    }
+                }
+            }
+
+                return View(post);
         }
 
     }
