@@ -5,6 +5,17 @@
 }
 
 <div id="content">
+    @if (ViewBag.Type == "All Posts")
+    {
+        <a asp-action="Posts" asp-controller="Blog">All Posts  </a>
+
+    }
+    else if (ViewBag.Type == "Custom"){
+    <a asp-action="CustomPosts" asp-controller="Blog">Your Feed  </a>
+    }
+    <a asp-action="Category" asp-controller="Blog" asp-route-category="@Model.Category.UrlSlug">&#062 @Model.Category.Name  </a>
+    <a asp-action="Post" asp-controller="Blog">&#062 @Model.Title</a>
+
     <div class="post">
         <div class="post-meta">
             <div class="row">

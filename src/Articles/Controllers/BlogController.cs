@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Articles.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using Articles.Models.Core;
+using Articles.Models.BlogViewModels;
 
 namespace Articles.Controllers
 {
@@ -46,8 +47,42 @@ namespace Articles.Controllers
               string user_name = User.Identity.Name;
                
               var viewModel = new ListViewModel(_blogRepository, p, user_name);
-                ViewBag.Title = String.Format(@"{0} user posts", user_name);
+                ViewBag.Title = String.Format(@"{0} posts found for user {1} ", viewModel.TotalPosts, user_name);
               return View("List", viewModel);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Customize()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                CustomizeViewModel ViewModel = new CustomizeViewModel(_blogRepository, User.Identity.Name);
+                return View(ViewModel);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Customize([Bind(include: "categories")] CustomizeViewModel ViewModel)
+        {
+            if (ModelState.IsValid) {  
+                if (ViewModel.categories.Keys.Count < 3)
+                {
+                    return new StatusCodeResult(406);
+                }
+                 _blogRepository.UpdateCustomization(ViewModel, User.Identity.Name);
+                return RedirectToAction("CustomPosts");
+
+                //return View("Test", ViewModel);
+            }
+
+            else
+            {
+                return new StatusCodeResult(406);
             }
         }
 
@@ -60,6 +95,8 @@ namespace Articles.Controllers
 
             ViewBag.Title = String.Format(@"{0} posts on category ""{1}""", viewModel.TotalPosts,
                         viewModel.Category.Name);
+            ViewBag.ByCategory = true;
+            ViewBag.Category = viewModel.Category;
 
             return View("List", viewModel);
         }
@@ -93,6 +130,15 @@ namespace Articles.Controllers
 
             if (post.Published == false && User.Identity.IsAuthenticated == false)
                 return new StatusCodeResult(401);
+
+            if( Request.Headers["Referer"].ToString().Contains("Custom") == true || Request.Headers["Referer"].ToString().Contains("custom") == true)
+            {
+                ViewBag.Type = "Custom";
+            }
+            else
+            {
+                ViewBag.Type = "All Posts";
+            }
 
             return View(post);
         }

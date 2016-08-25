@@ -6,6 +6,8 @@ using Articles.Models;
 using Articles.Models.Core;
 using Articles.Data;
 using Microsoft.EntityFrameworkCore;
+using Articles.Models.BlogViewModels;
+using System.Collections;
 
 namespace Articles.Models
 
@@ -114,9 +116,83 @@ namespace Articles.Models
             return posts;
         }
 
+        public void UpdateCustomization(CustomizeViewModel viewModel, string user_name)
+        {
+            IList<Category> all_categories = this.Categories();
+            BlogUser user = db.BlogUser.Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers).Single(c => c.user_name == user_name);
+            
+            foreach(var key in viewModel.categories.Keys)
+            {
+                Category category = db.Categories.Single(c => c.Name == key);
+                if (viewModel.categories[key] == false)
+                {
+                    if(category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name))
+                    {
+                        CategoryBlogUser to_remove = category.CategoryBlogUsers.Find(c => c.BlogUser.user_name == user_name);
+                        category.CategoryBlogUsers.Remove(to_remove);
+                        db.CategoryBlogUser.Remove(to_remove);
+                        
+                    }
+                }
+                else  if(viewModel.categories[key] == true)
+                {
+                    if(category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name) == false)
+                    {
+                        //throw new InvalidOperationException();
+                        /*
+                         CategoryBlogUser to_add = new CategoryBlogUser();
+
+                         to_add.BlogUser = db.BlogUser.Single(c => c.user_name == user_name);
+                         to_add.Category = db.Categories.Single(c => c.Name == category.Name);
+                         to_add.CategoryId = db.Categories.Single(c => c.Name == category.Name).CategoryId;
+                         to_add.BlogUserId = db.BlogUser.Single(c => c.user_name == user_name).BlogUserId;
+                         db.BlogUser.Single(c => c.user_name == user_name).CategoryBlogUsers.Add(to_add);
+                         db.Categories.Single(c => c.Name == key);
+                         db.CategoryBlogUser.Add(to_add);
+
+                         db.SaveChanges(); */
+
+                        CategoryBlogUser cbu1 = new CategoryBlogUser();
+                        cbu1.BlogUser = db.BlogUser.Single(c => c.user_name == user_name);
+                        cbu1.Category = db.Categories.FirstOrDefault(c => c.UrlSlug == category.UrlSlug);
+                        user.CategoryBlogUsers.Add(cbu1);
+                        db.CategoryBlogUser.Add(cbu1);
+                        
+                    }
+                }
+            }
+            db.SaveChanges();
+            /*
+            
+
+            foreach (Category category in all_categories)
+            {
+                if (viewModel.categories.Keys.Contains(category.Name))
+                {
+                    if (viewModel.categories[category.Name] == true && !category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name))
+                    {
+
+                        CategoryBlogUser category_user = new CategoryBlogUser();
+                        category_user.BlogUser = user;
+                        category_user.BlogUserId = user.BlogUserId;
+                        category_user.Category = category;
+                        category_user.CategoryId = category.CategoryId;
+                        user.CategoryBlogUsers.Add(category_user);
+                        category.CategoryBlogUsers.Add(category_user);
+                        db.CategoryBlogUser.Add(category_user);
+                        db.SaveChanges();
+                    }
+                }
+            } */
+
+            //db.BlogUser.Update(user);
+            //db.SaveChanges();
+
+        }
+
         public IList<Post> PostsForUser(string user_name, int pageNo, int pageSize)
         {
-            /*BlogUser bloguser = new BlogUser();
+          /* BlogUser bloguser = new BlogUser();
             bloguser.user_name = user_name;
             bloguser.CategoryBlogUsers = new List<CategoryBlogUser>();
 
@@ -134,7 +210,7 @@ namespace Articles.Models
             db.CategoryBlogUser.Add(cbu2);
 
             db.BlogUser.Add(bloguser);
-            db.SaveChanges(); */
+            db.SaveChanges();   */
             
             
 
@@ -309,9 +385,13 @@ namespace Articles.Models
         {
             List<Category> categories = new List<Category>();
             IEnumerable<Category> c_query =
-                from c in db.Categories
-                orderby c.Name
-                select c;
+                (from c in db.Categories
+                 orderby c.Name
+                 select c)
+                .Include<Category, List<CategoryBlogUser>>(c => c.CategoryBlogUsers)
+                .ThenInclude<Category, CategoryBlogUser, BlogUser>(c => c.BlogUser);
+                
+                
 
             foreach (Category category in c_query)
             {

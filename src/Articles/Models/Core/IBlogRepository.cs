@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Articles.Models;
+using Articles.Models.BlogViewModels;
 
 namespace Articles.Models
 {
@@ -29,6 +30,7 @@ namespace Articles.Models
 
         IList<Post> PostsForUser(string user_name, int pageNo, int pageSize);
         int TotalPostsForUser(string user_name);
+        void UpdateCustomization(CustomizeViewModel viewModel, string user_name);
 
         //returns a post for full display identified via year/month posted and title slug 
         Post Post(int year, int month, string titleSlug);

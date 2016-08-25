@@ -129,7 +129,7 @@ namespace Articles.Data
             string generic_description = generic_short_description + "<p> this is a second paragraph which will only display with the full post";
 
 
-            for (int i = 1; i < 10; i++)
+            for (int i = 1; i <32; i++)
             {
                 Post post = new Post();
                 post.Title = "seed post" + i.ToString();
@@ -149,11 +149,11 @@ namespace Articles.Data
                     context.Add(pt);
                 }
 
-                if (i < 4)
+                if (i < 12)
                 {
                     post.Category = seed_cat;
                 }
-                else if (i < 8)
+                else if (i < 20)
                 {
                     post.Category = second_seed_category;
                 }
