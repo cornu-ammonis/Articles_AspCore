@@ -1,0 +1,19 @@
+the following code, used to generate a tag breadcrumb rather than a category breadcrumb when viewing a post from a tag page feed,
+cannout account for the scenario where one tag's url slug is a subset of another tag's url slug.
+
+the logic in the controller should be changed, or the slugs should have the requirement that they cannot be subsets.
+
+if (Request.Headers["Referer"].ToString().Contains("tag") || Request.Headers["Referer"].ToString().Contains("Tag"))
+            {
+                ViewBag.RefererTag = true;
+               
+                
+                foreach(PostTag ptag in post.PostTags)
+                {
+                    if(Request.Headers["Referer"].ToString().ToLower().Contains(ptag.Tag.UrlSlug.ToLower()))
+                    {
+                        ViewBag.Name = ptag.Tag.Name;
+                        ViewBag.Slug = ptag.Tag.UrlSlug;
+                    }
+                }
+            }

@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Articles.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using Articles.Models.Core;
 using Articles.Models.BlogViewModels;
+using Microsoft.Extensions.Primitives;
 
 namespace Articles.Controllers
 {
@@ -140,17 +142,39 @@ namespace Articles.Controllers
                 ViewBag.Type = "All Posts";
             }
 
+            
+            //checks if user came from a tag page in order to render tag breadcrumb
             if (Request.Headers["Referer"].ToString().Contains("tag") || Request.Headers["Referer"].ToString().Contains("Tag"))
             {
                 ViewBag.RefererTag = true;
+
+                string reference_url = Request.Headers["Referer"].ToString();
+                string query_string = null;
                
+                //query string index
+                int qsi = reference_url.IndexOf('?');
                 
-                foreach(PostTag ptag in post.PostTags)
+                //if query string doesnt exist, return view with category breadcrumb instead
+                if (qsi == -1)
                 {
-                    if(Request.Headers["Referer"].ToString().ToLower().Contains(ptag.Tag.UrlSlug.ToLower()))
+                    ViewBag.RefererTag = false;
+                    return View(post);
+                }
+                else if (qsi >= 0)
+                {
+                    query_string = (qsi < reference_url.Length - 1) ? reference_url.Substring(qsi + 1) : String.Empty;
+                }
+
+                // Parse the query string variables into a NameValueCollection.
+                IDictionary<string, StringValues> qsdictionary = QueryHelpers.ParseQuery(query_string);
+
+                foreach (PostTag ptag in post.PostTags)
+                {
+                    if(qsdictionary["tag"].ToString().Equals(ptag.Tag.UrlSlug, StringComparison.OrdinalIgnoreCase))
                     {
                         ViewBag.Name = ptag.Tag.Name;
                         ViewBag.Slug = ptag.Tag.UrlSlug;
+                        return View(post);
                     }
                 }
             }
