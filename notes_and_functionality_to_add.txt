@@ -1,3 +1,4 @@
+***POTENTIAL BUG -- FIXED***
 the following code, used to generate a tag breadcrumb rather than a category breadcrumb when viewing a post from a tag page feed,
 cannout account for the scenario where one tag's url slug is a subset of another tag's url slug.
 
