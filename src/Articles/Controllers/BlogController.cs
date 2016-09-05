@@ -33,7 +33,17 @@ namespace Articles.Controllers
         {
             // var posts = _blogRepository.Posts(p - 1, 10);
             // var total_posts = _blogRepository.TotalPosts();
-            var viewModel = new ListViewModel(_blogRepository, p);
+
+            ListViewModel viewModel;
+            if(User.Identity.IsAuthenticated)
+            {
+                viewModel = new ListViewModel(_blogRepository, p, "All", User.Identity.Name);
+            }
+            else
+            {
+                viewModel = new ListViewModel(_blogRepository, p, "All");
+            }
+             
             ViewBag.Title = "Latest Posts";
             return View("List", viewModel);
         }
@@ -48,7 +58,7 @@ namespace Articles.Controllers
             {
               string user_name = User.Identity.Name;
                
-              var viewModel = new ListViewModel(_blogRepository, p, user_name);
+              var viewModel = new ListViewModel(_blogRepository, p, "Custom", user_name);
                 ViewBag.Title = String.Format(@"{0} posts found for user {1} ", viewModel.TotalPosts, user_name);
               return View("List", viewModel);
             }
@@ -90,7 +100,17 @@ namespace Articles.Controllers
 
         public IActionResult Category(string category, int p = 1)
         {
-            var viewModel = new ListViewModel(_blogRepository, category, "Category", p);
+
+            ListViewModel viewModel;
+            if (User.Identity.IsAuthenticated)
+            {
+                 viewModel = new ListViewModel(_blogRepository, category, "Category", p, User.Identity.Name);
+            }
+            else
+            {
+                 viewModel = new ListViewModel(_blogRepository, category, "Category", p);
+            }
+            
 
             if (viewModel.Category == null)
                 return new StatusCodeResult(400); 
@@ -105,7 +125,17 @@ namespace Articles.Controllers
 
         public IActionResult Tag(string tag, int p = 1)
         {
-            var viewModel = new ListViewModel(_blogRepository, tag, "Tag", p);
+            ListViewModel viewModel;
+            if(User.Identity.IsAuthenticated)
+            {
+                viewModel = new ListViewModel(_blogRepository, tag, "Tag", p, User.Identity.Name);
+            }
+            else
+            {
+                viewModel = new ListViewModel(_blogRepository, tag, "Tag", p);
+            }
+
+             
             if (viewModel.Tag == null)
                 return new StatusCodeResult(400);
 
@@ -118,7 +148,16 @@ namespace Articles.Controllers
 
         public ViewResult Search(string s, int p = 1)
         {
-            var viewModel = new ListViewModel(_blogRepository, s, "Search", p);
+            ListViewModel viewModel;
+            if(User.Identity.IsAuthenticated)
+            {
+                viewModel = new ListViewModel(_blogRepository, s, "Search", p, User.Identity.Name);
+            }
+            else
+            {
+                viewModel = new ListViewModel(_blogRepository, s, "Search", p);
+            }
+             
 
             ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
             return View("List", viewModel);

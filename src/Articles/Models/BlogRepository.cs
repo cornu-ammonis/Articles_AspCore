@@ -125,6 +125,7 @@ namespace Articles.Models
             {
                  user = new BlogUser();
                 user.user_name = user_name;
+                user.page_size = 10;
                 user.CategoryBlogUsers = new List<CategoryBlogUser>();
                 db.BlogUser.Add(user);
             }
@@ -248,6 +249,20 @@ namespace Articles.Models
 
             return posts;
 
+        }
+
+        public int UserPageSize(string user_name)
+        {
+            BlogUser user;
+            if (!db.BlogUser.Any(c => c.user_name == user_name))
+            {
+                return 10;
+            }
+            else
+            {
+                user = db.BlogUser.Single(c => c.user_name == user_name);
+                return user.page_size;
+            }
         }
 
         public int TotalPostsForUser(string user_name)

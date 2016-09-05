@@ -85,7 +85,7 @@ namespace Articles
             app.UseStaticFiles();
 
             app.UseIdentity();
-           app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
+           //app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
 
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
@@ -95,7 +95,13 @@ namespace Articles
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            
+            /*
+                routes.MapRoute(
+                    name: "tag",
+                    template: "{controller=Blog}/{action=Tag}/{tag?}");*/
+            }
+            );
         }
     }
 }

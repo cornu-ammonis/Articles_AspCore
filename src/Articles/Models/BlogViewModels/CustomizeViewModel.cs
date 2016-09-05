@@ -32,5 +32,6 @@ namespace Articles.Models.BlogViewModels
        
 
         public IDictionary<string, bool> categories { get; set; }
+        public int user_page_size { get; set; }
     }
 }

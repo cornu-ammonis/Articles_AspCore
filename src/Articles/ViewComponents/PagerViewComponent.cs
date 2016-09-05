@@ -11,7 +11,7 @@ namespace Articles.ViewComponents
     public class PaginationViewComponent : ViewComponent
     {
 
-        public async Task<IViewComponentResult> InvokeAsync(int total_posts)
+        public async Task<IViewComponentResult> InvokeAsync(int total_posts, int page_size)
         {
             PaginationViewModel paginationViewModel = new PaginationViewModel();
             paginationViewModel.n_visible = false;
@@ -28,7 +28,7 @@ namespace Articles.ViewComponents
                 paginationViewModel.current_page = 1;
             }
 
-            paginationViewModel.total_pages = Math.Ceiling((double)total_posts / 10);
+            paginationViewModel.total_pages = Math.Ceiling((double)total_posts / page_size);
 
             if (paginationViewModel.current_page > 1 )
             {
