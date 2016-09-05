@@ -8,7 +8,13 @@
     {
         <a asp-action="Posts" asp-controller="Blog">All Posts  </a>
         <a asp-action="Category" asp-controller="Blog" asp-route-category="@ViewBag.Category.UrlSlug"> <b>&#062 @ViewBag.Category.Name</b></a >
-                                                                                 
+
+
+    }
+    else if (ViewBag.ByTag == true)
+    {
+        <a asp-action="Posts" asp-controller="Blog"> All Posts</a>
+        <a asp-action="Tag" asp-controller="Blog" asp-route-tag="@ViewBag.Tag.UrlSlug"><b>&#062 @ViewBag.Tag.Name</b></a>
 
     }
 

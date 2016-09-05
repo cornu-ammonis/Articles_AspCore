@@ -72,7 +72,7 @@ namespace Articles.Controllers
         public IActionResult Customize([Bind(include: "categories")] CustomizeViewModel ViewModel)
         {
             if (ModelState.IsValid) {  
-                if (ViewModel.categories.Keys.Count < 3)
+                if (ViewModel.categories.Keys.Count < _blogRepository.Categories().Count)
                 {
                     return new StatusCodeResult(406);
                 }
@@ -110,6 +110,8 @@ namespace Articles.Controllers
                 return new StatusCodeResult(400);
 
             ViewBag.Title = String.Format(@"{0} posts tagged ""{1}""", viewModel.TotalPosts, viewModel.Tag.Name);
+            ViewBag.ByTag = true;
+            ViewBag.Tag = viewModel.Tag;
 
             return View("List", viewModel);
         }
@@ -133,6 +135,7 @@ namespace Articles.Controllers
             if (post.Published == false && User.Identity.IsAuthenticated == false)
                 return new StatusCodeResult(401);
 
+            //checks whether user came from "all posts" or "custom posts" [this will not persist...need better implementation, perhaps with qstring]
             if( Request.Headers["Referer"].ToString().Contains("Custom") == true || Request.Headers["Referer"].ToString().Contains("custom") == true)
             {
                 ViewBag.Type = "Custom";
@@ -165,7 +168,7 @@ namespace Articles.Controllers
                     query_string = (qsi < reference_url.Length - 1) ? reference_url.Substring(qsi + 1) : String.Empty;
                 }
 
-                // Parse the query string variables into a NameValueCollection.
+                // Parse the query string variables into a dictionary.
                 IDictionary<string, StringValues> qsdictionary = QueryHelpers.ParseQuery(query_string);
 
                 foreach (PostTag ptag in post.PostTags)
