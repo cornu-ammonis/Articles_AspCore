@@ -79,13 +79,14 @@ namespace Articles.Controllers
         }
 
         [HttpPost]
-        public IActionResult Customize([Bind(include: "categories")] CustomizeViewModel ViewModel)
+        public IActionResult Customize([Bind(include: "categories, category_counts, user_page_size")] CustomizeViewModel ViewModel)
         {
             if (ModelState.IsValid) {  
                 if (ViewModel.categories.Keys.Count < _blogRepository.Categories().Count)
                 {
                     return new StatusCodeResult(406);
                 }
+                
                  _blogRepository.UpdateCustomization(ViewModel, User.Identity.Name);
                 return RedirectToAction("CustomPosts");
 

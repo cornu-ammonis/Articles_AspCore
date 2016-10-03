@@ -40,6 +40,11 @@ namespace Articles.Models
         IList<Category> Categories();
         IList<Tag> Tags();
 
+        //returns # of posts in each category for display in category links 
+        IDictionary<string, string> CategoryCounts();
+        //overloaded version which takes list ofall categories to avoid redundant database queries 
+        IDictionary<string, string> CategoryCounts(IList<Category> AllCategories);
+
         IList<Post> Posts(int pageNo, int pageSize, string sortColumn, bool sortByAscending);
     }
 }

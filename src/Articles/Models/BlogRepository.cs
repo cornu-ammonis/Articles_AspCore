@@ -125,20 +125,24 @@ namespace Articles.Models
             {
                  user = new BlogUser();
                 user.user_name = user_name;
-                user.page_size = 10;
+                user.page_size = viewModel.user_page_size;
                 user.CategoryBlogUsers = new List<CategoryBlogUser>();
                 db.BlogUser.Add(user);
             }
             else
             {
                 user = db.BlogUser.Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers).Single(c => c.user_name == user_name);
-                
+                db.BlogUser.Update(user);
+                user.page_size = viewModel.user_page_size;
+                db.SaveChanges();
+                user = db.BlogUser.Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers).Single(c => c.user_name == user_name);
             }
 
             
+            
             foreach(var key in viewModel.categories.Keys)
             {
-                Category category = db.Categories.Single(c => c.Name == key);
+                Category category = db.Categories.Single(c => c.UrlSlug == key);
                 if (viewModel.categories[key] == false)
                 {
                     if(category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name))
@@ -444,6 +448,35 @@ namespace Articles.Models
             }
 
             return tags;
+        }
+
+        public IDictionary<string, string> CategoryCounts()
+        {
+            IList<Category> AllCategories = new List<Category>();
+            IDictionary<string, string> counts = new Dictionary<string, string>();
+            AllCategories = this.Categories();
+
+            foreach (Category category in AllCategories)
+            {
+                int count = this.TotalPostsForCategory(category.UrlSlug);
+                string counter = String.Format("({0} posts)", count);
+                counts[category.UrlSlug] = counter;
+            }
+            return counts;
+
+        }
+
+        public IDictionary<string, string> CategoryCounts(IList<Category> AllCategories)
+        {
+            IDictionary<string, string> counts = new Dictionary<string, string>();
+
+            foreach (Category category in AllCategories)
+            {
+                int count = this.TotalPostsForCategory(category.UrlSlug);
+                string counter = String.Format("({0} posts)", count);
+                counts[category.UrlSlug] = counter;
+            }
+            return counts;
         }
 
 

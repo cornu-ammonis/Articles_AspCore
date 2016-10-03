@@ -18,15 +18,20 @@
               
                
                     
-                        <label asp-for="categories[key]">@key</label>
+                       
                     
                  
                         <input asp-for="categories[key]" class="form-control" />
-                   
+                        <label asp-for="categories[key]"> @key @Model.category_counts[key]</label>
                 
 
             </div>
         } 
+
+        <div class="form-group">
+            <input asp-for="user_page_size" type="number" />
+            <label asp-for="user_page_size">Posts per page</label>
+        </div>
         
          <div class="form-group">
            
