@@ -3,23 +3,29 @@
 <div id="content">
 
     <h1>@ViewBag.Title</h1>
+    
    
     @if (ViewBag.ByCategory == true)
     {
-        <a asp-action="Posts" asp-controller="Blog">All Posts  </a>
-        <a asp-action="Category" asp-controller="Blog" asp-route-category="@ViewBag.Category.UrlSlug"> <b>&#062 @ViewBag.Category.Name</b></a >
+        <div>
+            <a asp-action="Posts" asp-controller="Blog">All Posts</a>
+            &#062
 
-
+            <a asp-action="Category" asp-controller="Blog" asp-route-category="@ViewBag.Category.UrlSlug"> <b>@ViewBag.Category.Name</b></a>
+        </div>
     }
     else if (ViewBag.ByTag == true)
     {
-        <a asp-action="Posts" asp-controller="Blog"> All Posts</a>
-        <a asp-action="Tag" asp-controller="Blog" asp-route-tag="@ViewBag.Tag.UrlSlug"><b>&#062 @ViewBag.Tag.Name</b></a>
-
+        <div>
+            <a asp-action="Posts" asp-controller="Blog">All Posts</a>
+            &#062
+            <a asp-action="Tag" asp-controller="Blog" asp-route-tag="@ViewBag.Tag.UrlSlug"><b>@ViewBag.Tag.Name</b></a>
+        </div>
     }
 
-
-   @await Component.InvokeAsync("Pagination", new {total_posts = Model.TotalPosts, page_size = Model.PageSize })
+    <cache vary-by-query="p,category,tag" vary-by-route="action">
+        @await Component.InvokeAsync("Pagination", new { total_posts = Model.TotalPosts, page_size = Model.PageSize })
+    </cache>
 
     @if (Model.Posts.Count > 0)
     {
@@ -33,6 +39,7 @@
         <p>No posts found!</p>
     }
 
-
-    
+    <cache vary-by-query="p,category,tag" vary-by-route="action"> 
+        @await Component.InvokeAsync("Pagination", new { total_posts = Model.TotalPosts, page_size = Model.PageSize })
+        </cache>
 </div>

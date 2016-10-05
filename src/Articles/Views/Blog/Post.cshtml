@@ -7,26 +7,26 @@
 <div id="content">
     @if (ViewBag.Type == "All Posts")
     {
-        <a asp-action="Posts" asp-controller="Blog">All Posts  </a>
+        <a asp-action="Posts" asp-controller="Blog">All Posts   </a>
 
     }
     else if (ViewBag.Type == "Custom"){
     <a asp-action="CustomPosts" asp-controller="Blog">Your Feed  </a>
     }
-
+    &#062
     @if (ViewBag.RefererTag)
     {
-        <a asp-action="Tag" asp-controller ="Blog" asp-route-tag="@ViewBag.Slug">&#062 @ViewBag.Name</a>
+        <a asp-action="Tag" asp-controller ="Blog" asp-route-tag="@ViewBag.Slug"> @ViewBag.Name  </a>
 
     }
     else
     {
-        <a asp-action="Category" asp-controller="Blog" asp-route-category="@Model.Category.UrlSlug">&#062 @Model.Category.Name  </a>
+        <a asp-action="Category" asp-controller="Blog" asp-route-category="@Model.Category.UrlSlug"> @Model.Category.Name  </a>
 
     }
- 
+    &#062
     <a asp-action="Post" asp-controller="Blog" asp-route-year="@Model.PostedOn.Year" asp-route-month="@Model.PostedOn.Month"
-       asp-route-ti="@Model.UrlSlug">&#062 @Model.Title</a>
+       asp-route-ti="@Model.UrlSlug"> <b>@Model.Title</b></a>
 
     <div class="post">
         <div class="post-meta">
