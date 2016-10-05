@@ -116,14 +116,15 @@ namespace Articles.Models
             return posts;
         }
 
+        //takes viewmodel from HttpPost action and commits values returned from customize page to database. 
         public void UpdateCustomization(CustomizeViewModel viewModel, string user_name)
         {
-            IList<Category> all_categories = this.Categories();
+          
 
             BlogUser user;
             if (!db.BlogUser.Any(c => c.user_name == user_name))
             {
-                 user = new BlogUser();
+                user = new BlogUser();
                 user.user_name = user_name;
                 user.page_size = viewModel.user_page_size;
                 user.CategoryBlogUsers = new List<CategoryBlogUser>();
@@ -157,20 +158,7 @@ namespace Articles.Models
                 {
                     if(category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name) == false)
                     {
-                        //throw new InvalidOperationException();
-                        /*
-                         CategoryBlogUser to_add = new CategoryBlogUser();
-
-                         to_add.BlogUser = db.BlogUser.Single(c => c.user_name == user_name);
-                         to_add.Category = db.Categories.Single(c => c.Name == category.Name);
-                         to_add.CategoryId = db.Categories.Single(c => c.Name == category.Name).CategoryId;
-                         to_add.BlogUserId = db.BlogUser.Single(c => c.user_name == user_name).BlogUserId;
-                         db.BlogUser.Single(c => c.user_name == user_name).CategoryBlogUsers.Add(to_add);
-                         db.Categories.Single(c => c.Name == key);
-                         db.CategoryBlogUser.Add(to_add);
-
-                         db.SaveChanges(); */
-
+                
                         CategoryBlogUser cbu1 = new CategoryBlogUser();
                         //cbu1.BlogUser = db.BlogUser.Single(c => c.user_name == user_name);
                         cbu1.Category = db.Categories.FirstOrDefault(c => c.UrlSlug == category.UrlSlug);
@@ -181,58 +169,14 @@ namespace Articles.Models
                 }
             }
             db.SaveChanges();
-            /*
-            
-
-            foreach (Category category in all_categories)
-            {
-                if (viewModel.categories.Keys.Contains(category.Name))
-                {
-                    if (viewModel.categories[category.Name] == true && !category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name))
-                    {
-
-                        CategoryBlogUser category_user = new CategoryBlogUser();
-                        category_user.BlogUser = user;
-                        category_user.BlogUserId = user.BlogUserId;
-                        category_user.Category = category;
-                        category_user.CategoryId = category.CategoryId;
-                        user.CategoryBlogUsers.Add(category_user);
-                        category.CategoryBlogUsers.Add(category_user);
-                        db.CategoryBlogUser.Add(category_user);
-                        db.SaveChanges();
-                    }
-                }
-            } */
-
-            //db.BlogUser.Update(user);
-            //db.SaveChanges();
-
+           
         }
 
+        //returns only posts in a category for which the junction table link between that category
+        //and the current BlogUser exists 
         public IList<Post> PostsForUser(string user_name, int pageNo, int pageSize)
         {
-          /* BlogUser bloguser = new BlogUser();
-            bloguser.user_name = user_name;
-            bloguser.CategoryBlogUsers = new List<CategoryBlogUser>();
-
-            CategoryBlogUser cbu1 = new CategoryBlogUser();
-            cbu1.BlogUser = bloguser;
-            cbu1.Category = db.Categories.FirstOrDefault(c => c.UrlSlug == "seed_category_three");
-
-            CategoryBlogUser cbu2 = new CategoryBlogUser();
-            cbu2.BlogUser = bloguser;
-            cbu2.Category = db.Categories.FirstOrDefault(c => c.UrlSlug == "slug_one");
-
-            bloguser.CategoryBlogUsers.Add(cbu1);
-            bloguser.CategoryBlogUsers.Add(cbu2);
-            db.CategoryBlogUser.Add(cbu1);
-            db.CategoryBlogUser.Add(cbu2);
-
-            db.BlogUser.Add(bloguser);
-            db.SaveChanges();   */
-            
-            
-
+         
 
             List<Post> posts = new List<Post>();
 
@@ -255,6 +199,8 @@ namespace Articles.Models
 
         }
 
+        //queries database for pagesize value associated with current BlogUser, identified by string
+        // user name -- returns 10 if not found 
         public int UserPageSize(string user_name)
         {
             BlogUser user;
@@ -450,6 +396,9 @@ namespace Articles.Models
             return tags;
         }
 
+        //used to generate string representing current number of posts in a certain category for display 
+        //format of dictionary for return: key is category.UrlSlug, entry is "(x posts)" 
+        //this version generates its own copy of AllCategories, meaning it queries the databse once per call 
         public IDictionary<string, string> CategoryCounts()
         {
             IList<Category> AllCategories = new List<Category>();
@@ -466,6 +415,9 @@ namespace Articles.Models
 
         }
 
+        //used to generate string representing current number of posts in a certain category for display 
+        //format of dictionary for return: key is category.UrlSlug, entry is "(x posts)" 
+        //this version takes a premade list of all categories as an argument, meaning it avoids a redundant database query
         public IDictionary<string, string> CategoryCounts(IList<Category> AllCategories)
         {
             IDictionary<string, string> counts = new Dictionary<string, string>();

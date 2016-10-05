@@ -11,16 +11,22 @@ namespace Articles.Models.BlogViewModels
         {
             categories = new Dictionary<string, bool>();
         }
+
+        //used by the customize action to create a page of current settings and bind currend settings for httppost. 
+        // identifies user by User.Identity.Name, the string username 
         public CustomizeViewModel(IBlogRepository _blogRepository, string user_name)
         {
             user_page_size = _blogRepository.UserPageSize(user_name);
             IList<Category> all_categories = _blogRepository.Categories();
 
+            //generates <string, string> dictionary where the key is each category's category.UrlSlug and the entry is 
+            // "(x posts)" where x is the number of posts in that category
             category_counts = _blogRepository.CategoryCounts(all_categories);
 
+            //used for representing result of exploring junction table as boolean value 
             categories = new Dictionary<string, bool>();
             
-            //used for converting url slug to name in view 
+            //used for converting url slug to name in view ***
             category_names = new Dictionary<string, string>();
 
             foreach (Category category in all_categories)

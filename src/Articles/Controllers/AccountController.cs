@@ -43,6 +43,8 @@ namespace Articles.Controllers
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null, string title = "Log in")
         {
+
+          
             ViewData["ReturnUrl"] = returnUrl;
             ViewBag.Title = title;
             return View();

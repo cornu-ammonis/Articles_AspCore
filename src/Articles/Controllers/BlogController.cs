@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Articles.Models.Core;
 using Articles.Models.BlogViewModels;
 using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Articles.Controllers
 {
@@ -22,15 +23,19 @@ namespace Articles.Controllers
 
         private readonly IBlogRepository _blogRepository;
 
-        //constructer for ninject dependency injection 
+        //constructer for  dependency injection, registered in the startup.cs service. repository DI is configured her to use a 
+        //scoped lifetime, which means one instance is used in all cases within one request, and a new instance is created each request 
         public BlogController(IBlogRepository blogRepository)
         {
             _blogRepository = blogRepository;
         }
 
-
+        //returns a list of all posts. parameter p is provided as a query string and represents the current page, used by 
+        // pagination / repository methods to pull the correct posts from the database. if the user is authenticated, their customized page 
+        //size will be used, defaulting to 10 either if user is not authenticaed or user has not submitted custom page size.
         public ViewResult Posts(int p = 1)
         {
+            //these were replaced by the viewmodel, which now handles generation of posts and total posts 
             // var posts = _blogRepository.Posts(p - 1, 10);
             // var total_posts = _blogRepository.TotalPosts();
 
@@ -48,6 +53,7 @@ namespace Articles.Controllers
             return View("List", viewModel);
         }
 
+        [Authorize]
         public IActionResult CustomPosts(int p = 1)
         {
             if (!User.Identity.IsAuthenticated)
@@ -65,6 +71,7 @@ namespace Articles.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Customize()
         {
             if (!User.Identity.IsAuthenticated)
@@ -81,12 +88,14 @@ namespace Articles.Controllers
         [HttpPost]
         public IActionResult Customize([Bind(include: "categories, category_counts, user_page_size")] CustomizeViewModel ViewModel)
         {
-            if (ModelState.IsValid) {  
+            if (ModelState.IsValid) {
+                //returns error if there are somehow fewer categories in the ViewModel than in the databse 
                 if (ViewModel.categories.Keys.Count < _blogRepository.Categories().Count)
                 {
                     return new StatusCodeResult(406);
                 }
                 
+
                  _blogRepository.UpdateCustomization(ViewModel, User.Identity.Name);
                 return RedirectToAction("CustomPosts");
 
