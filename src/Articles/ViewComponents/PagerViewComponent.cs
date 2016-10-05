@@ -43,6 +43,39 @@ namespace Articles.ViewComponents
             paginationViewModel.previous_page = string.Format("p={0}", paginationViewModel.current_page - 1);
             paginationViewModel.next_page = string.Format("p={0}", paginationViewModel.current_page + 1);
 
+            string action = RouteData.Values["action"].ToString().ToLower();
+            string query_concat;
+            switch (action)
+            {
+                case "category":
+                    query_concat = string.Format("?category={0}", queryStrings["category"]);
+                    break;
+                case "search":
+                    query_concat = string.Format("?s={0}", queryStrings["s"]);
+                    break;
+                case "tag":
+                    query_concat = string.Format("?tag={0}", queryStrings["tag"]);
+                    break;
+                default:
+                    query_concat = null;
+                    break;
+
+            }
+            if(query_concat == null)
+            {
+                paginationViewModel.previous_page = string.Concat("?", paginationViewModel.previous_page);
+                paginationViewModel.next_page = string.Concat("?", paginationViewModel.next_page);
+            }
+            else
+            {
+                paginationViewModel.previous_page = string.Format("{0}&{1}", query_concat, paginationViewModel.previous_page);
+                paginationViewModel.next_page = string.Format("{0}&{1}", query_concat, paginationViewModel.next_page);
+            }
+            /*
+            if (action.Equals("category", StringComparison.OrdinalIgnoreCase)) { }
+
+            if(RouteData.Values["action").ToString().Equals("category", StringComparison.OrdinalIgnoreCase) { }
+
              if (RouteData.Values["action"].ToString().Equals("category", StringComparison.OrdinalIgnoreCase))
             {
                 var c = string.Format("?category={0}", queryStrings["category"]);
@@ -67,6 +100,7 @@ namespace Articles.ViewComponents
                 paginationViewModel.previous_page = string.Concat("?", paginationViewModel.previous_page);
                 paginationViewModel.next_page = string.Concat("?", paginationViewModel.next_page);
             }
+            */
 
             return View(paginationViewModel);
         }
