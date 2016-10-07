@@ -41,7 +41,6 @@ namespace Articles.Models
 
         public virtual Category Category
         { get; set; }
-
         
         public List<PostTag> PostTags 
         { get; set; }

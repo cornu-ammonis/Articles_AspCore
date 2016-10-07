@@ -128,6 +128,7 @@ namespace Articles.Models
                 user.user_name = user_name;
                 user.page_size = viewModel.user_page_size;
                 user.CategoryBlogUsers = new List<CategoryBlogUser>();
+                user.BlogUserPosts = new List<Post>();
                 db.BlogUser.Add(user);
             }
             else
@@ -232,6 +233,114 @@ namespace Articles.Models
             return totalPosts;
         }
 
+        public void SavePostForUser(int year, int month, string titleSlug, string user_name)
+        {
+          
+           
+            BlogUser user;
+            if (!db.BlogUser.Any(c => c.user_name == user_name))
+            {
+                user = new BlogUser();
+                user.user_name = user_name;
+                user.CategoryBlogUsers = new List<CategoryBlogUser>();
+                user.BlogUserPosts = new List<Post>();
+                db.BlogUser.Add(user);
+                db.SaveChanges();
+            }
+            Post post_tosave = this.Post(year, month, titleSlug);
+            user = db.BlogUser.Include<BlogUser, IList<Post>>(u => u.BlogUserPosts).Single(c => c.user_name == user_name);
+            db.BlogUser.Update(user);
+            db.Posts.Update(post_tosave);
+            user.BlogUserPosts.Add(post_tosave);
+            db.SaveChanges();
+
+        }
+
+        public void UnsavePostForUser(int year, int month, string titleSlug, string user_name)
+        {
+            BlogUser user = this.RetrieveUser(user_name);
+            db.BlogUser.Update(user);
+            Post post_to_remove = this.Post(year, month, titleSlug);
+            db.Posts.Update(post_to_remove);
+            user.BlogUserPosts.Remove(post_to_remove);
+            db.SaveChanges();
+        }
+
+        public IList<Post> PostsUserSaved(string username, int pageNo, int pageSize)
+        {
+            List<Post> posts = new List<Post>();
+            BlogUser user = db.BlogUser.Include<BlogUser, List<Post>>(u => u.BlogUserPosts).SingleOrDefault(u => u.user_name == username);
+            if(user == null)
+            {
+                return posts;
+            }
+
+            IEnumerable<Post> post_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 user.BlogUserPosts.Any(c => c.PostId == p.PostId)
+                 orderby p.PostedOn descending
+                 select p).Skip(pageNo * pageSize).Take(pageSize).Include<Post, Category>(p => p.Category)
+                  .Include(p => p.PostTags)
+                 .ThenInclude(posttag => posttag.Tag);
+
+
+
+
+            foreach (Post post in post_query)
+            {
+                posts.Add(post);
+            }
+
+            return posts;
+        }
+
+        public int TotalPostsUserSaved(string username)
+        {
+            List<Post> posts = new List<Post>();
+            int total = 0;
+            BlogUser user = db.BlogUser.SingleOrDefault(u => u.user_name == username);
+            if (user == null)
+            {
+                return total;
+            }
+
+            IEnumerable<Post> post_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 user.BlogUserPosts.Any(c => c.PostId == p.PostId)
+                 orderby p.PostedOn descending
+                 select p);
+
+
+
+
+            foreach (Post post in post_query)
+            {
+                total = total + 1;
+            }
+            return total;
+        }
+
+        public BlogUser RetrieveUser(string username)
+        {
+            BlogUser user = db.BlogUser.Include<BlogUser, List<Post>>(u => u.BlogUserPosts).SingleOrDefault(u => u.user_name == username);
+            return user;
+        }
+
+        public bool CheckIfSaved(Post post, string username)
+        {
+            BlogUser user = this.RetrieveUser(username);
+            if (user.BlogUserPosts.Any(p => p.PostId == post.PostId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
         public int TotalPosts(bool checkIsPublished = true)
         {
             int total = 0;

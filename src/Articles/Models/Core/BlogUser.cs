@@ -12,5 +12,6 @@ namespace Articles.Models.Core
         public int page_size { get; set; } = 10;
         
         public List<CategoryBlogUser> CategoryBlogUsers { get; set; }
+        public List<Post> BlogUserPosts { get; set; }
     }
 }

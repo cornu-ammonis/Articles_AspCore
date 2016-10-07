@@ -1,4 +1,5 @@
 ﻿using Articles.Models;
+using Articles.Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,10 +48,35 @@ namespace Articles.Models
                     Posts = blogRepository.Posts(p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPosts();
                     break;
+                case "Saved":
+                    Posts = blogRepository.PostsUserSaved(user_name, p - 1, PageSize);
+                    TotalPosts = blogRepository.TotalPostsUserSaved(user_name);
+                    break;
             }
-            
            
-
+            //this code creates a dictionary of <post.urlslug, bool> representing whether each post 
+            // is saved by the current user. 
+           if (user_name != null)
+            {
+                SaveUnsave = true;
+                BlogUser user = blogRepository.RetrieveUser(user_name);
+                IsSaved = new Dictionary<string, bool>();
+                foreach (Post post in Posts)
+                {
+                    if (user.BlogUserPosts.Any(c => c.PostId == post.PostId))
+                    {
+                        IsSaved[post.UrlSlug] = true;
+                    }
+                    else
+                    {
+                        IsSaved[post.UrlSlug] = false;
+                    }
+                }
+            }
+           else
+            {
+                SaveUnsave = false;
+            }
         }
 
 
@@ -61,6 +87,7 @@ namespace Articles.Models
             PageSize = 10;
             if (user_name != null)
             {
+               
                 PageSize = blogRepository.UserPageSize(user_name);
 
                 if (PageSize < 1)
@@ -88,6 +115,28 @@ namespace Articles.Models
                 break;
                
             }
+
+            if (user_name != null)
+            {
+                SaveUnsave = true;
+                BlogUser user = blogRepository.RetrieveUser(user_name);
+                IsSaved = new Dictionary<string, bool>();
+                foreach (Post post in Posts)
+                {
+                    if (user.BlogUserPosts.Any(c => c.PostId == post.PostId))
+                    {
+                        IsSaved[post.UrlSlug] = true;
+                    }
+                    else
+                    {
+                        IsSaved[post.UrlSlug] = false;
+                    }
+                }
+            }
+            else
+            {
+                SaveUnsave = false;
+            }
         }
 
 
@@ -97,6 +146,8 @@ namespace Articles.Models
         public Category Category { get; private set; }
         public Tag Tag { get; private set; }
         public string Search { get; private set; }
+        public IDictionary<string, bool> IsSaved { get; private set; }
+        public bool SaveUnsave { get; private set; }
 
 
     }

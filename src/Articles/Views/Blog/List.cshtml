@@ -23,9 +23,8 @@
         </div>
     }
 
-    <cache vary-by-query="p,category,tag" vary-by-route="action">
         @await Component.InvokeAsync("Pagination", new { total_posts = Model.TotalPosts, page_size = Model.PageSize })
-    </cache>
+   
 
     @if (Model.Posts.Count > 0)
     {

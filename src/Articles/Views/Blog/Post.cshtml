@@ -47,6 +47,20 @@
 
                 <div class="post-tags">
                     <span>Tags:</span> @Html.Partial("_PostTags", Model.PostTags)
+                    &nbsp
+                    @if (ViewBag.Saved == true)
+                    {
+                        <a asp-action="UnsavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+                           asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Unsave Post</b></a>
+
+                    }
+                    else
+                    {
+                        <a asp-action="SavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+                           asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Save Post</b></a>
+
+                    }
+                    
                 </div>
 
                 <div class="posted-date">

@@ -40,16 +40,20 @@ namespace Articles.Controllers
             // var total_posts = _blogRepository.TotalPosts();
 
             ListViewModel viewModel;
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 viewModel = new ListViewModel(_blogRepository, p, "All", User.Identity.Name);
+                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
+                ViewBag.SaveUnsave = true;
             }
             else
             {
                 viewModel = new ListViewModel(_blogRepository, p, "All");
+                ViewBag.SaveUnsave = false;
             }
-             
+            
             ViewBag.Title = "Latest Posts";
+            
             return View("List", viewModel);
         }
 
@@ -62,11 +66,13 @@ namespace Articles.Controllers
             }
             else
             {
-              string user_name = User.Identity.Name;
-               
-              var viewModel = new ListViewModel(_blogRepository, p, "Custom", user_name);
+                string user_name = User.Identity.Name;
+
+                var viewModel = new ListViewModel(_blogRepository, p, "Custom", user_name);
                 ViewBag.Title = String.Format(@"{0} posts found for user {1} ", viewModel.TotalPosts, user_name);
-              return View("List", viewModel);
+                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
+                ViewBag.SaveUnsave = true;
+                return View("List", viewModel);
             }
         }
 
@@ -88,15 +94,16 @@ namespace Articles.Controllers
         [HttpPost]
         public IActionResult Customize([Bind(include: "categories, category_counts, user_page_size")] CustomizeViewModel ViewModel)
         {
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 //returns error if there are somehow fewer categories in the ViewModel than in the databse 
                 if (ViewModel.categories.Keys.Count < _blogRepository.Categories().Count)
                 {
                     return new StatusCodeResult(406);
                 }
-                
 
-                 _blogRepository.UpdateCustomization(ViewModel, User.Identity.Name);
+
+                _blogRepository.UpdateCustomization(ViewModel, User.Identity.Name);
                 return RedirectToAction("CustomPosts");
 
                 //return View("Test", ViewModel);
@@ -114,16 +121,23 @@ namespace Articles.Controllers
             ListViewModel viewModel;
             if (User.Identity.IsAuthenticated)
             {
-                 viewModel = new ListViewModel(_blogRepository, category, "Category", p, User.Identity.Name);
+                viewModel = new ListViewModel(_blogRepository, category, "Category", p, User.Identity.Name);
+                //dictionary of type <string, bool>; key is post.urlSlug, value is whether it has been saved by current user
+                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
+                //tells the view to toggle save/unsave button; only possible if user is authenticated and 
+                // ViewBag.SaveUnsaveDict exists 
+                ViewBag.SaveUnsave = true;
             }
             else
             {
-                 viewModel = new ListViewModel(_blogRepository, category, "Category", p);
+                viewModel = new ListViewModel(_blogRepository, category, "Category", p);
+                //tells view not to toggle save/unsave button; dict doesnt exist 
+                ViewBag.SaveUnsave = false;
             }
-            
+
 
             if (viewModel.Category == null)
-                return new StatusCodeResult(400); 
+                return new StatusCodeResult(400);
 
             ViewBag.Title = String.Format(@"{0} posts on category ""{1}""", viewModel.TotalPosts,
                         viewModel.Category.Name);
@@ -136,16 +150,24 @@ namespace Articles.Controllers
         public IActionResult Tag(string tag, int p = 1)
         {
             ListViewModel viewModel;
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 viewModel = new ListViewModel(_blogRepository, tag, "Tag", p, User.Identity.Name);
+
+                //dictionary of type <string, bool>; key is post.urlSlug, value is whether it has been saved by current user
+                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
+                //tells view to toggle save unsave; dict exists
+                ViewBag.SaveUnsave = true;
             }
             else
             {
                 viewModel = new ListViewModel(_blogRepository, tag, "Tag", p);
+               
+                //tells view not to toggle save/unsave; dict doesnt exist
+                ViewBag.SaveUnsave = false;
             }
 
-             
+
             if (viewModel.Tag == null)
                 return new StatusCodeResult(400);
 
@@ -159,15 +181,23 @@ namespace Articles.Controllers
         public ViewResult Search(string s, int p = 1)
         {
             ListViewModel viewModel;
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 viewModel = new ListViewModel(_blogRepository, s, "Search", p, User.Identity.Name);
+               
+                //dictionary of type <string, bool>; key is post.urlSlug, value is whether it has been saved by current user
+                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
+                //tells view to toggle save unsave; dict exists
+                ViewBag.SaveUnsave = true;
             }
             else
             {
                 viewModel = new ListViewModel(_blogRepository, s, "Search", p);
+
+                //tells view not to toggle save/unsave; dict doesnt exist
+                ViewBag.SaveUnsave = false;
             }
-             
+
 
             ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
             return View("List", viewModel);
@@ -185,7 +215,7 @@ namespace Articles.Controllers
                 return new StatusCodeResult(401);
 
             //checks whether user came from "all posts" or "custom posts" [this will not persist...need better implementation, perhaps with qstring]
-            if( Request.Headers["Referer"].ToString().Contains("Custom") == true || Request.Headers["Referer"].ToString().Contains("custom") == true)
+            if (Request.Headers["Referer"].ToString().Contains("Custom") == true || Request.Headers["Referer"].ToString().Contains("custom") == true)
             {
                 ViewBag.Type = "Custom";
             }
@@ -194,7 +224,7 @@ namespace Articles.Controllers
                 ViewBag.Type = "All Posts";
             }
 
-            
+
             //checks if user came from a tag page in order to render tag breadcrumb
             if (Request.Headers["Referer"].ToString().Contains("tag") || Request.Headers["Referer"].ToString().Contains("Tag"))
             {
@@ -202,10 +232,10 @@ namespace Articles.Controllers
 
                 string reference_url = Request.Headers["Referer"].ToString();
                 string query_string = null;
-               
+
                 //query string index
                 int qsi = reference_url.IndexOf('?');
-                
+
                 //if query string doesnt exist, return view with category breadcrumb instead
                 if (qsi == -1)
                 {
@@ -222,7 +252,7 @@ namespace Articles.Controllers
 
                 foreach (PostTag ptag in post.PostTags)
                 {
-                    if(qsdictionary["tag"].ToString().Equals(ptag.Tag.UrlSlug, StringComparison.OrdinalIgnoreCase))
+                    if (qsdictionary["tag"].ToString().Equals(ptag.Tag.UrlSlug, StringComparison.OrdinalIgnoreCase))
                     {
                         ViewBag.Name = ptag.Tag.Name;
                         ViewBag.Slug = ptag.Tag.UrlSlug;
@@ -231,8 +261,57 @@ namespace Articles.Controllers
                 }
             }
 
-                return View(post);
+            ViewBag.Saved = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                if(_blogRepository.CheckIfSaved(post, User.Identity.Name))
+                {
+                    ViewBag.Saved = true;
+                }
+            }
+            return View(post);
         }
 
+        [Authorize]
+        public IActionResult SavePost(int year, int month, string ti)
+        {
+            _blogRepository.SavePostForUser(year, month, ti, User.Identity.Name);
+            //return RedirectToAction("Post", new { year, month, ti });
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        [Authorize]
+        public IActionResult UnsavePost(int year, int month, string ti)
+        {
+            _blogRepository.UnsavePostForUser(year, month, ti, User.Identity.Name);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        [Authorize]
+        public IActionResult SavedPosts(int p = 1)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                string user_name = User.Identity.Name;
+
+                var viewModel = new ListViewModel(_blogRepository, p, "Saved", user_name);
+                ViewBag.Title = String.Format(@"{0} posts saved for user {1} ", viewModel.TotalPosts, user_name);
+                if (viewModel.SaveUnsave)
+                {
+                    ViewBag.SaveUnsaveDict = viewModel.IsSaved;
+                    ViewBag.SaveUnsave = true;
+                }
+                else
+                {
+                    ViewBag.SaveUnsave = false;
+                }
+                return View("List", viewModel);
+            }
+
+        }
     }
 }
