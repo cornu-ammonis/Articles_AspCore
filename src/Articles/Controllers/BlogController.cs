@@ -72,10 +72,6 @@ namespace Articles.Controllers
                 ViewBag.Title = String.Format(@"{0} posts found for user {1} ", viewModel.TotalPosts, user_name);
                 ViewBag.SaveUnsaveDict = viewModel.IsSaved;
                 ViewBag.SaveUnsave = true;
-                /*
-                HttpContext.Items["Widget.IsCustomizing"] = true;
-                HttpContext.Items["UserName.ForWidget"] = User.Identity.Name;
-                */
                 return View("List", viewModel);
             }
         }
