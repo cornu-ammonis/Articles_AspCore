@@ -8,18 +8,21 @@
     }
   },
   "profiles": {
+    "Articles": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\Andrew_Jones\\Documents\\Visual Studio 2015\\Projects\\core\\Articles",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:49828",
+      "environmentVariables": {
+        "DNX_IIS_RUNTIME_FRAMEWORK": "dnx46",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "Articles": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:5000",
-      "environmentVariables": {
+        "DNX_IIS_RUNTIME_FRAMEWORK": "dnx46",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }

@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using System.IO;
 using Articles.Models.Core;
+using Articles.Models;
+using System.Collections.Generic;
 
 namespace Articles.Controllers
 {
@@ -26,7 +28,7 @@ namespace Articles.Controllers
         public ImageController(IHostingEnvironment env, IPhotoRepository PhotoRepository)
         {
             this.hostingEnv = env;
-            this.photoRepository = PhotoRepository;
+            this.photoRepository = new PhotoRepository();
         }
 
         public IActionResult UploadFiles()
@@ -49,6 +51,7 @@ namespace Articles.Controllers
             List<string> filepaths = photoRepository.BatchFilePaths(batch, hostingEnv);
 
             return View(filepaths);
+             
         }
 
        
