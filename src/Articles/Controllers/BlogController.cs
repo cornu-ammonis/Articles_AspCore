@@ -103,6 +103,19 @@ namespace Articles.Controllers
             }
         }
 
+        [Authorize]
+        public IActionResult Subscribed(int p = 1)
+        {
+
+            string current_username = User.Identity.Name;
+            var viewModel = new ListViewModel(_blogRepository, p, "Subscribed", current_username);
+            ViewBag.SaveUnsave = true;
+            ViewBag.SaveUnsaveDict = viewModel.IsSaved;
+            ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes", 
+                viewModel.TotalPosts, current_username);
+            return View("List", viewModel);
+        }
+
         [HttpGet]
         [Authorize]
         public IActionResult Customize()
@@ -119,7 +132,7 @@ namespace Articles.Controllers
         }
 
         [HttpPost]
-        public IActionResult Customize([Bind(include: "categories, category_counts, user_page_size")] CustomizeViewModel ViewModel)
+        public IActionResult Customize([Bind(include: "categories, category_counts, user_page_size, subscribed_authors")] CustomizeViewModel ViewModel)
         {
             if (ModelState.IsValid)
             {

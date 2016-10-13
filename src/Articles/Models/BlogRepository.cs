@@ -133,15 +133,22 @@ namespace Articles.Models
                 user.page_size = viewModel.user_page_size;
                 user.CategoryBlogUsers = new List<CategoryBlogUser>();
                 user.BlogUserPosts = new List<Post>();
+                user.SubscribedAuthors = new List<BlogUser>();
                 db.BlogUser.Add(user);
             }
             else
             {
-                user = db.BlogUser.Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers).Single(c => c.user_name == user_name);
+                user = db.BlogUser
+                    .Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers)
+                    .Include<BlogUser, List<BlogUser>>(u => u.SubscribedAuthors)
+                    .Single(c => c.user_name == user_name);
                 db.BlogUser.Update(user);
                 user.page_size = viewModel.user_page_size;
                 db.SaveChanges();
-                user = db.BlogUser.Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers).Single(c => c.user_name == user_name);
+                user = db.BlogUser
+                    .Include<BlogUser, List<BlogUser>>(u => u.SubscribedAuthors)
+                    .Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers)
+                    .Single(c => c.user_name == user_name);
             }
 
             
@@ -170,6 +177,28 @@ namespace Articles.Models
                         user.CategoryBlogUsers.Add(cbu1);
                         db.CategoryBlogUser.Add(cbu1);
                         
+                    }
+                }
+            }
+
+            db.Update(user);
+            foreach(var key in viewModel.subscribed_authors.Keys)
+            {
+                BlogUser author = db.BlogUser.Single(c => c.user_name == key);
+                db.Update(author);
+                if (viewModel.subscribed_authors[key] == false)
+                {
+                    if(user.SubscribedAuthors.Any(c => c.user_name == author.user_name))
+                    {
+                        user.SubscribedAuthors.Remove(author);
+                    }
+                }
+
+                if (viewModel.subscribed_authors[key] == true)
+                {
+                    if(user.SubscribedAuthors.Any(c => c.user_name == author.user_name) == false)
+                    {
+                        user.SubscribedAuthors.Add(author);
                     }
                 }
             }
@@ -203,6 +232,49 @@ namespace Articles.Models
 
             return posts;
 
+        }
+
+        public IList<Post> SubscribedPostsForUser(string user_name, int pageNo, int pageSize)
+        {
+            List<Post> posts = new List<Post>();
+            BlogUser user = this.RetrieveUser(user_name);
+
+            IEnumerable<Post> post_query = 
+                (from p in db.Posts
+                 where p.Published == true &&
+                 user.SubscribedAuthors.Any(sa => sa.user_name == p.Author.user_name)
+                 orderby p.PostedOn descending
+                 select p).Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, BlogUser>(p => p.Author)
+                 .Include<Post, Category>(p => p.Category)
+                .Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag);
+
+            foreach (Post post in post_query)
+            {
+                posts.Add(post);
+            }
+
+            return posts;
+        }
+
+        public int TotalSubscribedPostsForUser(string user_name)
+        {
+            int total = 0;
+            BlogUser user = this.RetrieveUser(user_name);
+
+            IEnumerable<Post> post_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 user.SubscribedAuthors.Any(sa => sa.user_name == p.Author.user_name)
+                 orderby p.PostedOn descending
+                 select p);
+
+            foreach (Post post in post_query)
+            {
+                total = total + 1;
+            }
+            return total;
         }
 
         //queries database for pagesize value associated with current BlogUser, identified by string
@@ -331,9 +403,30 @@ namespace Articles.Models
 
         public BlogUser RetrieveUser(string username)
         {
-            BlogUser user = db.BlogUser.Include<BlogUser, List<Post>>(u => u.BlogUserPosts).SingleOrDefault(u => u.user_name == username);
+            BlogUser user = db.BlogUser
+            .Include<BlogUser, List<BlogUser>>(u => u.SubscribedAuthors)
+             .Include<BlogUser, List<Post>>(u => u.BlogUserPosts)
+             .SingleOrDefault(u => u.user_name == username);
             return user;
         }
+
+        public IList<BlogUser> AllAuthors()
+        {
+            List<BlogUser> authors = new List<BlogUser>();
+            IEnumerable<BlogUser> u_query =
+                (from u in db.BlogUser
+                 orderby u.user_name
+                 select u)
+                 .Include<BlogUser, List<BlogUser>>(u => u.SubscribedAuthors)
+                 .Include<BlogUser, List<Post>>(u => u.BlogUserPosts);
+
+            foreach (BlogUser author in u_query)
+            {
+                authors.Add(author);
+            }
+            return authors;
+        }
+
 
         public bool CheckIfSaved(Post post, string username)
         {
@@ -513,7 +606,7 @@ namespace Articles.Models
            
         }
 
-
+       
         public IList<Category> Categories()
         {
             List<Category> categories = new List<Category>();

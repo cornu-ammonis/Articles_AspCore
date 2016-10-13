@@ -8,10 +8,10 @@
 
 <form asp-action="Customize">
     <div class="form-horizontal">
-        <h4>CustomizeViewModel</h4>
+        <h4>Customize Your Feeds</h4>
         <hr />
         <div asp-validation-summary="All" class="text-danger"></div>
-      
+      <p> <b>Custom Feed (filter by category)</b></p>
         @foreach (var key in Model.categories.Keys)
             {
             <div class="form-group">
@@ -28,6 +28,17 @@
             </div>
         } 
 
+        <p><b>Subscribed Feed (filter by author)</b></p>
+        @foreach(var key in Model.subscribed_authors.Keys)
+        {
+            <div class="form-group">
+
+                <input asp-for="subscribed_authors[key]" class="form-control" />
+                <label asp-for="subscribed_authors[key]">@key</label>
+
+            </div>
+
+        }
         <div class="form-group">
             <input asp-for="user_page_size" type="number" />
             <label asp-for="user_page_size">Posts per page</label>

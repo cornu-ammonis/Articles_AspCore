@@ -40,6 +40,10 @@ namespace Articles.Models
             }
             switch(type)
             {
+                case "Subscribed":
+                    Posts = blogRepository.SubscribedPostsForUser(user_name, p - 1, PageSize);
+                    TotalPosts = blogRepository.TotalSubscribedPostsForUser(user_name);
+                    break;
                 case "Custom":
                     Posts = blogRepository.PostsForUser(user_name, p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsForUser(user_name);

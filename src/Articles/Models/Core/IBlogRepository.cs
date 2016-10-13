@@ -37,8 +37,11 @@ namespace Articles.Models
         void SavePostForUser(int year, int month, string titleSlug, string user_name);
         void UnsavePostForUser(int year, int month, string titleSlug, string user_name);
          IList<Post> PostsUserSaved(string username, int pageNo, int pageSize);
+        IList<Post> SubscribedPostsForUser(string user_name, int pageNo, int pageSize);
+        int TotalSubscribedPostsForUser(string user_name);
         int TotalPostsUserSaved(string username);
         BlogUser RetrieveUser(string username);
+        IList<BlogUser> AllAuthors();
         bool CheckIfSaved(Post post, string username);
 
         IList<Post> PostsByAuthor(string user_name, int pageNo, int pageSize);
