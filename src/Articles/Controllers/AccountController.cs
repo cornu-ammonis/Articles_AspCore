@@ -41,9 +41,12 @@ namespace Articles.Controllers
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl = null, string title = "Log in")
         {
+
+          
             ViewData["ReturnUrl"] = returnUrl;
+            ViewBag.Title = title;
             return View();
         }
 

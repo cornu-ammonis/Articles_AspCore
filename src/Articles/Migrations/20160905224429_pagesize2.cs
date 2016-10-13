@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Articles.Data.Migrations
+namespace Articles.Migrations
 {
-    public partial class init2 : Migration
+    public partial class pagesize2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Articles.Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Articles.Models
    public class Category
     {
 
-        public  int Id { get; set; }
+        public  int CategoryId { get; set; }
         public  string Name { get; set; }
         public  string UrlSlug { get; set; }
         public  string Description { get; set; }
@@ -18,5 +19,6 @@ namespace Articles.Models
         public virtual IList<Post> Posts
         { get; set; }
 
+        public List<CategoryBlogUser> CategoryBlogUsers { get; set; }
     }
 }

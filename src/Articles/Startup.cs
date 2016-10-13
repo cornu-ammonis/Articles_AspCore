@@ -12,6 +12,10 @@ using Microsoft.Extensions.Logging;
 using Articles.Data;
 using Articles.Models;
 using Articles.Services;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Articles.Models.Core;
 
 namespace Articles
 {
@@ -59,6 +63,7 @@ namespace Articles
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,9 +88,16 @@ namespace Articles
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Uploads")),
+                RequestPath = new PathString("/StaticFiles")
+            });
+
 
             app.UseIdentity();
-            app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
+               //app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
 
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
@@ -95,7 +107,13 @@ namespace Articles
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            
+            /*
+                routes.MapRoute(
+                    name: "tag",
+                    template: "{controller=Blog}/{action=Tag}/{tag?}");*/
+            }
+            );
         }
     }
 }

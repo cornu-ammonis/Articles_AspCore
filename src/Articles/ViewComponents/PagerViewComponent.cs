@@ -8,59 +8,72 @@ using System.Threading.Tasks;
 
 namespace Articles.ViewComponents
 {
-    public class PagerViewComponent : ViewComponent
+    public class PaginationViewComponent : ViewComponent
     {
 
-        public async Task<IViewComponentResult> InvokeAsync(int total_posts)
+        public async Task<IViewComponentResult> InvokeAsync(int total_posts, int page_size)
         {
-            PagerViewModel pvm = new PagerViewModel();
-            pvm.n_visible = false;
-            pvm.p_visible = false;
+            PaginationViewModel paginationViewModel = new PaginationViewModel();
+            paginationViewModel.n_visible = false;
+            paginationViewModel.p_visible = false;
+
             var queryStrings = Request.Query;
             var keys = queryStrings.Keys;
             if (keys.Contains("p"))
             {
-                pvm.CurrentPage = int.Parse(queryStrings["p"]);
+                paginationViewModel.current_page = int.Parse(queryStrings["p"]);
             }
             else
             {
-                pvm.CurrentPage = 1;
+                paginationViewModel.current_page = 1;
             }
 
-            pvm.TotalPages = Math.Ceiling((double)total_posts / 10);
+            paginationViewModel.total_pages = Math.Ceiling((double)total_posts / page_size);
 
-            if (pvm.CurrentPage > 1 )
+            if (paginationViewModel.current_page > 1 )
             {
-                pvm.p_visible = true;
+                paginationViewModel.p_visible = true;
             }
 
-            if (pvm.CurrentPage < pvm.TotalPages)
+            if (paginationViewModel.current_page < paginationViewModel.total_pages)
             {
-                pvm.n_visible = true;
+                paginationViewModel.n_visible = true;
             }
 
-            pvm.p = string.Format("p={0}", pvm.CurrentPage - 1);
-            pvm.n = string.Format("p={0}", pvm.CurrentPage + 1);
+            paginationViewModel.previous_page = string.Format("p={0}", paginationViewModel.current_page - 1);
+            paginationViewModel.next_page = string.Format("p={0}", paginationViewModel.current_page + 1);
 
-            if (RouteData.Values["action"].ToString().Equals("search", StringComparison.OrdinalIgnoreCase))
+            string action = RouteData.Values["action"].ToString().ToLower();
+            string query_concat;
+            switch (action)
             {
-                var s = string.Format("?s={0}", queryStrings["s"]);
-                pvm.p = string.Format("{0}&{1}", s, pvm.p);
-                pvm.n = string.Format("{0}&{1}", s, pvm.n);
+                case "category":
+                    query_concat = string.Format("?category={0}", queryStrings["category"]);
+                    break;
+                case "search":
+                    query_concat = string.Format("?s={0}", queryStrings["s"]);
+                    break;
+                case "tag":
+                    query_concat = string.Format("?tag={0}", queryStrings["tag"]);
+                    break;
+                default:
+                    query_concat = null;
+                    break;
+
             }
-            else if(RouteData.Values["action"].ToString().Equals("category", StringComparison.OrdinalIgnoreCase))
+            if(query_concat == null)
             {
-                var c = string.Format("?category={0}", queryStrings["category"]);
-                pvm.p = string.Format("{0}&{1}", c, pvm.p);
-                pvm.n = string.Format("{0}&{1}", c, pvm.n);
+                paginationViewModel.previous_page = string.Concat("?", paginationViewModel.previous_page);
+                paginationViewModel.next_page = string.Concat("?", paginationViewModel.next_page);
             }
             else
             {
-                pvm.p = string.Concat("?", pvm.p);
-                pvm.n = string.Concat("?", pvm.n);
+                paginationViewModel.previous_page = string.Format("{0}&{1}", query_concat, paginationViewModel.previous_page);
+                paginationViewModel.next_page = string.Format("{0}&{1}", query_concat, paginationViewModel.next_page);
             }
+            
 
-            return View(pvm);
+            return View(paginationViewModel);
         }
     }
 }

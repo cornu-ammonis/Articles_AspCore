@@ -5,6 +5,29 @@
 }
 
 <div id="content">
+    @if (ViewBag.Type == "All Posts")
+    {
+        <a asp-action="Posts" asp-controller="Blog">All Posts   </a>
+
+    }
+    else if (ViewBag.Type == "Custom"){
+    <a asp-action="CustomPosts" asp-controller="Blog">Your Feed  </a>
+    }
+    &#062
+    @if (ViewBag.RefererTag)
+    {
+        <a asp-action="Tag" asp-controller ="Blog" asp-route-tag="@ViewBag.Slug"> @ViewBag.Name  </a>
+
+    }
+    else
+    {
+        <a asp-action="Category" asp-controller="Blog" asp-route-category="@Model.Category.UrlSlug"> @Model.Category.Name  </a>
+
+    }
+    &#062
+    <a asp-action="Post" asp-controller="Blog" asp-route-year="@Model.PostedOn.Year" asp-route-month="@Model.PostedOn.Month"
+       asp-route-ti="@Model.UrlSlug"> <b>@Model.Title</b></a>
+
     <div class="post">
         <div class="post-meta">
             <div class="row">
@@ -24,6 +47,20 @@
 
                 <div class="post-tags">
                     <span>Tags:</span> @Html.Partial("_PostTags", Model.PostTags)
+                    &nbsp
+                    @if (ViewBag.Saved == true)
+                    {
+                        <a asp-action="UnsavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+                           asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Unsave Post</b></a>
+
+                    }
+                    else
+                    {
+                        <a asp-action="SavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+                           asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Save Post</b></a>
+
+                    }
+                    
                 </div>
 
                 <div class="posted-date">

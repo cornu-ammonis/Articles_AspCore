@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Articles.Models;
 using Articles.Models.Core;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace Articles.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -18,6 +20,10 @@ namespace Articles.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet <Tag> Tags { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<BlogUser> BlogUser { get; set; }
+        public DbSet<CategoryBlogUser> CategoryBlogUser { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -42,6 +48,20 @@ namespace Articles.Data
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Posts);
 
+            builder.Entity<CategoryBlogUser>()
+                .HasKey(c => new { c.CategoryId, c.BlogUserId });
+
+            builder.Entity<CategoryBlogUser>()
+                .HasOne(cb => cb.Category)
+                .WithMany(cb => cb.CategoryBlogUsers)
+                .HasForeignKey(cb => cb.CategoryId);
+
+            builder.Entity<CategoryBlogUser>()
+                .HasOne(cb => cb.BlogUser)
+                .WithMany(b => b.CategoryBlogUsers)
+                .HasForeignKey(cb => cb.BlogUserId);
+
+            
          
         }
 
@@ -57,24 +77,34 @@ namespace Articles.Data
 
             Category seed_cat = new Category();
             seed_cat.Description = "A category crrated for seeding";
-            seed_cat.Name = "category one";
+            seed_cat.Name = "category 1";
             seed_cat.UrlSlug = "slug_one";
             context.Categories.Add(seed_cat);
 
             Category second_seed_category = new Category();
             second_seed_category.Description = "a second category for fewer posts";
-            second_seed_category.Name = "seed two";
+            second_seed_category.Name ="category 2";
             second_seed_category.UrlSlug = "seed_two";
             context.Categories.Add(second_seed_category);
 
             Category third_seed_category = new Category();
             third_seed_category.Description = "third category for seed";
-            third_seed_category.Name = "seed category 3";
+            third_seed_category.Name = "category 3";
             third_seed_category.UrlSlug = "seed_category_three";
             context.Categories.Add(third_seed_category);
 
+            Category fourth_seed_category = new Category();
+            fourth_seed_category.Description = "category 4";
+            fourth_seed_category.Name = "category 4";
+            fourth_seed_category.UrlSlug = "seed_category_four";
+            context.Categories.Add(fourth_seed_category);
 
 
+            Category fifth_seed_category = new Category();
+            fifth_seed_category.Description = "category 5";
+            fifth_seed_category.Name = "category 5";
+            fifth_seed_category.UrlSlug = "seed_category_five";
+            context.Categories.Add(fifth_seed_category);
 
             Tag seed_tag = new Tag();
             seed_tag.Name = "seed tag";
@@ -109,7 +139,7 @@ namespace Articles.Data
             string generic_description = generic_short_description + "<p> this is a second paragraph which will only display with the full post";
 
 
-            for (int i = 1; i < 35; i++)
+            for (int i = 1; i <42; i++)
             {
                 Post post = new Post();
                 post.Title = "seed post" + i.ToString();
@@ -128,7 +158,28 @@ namespace Articles.Data
                     post.PostTags.Add(pt);
                     context.Add(pt);
                 }
-                post.Category = seed_cat;
+
+                if (i < 12)
+                {
+                    post.Category = seed_cat;
+                }
+                else if (i < 20)
+                {
+                    post.Category = second_seed_category;
+                }
+                else if(i < 32)
+                {
+                    post.Category = third_seed_category;
+                }
+                else if(i < 38) {
+
+                    post.Category = fourth_seed_category;
+                }
+                else
+                {
+                    post.Category = fifth_seed_category;
+                }
+                
 
                 post.ShortDescription = generic_short_description;
                 post.Description = generic_description;
@@ -139,7 +190,11 @@ namespace Articles.Data
 
             }
 
-            context.SaveChanges();
+
+          
+
+
+        context.SaveChanges();
         }
     }
 

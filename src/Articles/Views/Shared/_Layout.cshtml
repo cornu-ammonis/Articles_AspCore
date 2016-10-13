@@ -34,9 +34,11 @@
             <!-- Navigation -->
             <div id="menubar">
                 <ul id="menu">
-                    <li>@Html.ActionLink("Posts", "Posts", new {controller = "Blog" })</li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">About Me</a></li>
+                    <li><a asp-action="Posts" asp-controller="Blog">Posts</a></li>
+                    <li> <a asp-action="CustomPosts" asp-controller="Blog">Custom Feed</a> </li>
+                    <li><a asp-action="SavedPosts" asp-controller="Blog">Saved Posts</a></li>
+                    <li><a asp-action="Customize" asp-controller="Blog">Account Settings</a></li>
+                 
                    
                    
                 </ul>

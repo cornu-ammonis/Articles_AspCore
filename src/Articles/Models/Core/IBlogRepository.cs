@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Articles.Models;
+using Articles.Models.BlogViewModels;
+using Articles.Models.Core;
 
 namespace Articles.Models
 {
@@ -27,12 +29,29 @@ namespace Articles.Models
         IList<Post> PostsForSearch(string search, int pageNo, int pageSize);
         int TotalPostsForSearch(string search);
 
+        IList<Post> PostsForUser(string user_name, int pageNo, int pageSize);
+        int TotalPostsForUser(string user_name);
+        void UpdateCustomization(CustomizeViewModel viewModel, string user_name);
+        int UserPageSize(string user_name);
+
+        void SavePostForUser(int year, int month, string titleSlug, string user_name);
+        void UnsavePostForUser(int year, int month, string titleSlug, string user_name);
+         IList<Post> PostsUserSaved(string username, int pageNo, int pageSize);
+        int TotalPostsUserSaved(string username);
+        BlogUser RetrieveUser(string username);
+        bool CheckIfSaved(Post post, string username);
+
         //returns a post for full display identified via year/month posted and title slug 
         Post Post(int year, int month, string titleSlug);
 
         //returns all categories or tags -- this is used for widget
         IList<Category> Categories();
         IList<Tag> Tags();
+
+        //returns # of posts in each category for display in category links 
+        IDictionary<string, string> CategoryCounts();
+        //overloaded version which takes list ofall categories to avoid redundant database queries 
+        IDictionary<string, string> CategoryCounts(IList<Category> AllCategories);
 
         IList<Post> Posts(int pageNo, int pageSize, string sortColumn, bool sortByAscending);
     }
