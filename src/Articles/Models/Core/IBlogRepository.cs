@@ -41,6 +41,9 @@ namespace Articles.Models
         BlogUser RetrieveUser(string username);
         bool CheckIfSaved(Post post, string username);
 
+        IList<Post> PostsByAuthor(string user_name, int pageNo, int pageSize);
+        int TotalPostsByAuthor(string user_name);
+
         //returns a post for full display identified via year/month posted and title slug 
         Post Post(int year, int month, string titleSlug);
 

@@ -45,5 +45,8 @@ namespace Articles.Models
         public List<PostTag> PostTags 
         { get; set; }
 
+        public virtual BlogUser Author
+        { get; set; }
+
     }
 }

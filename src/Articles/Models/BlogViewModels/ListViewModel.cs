@@ -112,6 +112,10 @@ namespace Articles.Models
                     Posts = blogRepository.PostsForSearch(text, p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsForSearch(text);
                     Search = text;
+                    break;
+                case "Author":
+                    Posts = blogRepository.PostsByAuthor(text, p - 1, PageSize);
+                    TotalPosts = blogRepository.TotalPostsByAuthor(text);
                 break;
                
             }

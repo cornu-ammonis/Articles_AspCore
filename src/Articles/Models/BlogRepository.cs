@@ -33,6 +33,7 @@ namespace Articles.Models
                  orderby p.PostedOn descending
                  select p)
                 .Skip(pageNo * pageSize).Take(pageSize)
+                .Include<Post, BlogUser>(p => p.Author)
                 .Include<Post, Category>(p => p.Category)
                 .Include<Post, List<PostTag>>(p => p.PostTags)
                 .ThenInclude(posttag => posttag.Tag);
@@ -58,6 +59,7 @@ namespace Articles.Models
                  orderby p.PostedOn descending
                  select p)
                  .Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, BlogUser>(p => p.Author)
                  .Include<Post, Category>(p => p.Category)
                 .Include<Post, List<PostTag>>(p => p.PostTags)
                 .ThenInclude(posttag => posttag.Tag); 
@@ -81,6 +83,7 @@ namespace Articles.Models
                  orderby p.PostedOn descending
                  select p)
                  .Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, BlogUser>(p => p.Author)
                   .Include<Post, Category>(p => p.Category)
                 .Include<Post, List<PostTag>>(p => p.PostTags)
                 .ThenInclude(posttag => posttag.Tag);
@@ -104,6 +107,7 @@ namespace Articles.Models
                  orderby p.PostedOn descending
                  select p)
                  .Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, BlogUser>(p => p.Author)
                  .Include<Post, Category>(p => p.Category)
                 .Include<Post, List<PostTag>>(p => p.PostTags)
                 .ThenInclude(posttag => posttag.Tag);
@@ -187,6 +191,7 @@ namespace Articles.Models
                  p.Category.CategoryBlogUsers.Any(c => c.BlogUser.user_name == user_name)
                  orderby p.PostedOn descending
                  select p).Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, BlogUser>(p => p.Author)
                  .Include<Post, Category>(p => p.Category)
                 .Include<Post, List<PostTag>>(p => p.PostTags)
                 .ThenInclude(posttag => posttag.Tag);
@@ -280,7 +285,9 @@ namespace Articles.Models
                  where p.Published == true &&
                  user.BlogUserPosts.Any(c => c.PostId == p.PostId)
                  orderby p.PostedOn descending
-                 select p).Skip(pageNo * pageSize).Take(pageSize).Include<Post, Category>(p => p.Category)
+                 select p).Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, BlogUser>(p => p.Author)
+                 .Include<Post, Category>(p => p.Category)
                   .Include(p => p.PostTags)
                  .ThenInclude(posttag => posttag.Tag);
 
@@ -339,6 +346,43 @@ namespace Articles.Models
             {
                 return false;
             }
+        }
+
+        public IList<Post> PostsByAuthor(string user_name, int pageNo, int pageSize)
+        {
+            List<Post> return_posts = new List<Post>();
+            IEnumerable<Post> p_query = 
+                (from p in db.Posts
+                where p.Published == true &&
+                p.Author.user_name == user_name
+                orderby p.PostedOn descending
+                select p).Skip(pageNo * pageSize).Take(pageSize)
+                .Include<Post, BlogUser>(p => p.Author)
+                .Include<Post, Category>(p => p.Category)
+                  .Include(p => p.PostTags)
+                 .ThenInclude(posttag => posttag.Tag);
+
+            foreach(Post post in p_query)
+            {
+                return_posts.Add(post);
+            }
+            return return_posts;
+        }
+
+        public int TotalPostsByAuthor(string user_name)
+        {
+            int total = 0;
+            IEnumerable<Post> p_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 p.Author.user_name == user_name
+                 select p);
+
+            foreach(Post post in p_query)
+            {
+                total = total + 1;
+            }
+            return total;
         }
         
         public int TotalPosts(bool checkIsPublished = true)
@@ -453,6 +497,7 @@ namespace Articles.Models
                post = (from p in db.Posts
                                   where p.PostedOn.Year == year && p.PostedOn.Month == month && p.UrlSlug.Equals(titleSlug)
                                   select p)
+                                  .Include<Post, BlogUser>(p => p.Author)
                                  .Include<Post, Category>(p => p.Category)
                                  .Include<Post, List<PostTag>>(p => p.PostTags)
                                  .ThenInclude(posttag => posttag.Tag)

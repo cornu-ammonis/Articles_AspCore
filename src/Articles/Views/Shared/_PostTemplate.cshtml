@@ -16,6 +16,8 @@
 
             <!--Category-->
             <div class="post-category">
+                <span>Author:</span> <a asp-action="PostsByAuthor" asp-controller="Blog"
+                                        asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a> 
              Category:  <a asp-action="Category" asp-controller="Blog" asp-route-category=@Model.Category.UrlSlug>@Model.Category.Name</a> 
             </div>
 
