@@ -82,33 +82,33 @@ namespace Articles.Data
 
             Category seed_cat = new Category();
             seed_cat.Description = "A category crrated for seeding";
-            seed_cat.Name = "category 1";
-            seed_cat.UrlSlug = "slug_one";
+            seed_cat.Name = "Conventions";
+            seed_cat.UrlSlug = "con";
             context.Categories.Add(seed_cat);
 
             Category second_seed_category = new Category();
             second_seed_category.Description = "a second category for fewer posts";
-            second_seed_category.Name ="category 2";
-            second_seed_category.UrlSlug = "seed_two";
+            second_seed_category.Name ="Anime";
+            second_seed_category.UrlSlug = "anime";
             context.Categories.Add(second_seed_category);
 
             Category third_seed_category = new Category();
             third_seed_category.Description = "third category for seed";
-            third_seed_category.Name = "category 3";
-            third_seed_category.UrlSlug = "seed_category_three";
+            third_seed_category.Name = "Image Galleries";
+            third_seed_category.UrlSlug = "image_galleries";
             context.Categories.Add(third_seed_category);
 
             Category fourth_seed_category = new Category();
             fourth_seed_category.Description = "category 4";
-            fourth_seed_category.Name = "category 4";
-            fourth_seed_category.UrlSlug = "seed_category_four";
+            fourth_seed_category.Name = "Game Reviews";
+            fourth_seed_category.UrlSlug = "game_reviews";
             context.Categories.Add(fourth_seed_category);
 
 
             Category fifth_seed_category = new Category();
             fifth_seed_category.Description = "category 5";
-            fifth_seed_category.Name = "category 5";
-            fifth_seed_category.UrlSlug = "seed_category_five";
+            fifth_seed_category.Name = "Videos";
+            fifth_seed_category.UrlSlug = "videos";
             context.Categories.Add(fifth_seed_category);
 
             Tag seed_tag = new Tag();
