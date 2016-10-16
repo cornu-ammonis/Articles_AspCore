@@ -40,6 +40,10 @@ namespace Articles.Models
             }
             switch(type)
             {
+                case "Subscribed":
+                    Posts = blogRepository.SubscribedPostsForUser(user_name, p - 1, PageSize);
+                    TotalPosts = blogRepository.TotalSubscribedPostsForUser(user_name);
+                    break;
                 case "Custom":
                     Posts = blogRepository.PostsForUser(user_name, p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsForUser(user_name);
@@ -54,30 +58,8 @@ namespace Articles.Models
                     break;
             }
            
-            //this code creates a dictionary of <post.urlslug, bool> representing whether each post 
-            // is saved by the current user. 
-           if (user_name != null)
-            {
-                SaveUnsave = true;
-                BlogUser user = blogRepository.RetrieveUser(user_name);
-                IsSaved = new Dictionary<string, bool>();
-                foreach (Post post in Posts)
-                {
-                    if (user.BlogUserPosts.Any(c => c.PostId == post.PostId))
-                    {
-                        IsSaved[post.UrlSlug] = true;
-                    }
-                    else
-                    {
-                        IsSaved[post.UrlSlug] = false;
-                    }
-                }
-            }
-           else
-            {
-                SaveUnsave = false;
-            }
-        }
+           
+        } 
 
 
         //used for generating a list of posts either by tag, category, or search term, the instance of which is specified by 
@@ -112,31 +94,14 @@ namespace Articles.Models
                     Posts = blogRepository.PostsForSearch(text, p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsForSearch(text);
                     Search = text;
+                    break;
+                case "Author":
+                    Posts = blogRepository.PostsByAuthor(text, p - 1, PageSize);
+                    TotalPosts = blogRepository.TotalPostsByAuthor(text);
                 break;
                
             }
-
-            if (user_name != null)
-            {
-                SaveUnsave = true;
-                BlogUser user = blogRepository.RetrieveUser(user_name);
-                IsSaved = new Dictionary<string, bool>();
-                foreach (Post post in Posts)
-                {
-                    if (user.BlogUserPosts.Any(c => c.PostId == post.PostId))
-                    {
-                        IsSaved[post.UrlSlug] = true;
-                    }
-                    else
-                    {
-                        IsSaved[post.UrlSlug] = false;
-                    }
-                }
-            }
-            else
-            {
-                SaveUnsave = false;
-            }
+           
         }
 
 
@@ -146,8 +111,7 @@ namespace Articles.Models
         public Category Category { get; private set; }
         public Tag Tag { get; private set; }
         public string Search { get; private set; }
-        public IDictionary<string, bool> IsSaved { get; private set; }
-        public bool SaveUnsave { get; private set; }
+       
 
 
     }

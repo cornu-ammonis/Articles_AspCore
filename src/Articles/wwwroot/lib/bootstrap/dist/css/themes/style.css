@@ -4,7 +4,7 @@ body
 { font-family: "lucida sans", arial, sans-serif;
   padding: 0px;
   margin: 0px;
-  font-size: .78em;
+  font-size: .75em;
   background: #090708 !important;
   color: #5D5D5D; }
 
@@ -193,14 +193,18 @@ ul#menu li a:hover
 { text-align: center; }
 
 #sidebars
-{ float: right; }
+{ float: right; 
+  box-sizing: content-box;
+}
 
 .sidebar
 { width: 200px;
-  padding: 0 15px 20px 15px; }
+  padding: 0 15px 20px 15px; 
+  box-sizing: content-box;
+}
  
 .sidebar h3
-{ margin-left: 20px; font-size: 150%; }
+{ margin-left: 20px; font-size: 150%; box-sizing:content-box;}
 
 .sidebar ul
 { width: 178px; 

@@ -5,44 +5,76 @@
 }
 
 <h2>Customize</h2>
-
-<form asp-action="Customize">
-    <div class="form-horizontal">
-        <h4>CustomizeViewModel</h4>
-        <hr />
-        <div asp-validation-summary="All" class="text-danger"></div>
-      
-        @foreach (var key in Model.categories.Keys)
-            {
-            <div class="form-group">
-              
-               
-                    
-                       
-                    
-                 
-                        <input asp-for="categories[key]" class="form-control" />
-                        <label asp-for="categories[key]"> @Model.category_names[key] @Model.category_counts[key]</label>
-                
-
-            </div>
-        } 
-
+<div id="content">
+    <form asp-action="Customize" class="form-horizontal">
         <div class="form-group">
-            <input asp-for="user_page_size" type="number" />
-            <label asp-for="user_page_size">Posts per page</label>
-        </div>
-        
-         <div class="form-group">
+            <h4>Customize Your Feeds</h4>
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <h3>Custom Feed (filter by category)</h3>
+          
+            
+                    @foreach (var key in Model.categories.Keys)
+                    {
+                        <div class="form-horizontal">
+                            <div class="form-group">
+
+                                <div id="customization">
+
+
+                                    <div class="col-sm-1">
+                                        <input asp-for="categories[key]" class="form-control" />
+                                    </div>
+                                    <label asp-for="categories[key]" class="control-label col-sm-2"> @Model.category_names[key]    </label>
+
+                                    <label class="control-label col-sm-2 ">@Model.category_counts[key]</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+             
+            
+            <h3>Subscribed Feed (filter by author)</h3>
            
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                @foreach (var key in Model.subscribed_authors.Keys)
+                {
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-1 col-sm-push-0">
+                                <input asp-for="subscribed_authors[key]" type="checkbox" class="form-control" />
+                            </div>
+                                <label asp-for="subscribed_authors[key]" class="control-label col-sm-2">@key </label>
+                           
+                            
+
+                            <label class="control-label  col-sm-2 ">@Model.author_counts[key]</label>
+
+
+
+
+
+
+
+                        </div>
+                        </div>
+                        }
+                    
+            <div class="form-group">
+                <input asp-for="user_page_size" type="number" />
+                <label asp-for="user_page_size" class="control-label col-md-2">Posts per page</label>
+            </div>
+
+            <div class="form-group">
+
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
             </div>
         </div>
+    </form>
+
+    <div>
+        <a asp-action="CustomPosts" asp-controller="Blog">Back to your custom feed</a>
     </div>
-</form>
-
-<div>
-    <a asp-action="CustomPosts" asp-controller="Blog">Back to your custom feed</a>
 </div>
-

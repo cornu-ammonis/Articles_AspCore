@@ -41,6 +41,8 @@
             <div class="row">
 
                 <div class="post-category">
+                    <span>Author:</span> <a asp-action="PostsByAuthor" asp-controller="Blog" 
+                                            asp-route-author=@Model.Author.user_name>@Model.Author.user_name </a>  
                     <span>Category:</span> <a asp-action="Category" asp-controller="Blog" 
                                               asp-route-category=@Model.Category.UrlSlug>@Model.Category.Name</a>
                 </div>
@@ -48,18 +50,7 @@
                 <div class="post-tags">
                     <span>Tags:</span> @Html.Partial("_PostTags", Model.PostTags)
                     &nbsp
-                    @if (ViewBag.Saved == true)
-                    {
-                        <a asp-action="UnsavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
-                           asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Unsave Post</b></a>
-
-                    }
-                    else
-                    {
-                        <a asp-action="SavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
-                           asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Save Post</b></a>
-
-                    }
+                    @await Component.InvokeAsync("Save", new { post = Model})
                     
                 </div>
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Articles.Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,6 +50,22 @@ namespace Articles.Models.BlogViewModels
                 */
                 category_names[category.UrlSlug] = category.Name; 
             }
+
+            IList<BlogUser> all_authors = _blogRepository.AllAuthors();
+            BlogUser current_user = _blogRepository.RetrieveUser(user_name);
+            subscribed_authors = new Dictionary<string, bool>();
+            author_counts = _blogRepository.AuthorPostCounts(all_authors);
+            foreach (BlogUser author in all_authors)
+            {
+                if(current_user.SubscribedAuthors.Any(c => c.user_name == author.user_name))
+                {
+                    subscribed_authors[author.user_name] = true;
+                }
+                else
+                {
+                    subscribed_authors[author.user_name] = false;
+                }
+            }
         }
 
        
@@ -58,5 +75,7 @@ namespace Articles.Models.BlogViewModels
         public int user_page_size { get; set; }
         //used for converting from url slug to name in view 
         public IDictionary<string, string> category_names { get; set; }
+        public IDictionary<string, bool> subscribed_authors { get; set; }
+        public IDictionary<string, string> author_counts { get; set; }
     }
 }

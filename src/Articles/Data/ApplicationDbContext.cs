@@ -61,6 +61,11 @@ namespace Articles.Data
                 .WithMany(b => b.CategoryBlogUsers)
                 .HasForeignKey(cb => cb.BlogUserId);
 
+            builder.Entity<Post>()
+                .HasOne(p => p.Author)
+                .WithMany(bu => bu.AuthoredPosts);
+
+           
             
          
         }
@@ -77,33 +82,33 @@ namespace Articles.Data
 
             Category seed_cat = new Category();
             seed_cat.Description = "A category crrated for seeding";
-            seed_cat.Name = "category 1";
-            seed_cat.UrlSlug = "slug_one";
+            seed_cat.Name = "Conventions";
+            seed_cat.UrlSlug = "con";
             context.Categories.Add(seed_cat);
 
             Category second_seed_category = new Category();
             second_seed_category.Description = "a second category for fewer posts";
-            second_seed_category.Name ="category 2";
-            second_seed_category.UrlSlug = "seed_two";
+            second_seed_category.Name ="Anime";
+            second_seed_category.UrlSlug = "anime";
             context.Categories.Add(second_seed_category);
 
             Category third_seed_category = new Category();
             third_seed_category.Description = "third category for seed";
-            third_seed_category.Name = "category 3";
-            third_seed_category.UrlSlug = "seed_category_three";
+            third_seed_category.Name = "Image Galleries";
+            third_seed_category.UrlSlug = "image_galleries";
             context.Categories.Add(third_seed_category);
 
             Category fourth_seed_category = new Category();
             fourth_seed_category.Description = "category 4";
-            fourth_seed_category.Name = "category 4";
-            fourth_seed_category.UrlSlug = "seed_category_four";
+            fourth_seed_category.Name = "Game Reviews";
+            fourth_seed_category.UrlSlug = "game_reviews";
             context.Categories.Add(fourth_seed_category);
 
 
             Category fifth_seed_category = new Category();
             fifth_seed_category.Description = "category 5";
-            fifth_seed_category.Name = "category 5";
-            fifth_seed_category.UrlSlug = "seed_category_five";
+            fifth_seed_category.Name = "Videos";
+            fifth_seed_category.UrlSlug = "videos";
             context.Categories.Add(fifth_seed_category);
 
             Tag seed_tag = new Tag();
@@ -133,7 +138,19 @@ namespace Articles.Data
             context.Tags.Add(seed_tag_2);
             context.Tags.Add(seed_tag_3);
 
+            BlogUser user1 = new BlogUser();
+            user1.user_name = "admin@gmail.com";
+            user1.CategoryBlogUsers = new List<CategoryBlogUser>();
+            user1.AuthoredPosts = new List<Post>();
 
+            BlogUser user2 = new BlogUser();
+            user2.user_name = "admin2@gmail.com";
+            user2.CategoryBlogUsers = new List<CategoryBlogUser>();
+            user2.AuthoredPosts = new List<Post>();
+
+           
+           // context.Update(user1);
+            //context.Update(user2);
 
             string generic_short_description = "<p> There are a handful of conventions that seem to stand out above all of the rest. People who are interested in knowing about t.v. shows and movies that will be released over the next year usually pay attention to New York Comicon. People who are interested in video game news look to the Pax conventions eagerly waiting to hear about announcements pertaining to their favorite franchises. However cosplayers wait all year to show case their newest cosplays at Dragoncon. It doesn’t matter if you are looking for panels to teach you how to create a new prop or believe you have what it takes to win a cosplay contest Dragoncon has exactly what you are looking for. <p>";
             string generic_description = generic_short_description + "<p> this is a second paragraph which will only display with the full post";
@@ -161,23 +178,29 @@ namespace Articles.Data
 
                 if (i < 12)
                 {
+                   
                     post.Category = seed_cat;
+                    user1.AuthoredPosts.Add(post);
                 }
                 else if (i < 20)
                 {
                     post.Category = second_seed_category;
+                    user2.AuthoredPosts.Add(post);
                 }
                 else if(i < 32)
                 {
                     post.Category = third_seed_category;
+                    user2.AuthoredPosts.Add(post);
                 }
                 else if(i < 38) {
 
                     post.Category = fourth_seed_category;
+                    user2.AuthoredPosts.Add(post);
                 }
                 else
                 {
                     post.Category = fifth_seed_category;
+                    user2.AuthoredPosts.Add(post);
                 }
                 
 
@@ -191,10 +214,11 @@ namespace Articles.Data
             }
 
 
-          
 
 
-        context.SaveChanges();
+            context.BlogUser.Add(user1);
+            context.BlogUser.Add(user2);
+            context.SaveChanges();
         }
     }
 

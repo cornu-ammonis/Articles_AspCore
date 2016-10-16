@@ -4,7 +4,7 @@ body
 { font-family: "lucida sans", arial, sans-serif;
   padding: 0px;
   margin: 0px;
-  font-size: .78em;
+  font-size: 1.2em;
   background: #090708 !important;
   color: #5D5D5D; }
 
@@ -12,6 +12,10 @@ p
 { margin: 0px;
   padding: 0px 0px 16px 0px;
   line-height: 1.7em; }
+
+#customization {
+    text-align: left;
+}
 
 h1, h2, h3, h4, h5, h6 
 { font: normal 179% 'century gothic', arial, sans-serif;
@@ -193,7 +197,9 @@ ul#menu li a:hover
 { text-align: center; }
 
 #sidebars
-{ float: right; }
+{ float: right;
+  box-sizing:content-box;
+}
 
 .sidebar
 { width: 200px;

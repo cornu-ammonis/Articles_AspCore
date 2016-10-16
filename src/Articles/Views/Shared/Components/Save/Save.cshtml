@@ -1,0 +1,4 @@
+﻿@model Articles.Models.Post
+
+<a asp-action="SavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+   asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Save Post </b></a>

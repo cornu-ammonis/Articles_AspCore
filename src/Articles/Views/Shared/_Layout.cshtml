@@ -7,12 +7,14 @@
     <title>@ViewBag.Title</title>
 
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
-    <script src="@Url.Content("~/Scripts/app.js")"></script>
+     <!-- <script src="Url.Content("~/Scripts/app.js")"></script>
 
-    <!-- Stylesheets -->
+   Stylesheets -->
+    <link rel="stylesheet" type="text/css"
+          href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.css")" />
     <link rel="stylesheet" type="text/css"
           href="@Url.Content("~/lib/bootstrap/dist/css/themes/simple/style.css")" />
-
+    
     
 </head>
 
@@ -36,6 +38,7 @@
                 <ul id="menu">
                     <li><a asp-action="Posts" asp-controller="Blog">Posts</a></li>
                     <li> <a asp-action="CustomPosts" asp-controller="Blog">Custom Feed</a> </li>
+                    <li><a asp-action="Subscribed" asp-controller="Blog">Subscribed Posts</a></li>
                     <li><a asp-action="SavedPosts" asp-controller="Blog">Saved Posts</a></li>
                     <li><a asp-action="Customize" asp-controller="Blog">Account Settings</a></li>
                  
