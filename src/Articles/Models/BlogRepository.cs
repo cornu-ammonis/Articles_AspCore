@@ -427,6 +427,32 @@ namespace Articles.Models
             return authors;
         }
 
+       public IDictionary<string, string> AuthorPostCounts()
+        {
+            int count;
+            IList<BlogUser> AllAuthors = this.AllAuthors();
+            Dictionary<string, string> AuthorCounts = new Dictionary<string, string>();
+            foreach (BlogUser author in AllAuthors)
+            {
+                count = this.TotalPostsByAuthor(author.user_name);
+                AuthorCounts[author.user_name] = String.Format("({0} posts)", count);
+
+            }
+            return AuthorCounts;
+        }
+
+        public IDictionary<string, string> AuthorPostCounts(IList<BlogUser> AllAuthors)
+        {
+            int count;
+            Dictionary<string, string> AuthorCounts = new Dictionary<string, string>();
+            foreach (BlogUser author in AllAuthors)
+            {
+                count = this.TotalPostsByAuthor(author.user_name);
+                AuthorCounts[author.user_name] = String.Format("({0} posts)", count);
+
+            }
+            return AuthorCounts;
+        }
 
         public bool CheckIfSaved(Post post, string username)
         {

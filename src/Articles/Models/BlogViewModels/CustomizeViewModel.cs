@@ -54,6 +54,7 @@ namespace Articles.Models.BlogViewModels
             IList<BlogUser> all_authors = _blogRepository.AllAuthors();
             BlogUser current_user = _blogRepository.RetrieveUser(user_name);
             subscribed_authors = new Dictionary<string, bool>();
+            author_counts = _blogRepository.AuthorPostCounts(all_authors);
             foreach (BlogUser author in all_authors)
             {
                 if(current_user.SubscribedAuthors.Any(c => c.user_name == author.user_name))
@@ -75,5 +76,6 @@ namespace Articles.Models.BlogViewModels
         //used for converting from url slug to name in view 
         public IDictionary<string, string> category_names { get; set; }
         public IDictionary<string, bool> subscribed_authors { get; set; }
+        public IDictionary<string, string> author_counts { get; set; }
     }
 }

@@ -91,7 +91,8 @@ namespace Articles.Controllers
                 string active_user = User.Identity.Name;
                 var viewModel = new ListViewModel(_blogRepository, author, "Author", p, active_user );
                 ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
-                ViewBag.SaveUnsave = false;
+                ViewBag.SaveUnsave = true;
+                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
                 return View("List", viewModel);
             }
             else
@@ -312,6 +313,10 @@ namespace Articles.Controllers
             return View(post);
         }
 
+        //this causes a bug where if a user presses save and is not logged in, they will be redirected to 
+        //the login page due to authorize decorator, which will redirect them back to this action upon login
+        // -- this action will save the post, but then redirect the user back to the login page with no indication
+        //that they have either logged in successfully or saved the post, when in fact both have happened.
         [Authorize]
         public IActionResult SavePost(int year, int month, string ti)
         {
