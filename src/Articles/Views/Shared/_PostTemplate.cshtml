@@ -27,28 +27,7 @@
                     <a asp-action="Tag" asp-controller="Blog" asp-route-tag=@pt.Tag.UrlSlug> @pt.Tag.Name</a>
                 }  </span>
                 &nbsp
-                @if(ViewBag.SaveUnsave)
-                {
-                    if(ViewBag.SaveUnsaveDict[Model.UrlSlug])
-                    {
-                        <a asp-action="UnsavePost" asp-controller="Blog"  asp-route-year=@Model.PostedOn.Year
-                   asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Unsave Post </b></a>
-
-                    }
-                    else
-                    {
-
-                        <a asp-action="SavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
-                           asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Save Post </b></a>
-                    }
-
-                }
-                else
-                {
-                    <a asp-action="SavePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
-                       asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Save Post </b></a>
-
-                }
+               @await Component.InvokeAsync("Save", new { post = Model })
                
             </div>
 

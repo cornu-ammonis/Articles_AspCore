@@ -43,13 +43,12 @@ namespace Articles.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 viewModel = new ListViewModel(_blogRepository, p, "All", User.Identity.Name);
-                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
-                ViewBag.SaveUnsave = true;
+                
             }
             else
             {
                 viewModel = new ListViewModel(_blogRepository, p, "All");
-                ViewBag.SaveUnsave = false;
+                
             }
             
             ViewBag.Title = "Latest Posts";
@@ -70,8 +69,6 @@ namespace Articles.Controllers
 
                 var viewModel = new ListViewModel(_blogRepository, p, "Custom", user_name);
                 ViewBag.Title = String.Format(@"{0} posts found for user {1} ", viewModel.TotalPosts, user_name);
-                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
-                ViewBag.SaveUnsave = true;
                 return View("List", viewModel);
             }
         }
@@ -91,15 +88,12 @@ namespace Articles.Controllers
                 string active_user = User.Identity.Name;
                 var viewModel = new ListViewModel(_blogRepository, author, "Author", p, active_user );
                 ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
-                ViewBag.SaveUnsave = true;
-                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
                 return View("List", viewModel);
             }
             else
             {
                 var viewModel = new ListViewModel(_blogRepository, author, "Author", p);
                 ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
-                ViewBag.SaveUnsave = false;
                 return View("List", viewModel);
             }
         }
@@ -110,8 +104,6 @@ namespace Articles.Controllers
 
             string current_username = User.Identity.Name;
             var viewModel = new ListViewModel(_blogRepository, p, "Subscribed", current_username);
-            ViewBag.SaveUnsave = true;
-            ViewBag.SaveUnsaveDict = viewModel.IsSaved;
             ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes", 
                 viewModel.TotalPosts, current_username);
             return View("List", viewModel);
@@ -163,16 +155,12 @@ namespace Articles.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 viewModel = new ListViewModel(_blogRepository, category, "Category", p, User.Identity.Name);
-                //dictionary of type <string, bool>; key is post.urlSlug, value is whether it has been saved by current user
-                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
-                //tells the view to toggle save/unsave button; only possible if user is authenticated and 
-                // ViewBag.SaveUnsaveDict exists 
-                ViewBag.SaveUnsave = true;
+                
             }
             else
             {
                 viewModel = new ListViewModel(_blogRepository, category, "Category", p);
-                //tells view not to toggle save/unsave button; dict doesnt exist 
+             
                 ViewBag.SaveUnsave = false;
             }
 
@@ -194,18 +182,11 @@ namespace Articles.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 viewModel = new ListViewModel(_blogRepository, tag, "Tag", p, User.Identity.Name);
-
-                //dictionary of type <string, bool>; key is post.urlSlug, value is whether it has been saved by current user
-                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
-                //tells view to toggle save unsave; dict exists
-                ViewBag.SaveUnsave = true;
+                
             }
             else
             {
                 viewModel = new ListViewModel(_blogRepository, tag, "Tag", p);
-               
-                //tells view not to toggle save/unsave; dict doesnt exist
-                ViewBag.SaveUnsave = false;
             }
 
 
@@ -225,18 +206,10 @@ namespace Articles.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 viewModel = new ListViewModel(_blogRepository, s, "Search", p, User.Identity.Name);
-               
-                //dictionary of type <string, bool>; key is post.urlSlug, value is whether it has been saved by current user
-                ViewBag.SaveUnsaveDict = viewModel.IsSaved;
-                //tells view to toggle save unsave; dict exists
-                ViewBag.SaveUnsave = true;
             }
             else
             {
                 viewModel = new ListViewModel(_blogRepository, s, "Search", p);
-
-                //tells view not to toggle save/unsave; dict doesnt exist
-                ViewBag.SaveUnsave = false;
             }
 
 
@@ -302,14 +275,7 @@ namespace Articles.Controllers
                 }
             }
 
-            ViewBag.Saved = false;
-            if (User.Identity.IsAuthenticated)
-            {
-                if(_blogRepository.CheckIfSaved(post, User.Identity.Name))
-                {
-                    ViewBag.Saved = true;
-                }
-            }
+           
             return View(post);
         }
 
@@ -317,6 +283,8 @@ namespace Articles.Controllers
         //the login page due to authorize decorator, which will redirect them back to this action upon login
         // -- this action will save the post, but then redirect the user back to the login page with no indication
         //that they have either logged in successfully or saved the post, when in fact both have happened.
+        //ultimately this functionality should be implemented with AJAX, which will eliminate the need for 
+        //redirects 
         [Authorize]
         public IActionResult SavePost(int year, int month, string ti)
         {
@@ -345,15 +313,6 @@ namespace Articles.Controllers
 
                 var viewModel = new ListViewModel(_blogRepository, p, "Saved", user_name);
                 ViewBag.Title = String.Format(@"{0} posts saved for user {1} ", viewModel.TotalPosts, user_name);
-                if (viewModel.SaveUnsave)
-                {
-                    ViewBag.SaveUnsaveDict = viewModel.IsSaved;
-                    ViewBag.SaveUnsave = true;
-                }
-                else
-                {
-                    ViewBag.SaveUnsave = false;
-                }
                 return View("List", viewModel);
             }
 
