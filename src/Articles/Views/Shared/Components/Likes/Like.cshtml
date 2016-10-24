@@ -1,0 +1,4 @@
+﻿@model Articles.Models.Post
+
+<a asp-action="LikePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+   asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug><b>Like Post </b></a>

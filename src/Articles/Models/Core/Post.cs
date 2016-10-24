@@ -48,5 +48,8 @@ namespace Articles.Models
         public virtual BlogUser Author
         { get; set; }
 
+        public int LikeCount
+        { get; set; } = 0;
+
     }
 }

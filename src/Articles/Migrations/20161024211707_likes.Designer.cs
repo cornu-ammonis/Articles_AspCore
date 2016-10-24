@@ -8,9 +8,10 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161024211707_likes")]
+    partial class likes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -89,8 +90,6 @@ namespace Articles.Migrations
 
                     b.Property<int?>("BlogUserId");
 
-                    b.Property<int?>("BlogUserId1");
-
                     b.Property<int?>("CategoryId");
 
                     b.Property<string>("Description");
@@ -114,8 +113,6 @@ namespace Articles.Migrations
                     b.HasIndex("AuthorBlogUserId");
 
                     b.HasIndex("BlogUserId");
-
-                    b.HasIndex("BlogUserId1");
 
                     b.HasIndex("CategoryId");
 
@@ -351,10 +348,6 @@ namespace Articles.Migrations
                     b.HasOne("Articles.Models.Core.BlogUser")
                         .WithMany("BlogUserPosts")
                         .HasForeignKey("BlogUserId");
-
-                    b.HasOne("Articles.Models.Core.BlogUser")
-                        .WithMany("LikedPosts")
-                        .HasForeignKey("BlogUserId1");
 
                     b.HasOne("Articles.Models.Category", "Category")
                         .WithMany("Posts")

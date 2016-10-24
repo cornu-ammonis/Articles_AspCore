@@ -333,5 +333,19 @@ namespace Articles.Controllers
             _blogRepository.UnsubscribeAuthor(user_name, authorname);
             return Redirect(Request.Headers["Referer"].ToString());
         }
+
+        [Authorize]
+        public IActionResult LikePost(int year, int month, string ti)
+        {
+            _blogRepository.LikePostForUser( year, month, ti, User.Identity.Name);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        [Authorize]
+        public IActionResult UnlikePost(int year, int month, string ti)
+        {
+            _blogRepository.UnlikePostForUser(year, month, ti, User.Identity.Name);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
     }
 }
