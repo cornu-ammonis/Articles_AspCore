@@ -38,6 +38,11 @@ namespace Articles.Models
         void UnsavePostForUser(int year, int month, string titleSlug, string user_name);
          IList<Post> PostsUserSaved(string username, int pageNo, int pageSize);
 
+        void SubscribeAuthor(string user_name, string author_name);
+        void UnsubscribeAuthor(string user_name, string author_name);
+        bool CheckIfSubscribed(string user_name, string author_name);
+        //bool CheckIfSubscribed(string user_name, BlogUser author);
+
         IList<Post> SubscribedPostsForUser(string user_name, int pageNo, int pageSize);
         int TotalSubscribedPostsForUser(string user_name);
         int TotalPostsUserSaved(string username);

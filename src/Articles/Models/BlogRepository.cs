@@ -401,10 +401,52 @@ namespace Articles.Models
             return total;
         }
 
+        public void SubscribeAuthor(string user_name, string author_name)
+        {
+            BlogUser user = this.RetrieveUser(user_name);
+            BlogUser author = this.RetrieveUser(author_name);
+           
+            if(user.SubscribedAuthors.Any(c => c == author) == false)
+            {
+                db.Update(user);
+                db.Update(author);
+                user.SubscribedAuthors.Add(author);
+                db.SaveChanges();
+            }
+        }
+        public void UnsubscribeAuthor(string user_name, string author_name)
+        {
+            BlogUser user = this.RetrieveUser(user_name);
+            BlogUser author = this.RetrieveUser(author_name);
+
+            if(user.SubscribedAuthors.Any(u => u == author) == true)
+            {
+                db.Update(user);
+                db.Update(author);
+                user.SubscribedAuthors.Remove(author);
+                db.SaveChanges();
+            }
+        }
+
+        public bool CheckIfSubscribed(string user_name, string author_name)
+        {
+            BlogUser user = this.RetrieveUser(user_name);
+            if(user.SubscribedAuthors.Any(u => u.user_name == author_name))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+
+        }
+
         public BlogUser RetrieveUser(string username)
         {
             BlogUser user = db.BlogUser
-            .Include<BlogUser, List<BlogUser>>(u => u.SubscribedAuthors)
+             .Include<BlogUser, List<BlogUser>>(u => u.SubscribedAuthors)
              .Include<BlogUser, List<Post>>(u => u.BlogUserPosts)
              .SingleOrDefault(u => u.user_name == username);
             return user;

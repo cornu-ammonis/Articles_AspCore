@@ -16,8 +16,7 @@
 
             <!--Category-->
             <div class="post-category">
-                <span>Author:</span> <a asp-action="PostsByAuthor" asp-controller="Blog"
-                                        asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a> 
+                
              Category:  <a asp-action="Category" asp-controller="Blog" asp-route-category=@Model.Category.UrlSlug>@Model.Category.Name</a> 
             </div>
 
@@ -27,6 +26,10 @@
                     <a asp-action="Tag" asp-controller="Blog" asp-route-tag=@pt.Tag.UrlSlug> @pt.Tag.Name</a>
                 }  </span>
                 &nbsp
+                
+              
+               
+                &nbsp
                @await Component.InvokeAsync("Save", new { post = Model })
                
             </div>
@@ -35,6 +38,12 @@
             <div class="posted-date">
                 @Model.PostedOn
             </div>
+
+        </div>
+        <div class="row">
+            <span>Author:</span> <a asp-action="PostsByAuthor" asp-controller="Blog"
+                                    asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a> 
+            @await Component.InvokeAsync("Subscribe", new { author = Model.Author })
 
         </div>
 

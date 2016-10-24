@@ -33,7 +33,7 @@ namespace Articles.Controllers
         //returns a list of all posts. parameter p is provided as a query string and represents the current page, used by 
         // pagination / repository methods to pull the correct posts from the database. if the user is authenticated, their customized page 
         //size will be used, defaulting to 10 either if user is not authenticaed or user has not submitted custom page size.
-        public ViewResult Posts(int p = 1)
+        public IActionResult Posts(int p = 1)
         {
             //these were replaced by the viewmodel, which now handles generation of posts and total posts 
             // var posts = _blogRepository.Posts(p - 1, 10);
@@ -316,6 +316,22 @@ namespace Articles.Controllers
                 return View("List", viewModel);
             }
 
+        }
+
+        [Authorize]
+        public IActionResult Subscribe(string authorname)
+        {
+            string user_name = User.Identity.Name;
+            _blogRepository.SubscribeAuthor(user_name, authorname);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        [Authorize]
+        public IActionResult Unsubscribe(string authorname)
+        {
+            string user_name = User.Identity.Name;
+            _blogRepository.UnsubscribeAuthor(user_name, authorname);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
     }
 }
