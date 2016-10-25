@@ -11,6 +11,9 @@ namespace Articles.Models
 {
    public interface IBlogRepository
     {
+
+        BlogUser GenerateUser(string user_name);
+        
         //returns posts ordered by PostedOn descending and selected by pagination values
         IList<Post> Posts(int pageNo, int pageSize);
         int TotalPosts( bool checkIsPublished = true);

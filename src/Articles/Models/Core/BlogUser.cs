@@ -18,5 +18,9 @@ namespace Articles.Models.Core
         public List<BlogUser> SubscribedAuthors { get; set; }
         public List<PostUserSave> PostUserSaves { get; set; }
         public List<PostUserLike> PostUserLikes { get; set; }
+        //junction table from user --> author direction
+        public List<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
+        //junctino table from author --> user direction
+        public List<UserAuthorSubscribe> AuthorUserSubscribes { get; set; }
     }
 }

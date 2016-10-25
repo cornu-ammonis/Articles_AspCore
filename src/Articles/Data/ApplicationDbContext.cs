@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Articles.Models;
 using Articles.Models.Core;
 using Microsoft.AspNetCore.Identity;
-
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Articles.Data
 {
@@ -25,6 +25,7 @@ namespace Articles.Data
         public DbSet<CategoryBlogUser> CategoryBlogUser { get; set; }
         public DbSet<PostUserSave> PostUserSaves { get; set; }
         public DbSet<PostUserLike> PostUserLikes { get; set; }
+        public DbSet<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -93,6 +94,20 @@ namespace Articles.Data
                 .WithMany(bu => bu.PostUserLikes)
                 .HasForeignKey(pu => pu.BlogUserId);
 
+            builder.Entity<UserAuthorSubscribe>()
+                .HasKey(ua => new { ua.authorId, ua.userId });
+
+            builder.Entity<UserAuthorSubscribe>()
+                .HasOne(ua => ua.user)
+                .WithMany(ua => ua.UserAuthorSubscribes)
+                .HasForeignKey(ua => ua.userId)
+                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict; ;
+
+            builder.Entity<UserAuthorSubscribe>()
+                .HasOne(ua => ua.author)
+                .WithMany(ua => ua.AuthorUserSubscribes)
+                .HasForeignKey(ua => ua.authorId)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict; 
 
 
         }

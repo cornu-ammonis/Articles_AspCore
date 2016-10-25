@@ -8,9 +8,10 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161025003313_fknull")]
+    partial class fknull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -112,9 +113,9 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
                 {
-                    b.Property<int?>("authorId");
+                    b.Property<int>("authorId");
 
-                    b.Property<int?>("userId");
+                    b.Property<int>("userId");
 
                     b.HasKey("authorId", "userId");
 
