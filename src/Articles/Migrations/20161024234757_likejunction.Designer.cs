@@ -8,9 +8,10 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161024234757_likejunction")]
+    partial class likejunction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -92,7 +93,7 @@ namespace Articles.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("PostUserLikes");
+                    b.ToTable("PostUserLike");
                 });
 
             modelBuilder.Entity("Articles.Models.Core.PostUserSave", b =>
@@ -117,6 +118,8 @@ namespace Articles.Migrations
 
                     b.Property<int?>("AuthorBlogUserId");
 
+                    b.Property<int?>("BlogUserId");
+
                     b.Property<int?>("CategoryId");
 
                     b.Property<string>("Description");
@@ -140,6 +143,8 @@ namespace Articles.Migrations
                     b.HasKey("PostId");
 
                     b.HasIndex("AuthorBlogUserId");
+
+                    b.HasIndex("BlogUserId");
 
                     b.HasIndex("CategoryId");
 
@@ -397,6 +402,10 @@ namespace Articles.Migrations
                     b.HasOne("Articles.Models.Core.BlogUser", "Author")
                         .WithMany("AuthoredPosts")
                         .HasForeignKey("AuthorBlogUserId");
+
+                    b.HasOne("Articles.Models.Core.BlogUser")
+                        .WithMany("LikedPosts")
+                        .HasForeignKey("BlogUserId");
 
                     b.HasOne("Articles.Models.Category", "Category")
                         .WithMany("Posts")

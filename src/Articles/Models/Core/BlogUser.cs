@@ -12,9 +12,11 @@ namespace Articles.Models.Core
         public int page_size { get; set; } = 10;
         
         public List<CategoryBlogUser> CategoryBlogUsers { get; set; }
-        public List<Post> BlogUserPosts { get; set; }
+       // public List<Post> BlogUserPosts { get; set; }
         public List<Post> AuthoredPosts { get; set; }
-        public List<Post> LikedPosts { get; set; }
+       // public List<Post> LikedPosts { get; set; }
         public List<BlogUser> SubscribedAuthors { get; set; }
+        public List<PostUserSave> PostUserSaves { get; set; }
+        public List<PostUserLike> PostUserLikes { get; set; }
     }
 }

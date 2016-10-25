@@ -23,6 +23,8 @@ namespace Articles.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<BlogUser> BlogUser { get; set; }
         public DbSet<CategoryBlogUser> CategoryBlogUser { get; set; }
+        public DbSet<PostUserSave> PostUserSaves { get; set; }
+        public DbSet<PostUserLike> PostUserLikes { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -65,9 +67,34 @@ namespace Articles.Data
                 .HasOne(p => p.Author)
                 .WithMany(bu => bu.AuthoredPosts);
 
-           
-            
-         
+            builder.Entity<PostUserSave>()
+                .HasKey(pu => new { pu.PostId, pu.BlogUserId });
+
+            builder.Entity<PostUserSave>()
+                .HasOne(pu => pu.Post)
+                .WithMany(p => p.PostUserSaves)
+                .HasForeignKey(pu => pu.PostId);
+
+            builder.Entity<PostUserSave>()
+                .HasOne(pu => pu.BlogUser)
+                .WithMany(bu => bu.PostUserSaves)
+                .HasForeignKey(pu => pu.BlogUserId);
+
+            builder.Entity<PostUserLike>()
+                .HasKey(pu => new { pu.PostId, pu.BlogUserId });
+
+            builder.Entity<PostUserLike>()
+                .HasOne(pu => pu.Post)
+                .WithMany(p => p.PostUserLikes)
+                .HasForeignKey(pu => pu.PostId);
+
+            builder.Entity<PostUserLike>()
+                 .HasOne(pu => pu.BlogUser)
+                .WithMany(bu => bu.PostUserLikes)
+                .HasForeignKey(pu => pu.BlogUserId);
+
+
+
         }
 
         

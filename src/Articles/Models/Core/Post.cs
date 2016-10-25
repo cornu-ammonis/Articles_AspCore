@@ -51,5 +51,8 @@ namespace Articles.Models
         public int LikeCount
         { get; set; } = 0;
 
+        public List<PostUserSave> PostUserSaves { get; set; }
+        public List<PostUserLike> PostUserLikes { get; set; }
+
     }
 }
