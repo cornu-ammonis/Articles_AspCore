@@ -8,9 +8,10 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161024224829_saves")]
+    partial class saves
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -80,21 +81,6 @@ namespace Articles.Migrations
                     b.ToTable("PostTag");
                 });
 
-            modelBuilder.Entity("Articles.Models.Core.PostUserLike", b =>
-                {
-                    b.Property<int?>("PostId");
-
-                    b.Property<int?>("BlogUserId");
-
-                    b.HasKey("PostId", "BlogUserId");
-
-                    b.HasIndex("BlogUserId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostUserLikes");
-                });
-
             modelBuilder.Entity("Articles.Models.Core.PostUserSave", b =>
                 {
                     b.Property<int>("PostId");
@@ -110,27 +96,16 @@ namespace Articles.Migrations
                     b.ToTable("PostUserSaves");
                 });
 
-            modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
-                {
-                    b.Property<int?>("authorId");
-
-                    b.Property<int?>("userId");
-
-                    b.HasKey("authorId", "userId");
-
-                    b.HasIndex("authorId");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("UserAuthorSubscribes");
-                });
-
             modelBuilder.Entity("Articles.Models.Post", b =>
                 {
                     b.Property<int>("PostId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int?>("AuthorBlogUserId");
+
+                    b.Property<int?>("BlogUserId");
+
+                    b.Property<int?>("BlogUserId1");
 
                     b.Property<int?>("CategoryId");
 
@@ -155,6 +130,10 @@ namespace Articles.Migrations
                     b.HasKey("PostId");
 
                     b.HasIndex("AuthorBlogUserId");
+
+                    b.HasIndex("BlogUserId");
+
+                    b.HasIndex("BlogUserId1");
 
                     b.HasIndex("CategoryId");
 
@@ -381,19 +360,6 @@ namespace Articles.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Articles.Models.Core.PostUserLike", b =>
-                {
-                    b.HasOne("Articles.Models.Core.BlogUser", "BlogUser")
-                        .WithMany("PostUserLikes")
-                        .HasForeignKey("BlogUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Articles.Models.Post", "Post")
-                        .WithMany("PostUserLikes")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Articles.Models.Core.PostUserSave", b =>
                 {
                     b.HasOne("Articles.Models.Core.BlogUser", "BlogUser")
@@ -407,24 +373,19 @@ namespace Articles.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
-                {
-                    b.HasOne("Articles.Models.Core.BlogUser", "author")
-                        .WithMany("AuthorUserSubscribes")
-                        .HasForeignKey("authorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Articles.Models.Core.BlogUser", "user")
-                        .WithMany("UserAuthorSubscribes")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Articles.Models.Post", b =>
                 {
                     b.HasOne("Articles.Models.Core.BlogUser", "Author")
                         .WithMany("AuthoredPosts")
                         .HasForeignKey("AuthorBlogUserId");
+
+                    b.HasOne("Articles.Models.Core.BlogUser")
+                        .WithMany("BlogUserPosts")
+                        .HasForeignKey("BlogUserId");
+
+                    b.HasOne("Articles.Models.Core.BlogUser")
+                        .WithMany("LikedPosts")
+                        .HasForeignKey("BlogUserId1");
 
                     b.HasOne("Articles.Models.Category", "Category")
                         .WithMany("Posts")

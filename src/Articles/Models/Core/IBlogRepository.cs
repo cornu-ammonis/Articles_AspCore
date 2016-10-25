@@ -11,6 +11,9 @@ namespace Articles.Models
 {
    public interface IBlogRepository
     {
+
+        BlogUser GenerateUser(string user_name);
+        
         //returns posts ordered by PostedOn descending and selected by pagination values
         IList<Post> Posts(int pageNo, int pageSize);
         int TotalPosts( bool checkIsPublished = true);
@@ -36,11 +39,19 @@ namespace Articles.Models
 
         void SavePostForUser(int year, int month, string titleSlug, string user_name);
         void UnsavePostForUser(int year, int month, string titleSlug, string user_name);
-         IList<Post> PostsUserSaved(string username, int pageNo, int pageSize);
+        bool CheckIfSaved(Post post, string username);
+        Task<bool> CheckIfSavedAsync(Post post, string user_name);
+        IList<Post> PostsUserSaved(string username, int pageNo, int pageSize);
+
+        void LikePostForUser(int year, int month, string titleSlug, string user_name);
+        Task<bool> CheckIfLikedAsync(Post post, string user_name); 
+        void UnlikePostForUser(int year, int month, string titleSlug, string user_name);
+        bool CheckIfLiked(Post post, string user_name);
 
         void SubscribeAuthor(string user_name, string author_name);
         void UnsubscribeAuthor(string user_name, string author_name);
         bool CheckIfSubscribed(string user_name, string author_name);
+        Task<bool> CheckIfSubscribedAsync(string user_name, string author_name);
         //bool CheckIfSubscribed(string user_name, BlogUser author);
 
         IList<Post> SubscribedPostsForUser(string user_name, int pageNo, int pageSize);
@@ -49,7 +60,7 @@ namespace Articles.Models
 
         BlogUser RetrieveUser(string username);
         IList<BlogUser> AllAuthors();
-        bool CheckIfSaved(Post post, string username);
+       
 
         IList<Post> PostsByAuthor(string user_name, int pageNo, int pageSize);
         int TotalPostsByAuthor(string user_name);

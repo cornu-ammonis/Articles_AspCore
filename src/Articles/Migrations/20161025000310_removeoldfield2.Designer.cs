@@ -8,9 +8,10 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161025000310_removeoldfield2")]
+    partial class removeoldfield2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -82,9 +83,9 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Articles.Models.Core.PostUserLike", b =>
                 {
-                    b.Property<int?>("PostId");
+                    b.Property<int>("PostId");
 
-                    b.Property<int?>("BlogUserId");
+                    b.Property<int>("BlogUserId");
 
                     b.HasKey("PostId", "BlogUserId");
 
@@ -108,21 +109,6 @@ namespace Articles.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("PostUserSaves");
-                });
-
-            modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
-                {
-                    b.Property<int?>("authorId");
-
-                    b.Property<int?>("userId");
-
-                    b.HasKey("authorId", "userId");
-
-                    b.HasIndex("authorId");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("UserAuthorSubscribes");
                 });
 
             modelBuilder.Entity("Articles.Models.Post", b =>
@@ -404,19 +390,6 @@ namespace Articles.Migrations
                     b.HasOne("Articles.Models.Post", "Post")
                         .WithMany("PostUserSaves")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
-                {
-                    b.HasOne("Articles.Models.Core.BlogUser", "author")
-                        .WithMany("AuthorUserSubscribes")
-                        .HasForeignKey("authorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Articles.Models.Core.BlogUser", "user")
-                        .WithMany("UserAuthorSubscribes")
-                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

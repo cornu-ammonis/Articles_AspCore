@@ -8,32 +8,34 @@ using Articles.Models.Core;
 
 namespace Articles.ViewComponents
 {
-    public class SubscribeViewComponent : ViewComponent
+    public class LikesViewComponent : ViewComponent
     {
         IBlogRepository _blogRepository;
 
-        public SubscribeViewComponent(IBlogRepository blogRepository)
+        public LikesViewComponent(IBlogRepository blogRepository)
         {
             _blogRepository = blogRepository;
         }
-        public async Task<IViewComponentResult> InvokeAsync(BlogUser author)
+        public async Task<IViewComponentResult> InvokeAsync(Post post)
         {
             if (User.Identity.IsAuthenticated)
             {
-                bool subscribed = await _blogRepository.CheckIfSubscribedAsync(User.Identity.Name, author.user_name);
-                if(subscribed)
+                bool liked = await _blogRepository.CheckIfLikedAsync(post, User.Identity.Name);
+                if (liked)
                 {
-                    return View("Unsubscribe", author);
+                    return View("Unlike", post);
                 }
                 else
                 {
-                    return View("Subscribe", author);
+                    return View("Like", post);
                 }
             }
             else
             {
-                return View("Subscribe", author);
+                return View("Like", post);
             }
+
+           
         }
 
     }

@@ -8,9 +8,10 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161025002544_subscriptionjunction")]
+    partial class subscriptionjunction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -82,9 +83,9 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Articles.Models.Core.PostUserLike", b =>
                 {
-                    b.Property<int?>("PostId");
+                    b.Property<int>("PostId");
 
-                    b.Property<int?>("BlogUserId");
+                    b.Property<int>("BlogUserId");
 
                     b.HasKey("PostId", "BlogUserId");
 
@@ -112,9 +113,9 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
                 {
-                    b.Property<int?>("authorId");
+                    b.Property<int>("authorId");
 
-                    b.Property<int?>("userId");
+                    b.Property<int>("userId");
 
                     b.HasKey("authorId", "userId");
 

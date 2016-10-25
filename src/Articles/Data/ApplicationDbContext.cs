@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Articles.Models;
 using Articles.Models.Core;
 using Microsoft.AspNetCore.Identity;
-
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Articles.Data
 {
@@ -23,6 +23,9 @@ namespace Articles.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<BlogUser> BlogUser { get; set; }
         public DbSet<CategoryBlogUser> CategoryBlogUser { get; set; }
+        public DbSet<PostUserSave> PostUserSaves { get; set; }
+        public DbSet<PostUserLike> PostUserLikes { get; set; }
+        public DbSet<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -65,9 +68,48 @@ namespace Articles.Data
                 .HasOne(p => p.Author)
                 .WithMany(bu => bu.AuthoredPosts);
 
-           
-            
-         
+            builder.Entity<PostUserSave>()
+                .HasKey(pu => new { pu.PostId, pu.BlogUserId });
+
+            builder.Entity<PostUserSave>()
+                .HasOne(pu => pu.Post)
+                .WithMany(p => p.PostUserSaves)
+                .HasForeignKey(pu => pu.PostId);
+
+            builder.Entity<PostUserSave>()
+                .HasOne(pu => pu.BlogUser)
+                .WithMany(bu => bu.PostUserSaves)
+                .HasForeignKey(pu => pu.BlogUserId);
+
+            builder.Entity<PostUserLike>()
+                .HasKey(pu => new { pu.PostId, pu.BlogUserId });
+
+            builder.Entity<PostUserLike>()
+                .HasOne(pu => pu.Post)
+                .WithMany(p => p.PostUserLikes)
+                .HasForeignKey(pu => pu.PostId);
+
+            builder.Entity<PostUserLike>()
+                 .HasOne(pu => pu.BlogUser)
+                .WithMany(bu => bu.PostUserLikes)
+                .HasForeignKey(pu => pu.BlogUserId);
+
+            builder.Entity<UserAuthorSubscribe>()
+                .HasKey(ua => new { ua.authorId, ua.userId });
+
+            builder.Entity<UserAuthorSubscribe>()
+                .HasOne(ua => ua.user)
+                .WithMany(ua => ua.UserAuthorSubscribes)
+                .HasForeignKey(ua => ua.userId)
+                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict; ;
+
+            builder.Entity<UserAuthorSubscribe>()
+                .HasOne(ua => ua.author)
+                .WithMany(ua => ua.AuthorUserSubscribes)
+                .HasForeignKey(ua => ua.authorId)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict; 
+
+
         }
 
         

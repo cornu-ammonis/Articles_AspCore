@@ -27,7 +27,8 @@
                 }  </span>
                 &nbsp
                 
-              
+              @Model.LikeCount likes
+              @await Component.InvokeAsync("Likes", new { post = Model } )
                
                 &nbsp
                @await Component.InvokeAsync("Save", new { post = Model })

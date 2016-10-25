@@ -19,7 +19,8 @@ namespace Articles.ViewComponents
         {
             if (User.Identity.IsAuthenticated)
             {
-                if(_blogRepository.CheckIfSaved(post, User.Identity.Name))
+                bool saved = await _blogRepository.CheckIfSavedAsync(post, User.Identity.Name);
+                if(saved)
                 {
                     return View("Unsave", post);
                 }
