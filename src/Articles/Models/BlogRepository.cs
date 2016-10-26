@@ -677,7 +677,44 @@ namespace Articles.Models
             return AuthorCounts;
         }
 
-       
+        public IList<Post> PostsByLikesPerDay(int pageNo, int pageSize)
+        {
+            List<Post> posts = new List<Post>();
+
+            IEnumerable<Post> p_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 p.LikeCount > 0
+                 orderby p.LikesPerDay() descending
+                 select p).Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, BlogUser>(p => p.Author)
+                 .Include<Post, Category>(p => p.Category)
+                 .Include(p => p.PostTags)
+                 .ThenInclude(posttag => posttag.Tag);
+
+            foreach (Post post in p_query)
+            {
+                posts.Add(post);
+            }
+            return posts;
+        }
+        
+        public int TotalPostsByLikesPerDay()
+        {
+            int count = 0;
+            IEnumerable<Post> p_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 p.LikeCount > 0
+                 orderby p.LikesPerDay() descending
+                 select p);
+
+            foreach (Post post in p_query)
+            {
+                count = count + 1;
+            }
+            return count;
+        }
 
         public IList<Post> PostsByAuthor(string user_name, int pageNo, int pageSize)
         {
@@ -839,9 +876,17 @@ namespace Articles.Models
             {
                 throw new InvalidOperationException("Post selection failed due to title and date-published duplication");
             }
+            
             return post;
 
            
+        }
+        public Post IncrementViews(Post post)
+        {
+            db.Posts.Update(post);
+            post.ViewCount = post.ViewCount + 1;
+            db.SaveChanges();
+            return post;
         }
 
        

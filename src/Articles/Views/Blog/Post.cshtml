@@ -53,6 +53,7 @@
                                             asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a>  
                     @await Component.InvokeAsync("Subscribe", new { author = Model.Author })
                     &nbsp
+                    @await Component.InvokeAsync("Likes", new { post = Model })
                     @await Component.InvokeAsync("Save", new { post = Model})
                     
                 </div>

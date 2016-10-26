@@ -56,6 +56,10 @@ namespace Articles.Models
                     Posts = blogRepository.PostsUserSaved(user_name, p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsUserSaved(user_name);
                     break;
+                case "Hot":
+                    Posts = blogRepository.PostsByLikesPerDay(p - 1, PageSize);
+                    TotalPosts = blogRepository.TotalPostsByLikesPerDay();
+                    break;
             }
            
            

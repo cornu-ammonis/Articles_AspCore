@@ -51,8 +51,69 @@ namespace Articles.Models
         public int LikeCount
         { get; set; } = 0;
 
+        public int ViewCount
+        { get; set; } = 0;
+
         public List<PostUserSave> PostUserSaves { get; set; }
         public List<PostUserLike> PostUserLikes { get; set; }
+
+        public double DaysSincePosted()
+        {
+            DateTime now = DateTime.Now;
+
+            TimeSpan difference = now.Subtract(this.PostedOn);
+            return difference.TotalDays;
+        }
+
+        public double LikesPerDay()
+        {
+            if (this.LikeCount == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                double likesPerDay = this.LikeCount / this.DaysSincePosted();
+                return likesPerDay;
+            }
+        }
+
+        public string LikesPerDayString()
+        {
+           
+
+            string likesPerDayString = String.Format("{0} likes/day", this.LikesPerDay());
+            return likesPerDayString;
+        }
+
+        public double ViewsPerDay()
+        {
+            if(this.ViewCount == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                double viewsPerDay = this.ViewCount / this.DaysSincePosted();
+                return viewsPerDay;
+            }
+        }
+
+        public string ViewsPerDayString()
+        {
+            string viewsPerDayString = String.Format("{0} views/day", this.ViewsPerDay());
+            return viewsPerDayString;
+        }
+
+        /*
+        public double HeatIndex(string type = "default", string user_name = null)
+        {
+            double likesPerDay = this.LikesPerDay();
+            double heat = 0;
+
+            
+
+        } */
 
     }
 }

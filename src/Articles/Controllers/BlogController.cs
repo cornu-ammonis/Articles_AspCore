@@ -98,6 +98,21 @@ namespace Articles.Controllers
             }
         }
 
+        public IActionResult HotPosts(int p = 1)
+        {
+            ListViewModel viewModel;
+            if (User.Identity.IsAuthenticated)
+            {
+                string active_user = User.Identity.Name;
+                 viewModel = new ListViewModel(_blogRepository, p, "Hot", active_user);
+            }
+            else
+            {
+                 viewModel = new ListViewModel(_blogRepository, p, "Hot");
+            }
+            return View("List", viewModel);
+        }
+
         [Authorize]
         public IActionResult Subscribed(int p = 1)
         {
@@ -270,12 +285,13 @@ namespace Articles.Controllers
                     {
                         ViewBag.Name = ptag.Tag.Name;
                         ViewBag.Slug = ptag.Tag.UrlSlug;
+                        post = _blogRepository.IncrementViews(post);
                         return View(post);
                     }
                 }
             }
 
-           
+            post = _blogRepository.IncrementViews(post);
             return View(post);
         }
 

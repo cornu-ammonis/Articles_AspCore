@@ -28,6 +28,8 @@
                 &nbsp
                 
               @Model.LikeCount likes
+              @Model.LikesPerDayString()
+              @Model.ViewsPerDayString()
               @await Component.InvokeAsync("Likes", new { post = Model } )
                
                 &nbsp
