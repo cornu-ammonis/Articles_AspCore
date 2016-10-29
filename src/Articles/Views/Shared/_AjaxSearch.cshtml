@@ -1,0 +1,26 @@
+﻿
+<form id="search-form" asp-action="partialSearch" asp-controller="Blog" data-ajax="true"
+      data-ajax-mode="replace-with" data-ajax-update="#content" data-ajax-begin="sTest"
+      data-ajax-success="sTestR">
+    <input type="text" id="txtS" name="S" />
+    <input type="submit" value="Search" />
+
+</form>
+<div id="demoContainer"></div>
+<div id="statusResultContainer"></div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        function sTest() {
+            $("div#demoContainer").html("searching...");
+
+        }
+
+        function sTestR() {
+            $("div#statusResultContainer").html("search completed");
+
+        }
+    </script>
+}
+

@@ -1,5 +1,19 @@
 ﻿@model Articles.Models.Core.BlogUser
 
-<a asp-action="Subscribe" asp-controller="Blog" asp-route-authorname=@Model.user_name><b>Subscribe</b></a>
+<span class="@Model.AuthorSubscribeAjaxId()">
+   @Model.subscribers_count.ToString() subscribers
+    <a asp-action="Subscribe" asp-controller="Blog" asp-route-authorname=@Model.user_name
+       data-ajax="true" data-ajax-mode="replace-with" data-ajax-update=".@Model.AuthorSubscribeAjaxId()"
+      >
+    <b>Subscribe</b></a>
+
+    
+
+
+   
+</span>
+
+
+
 
 

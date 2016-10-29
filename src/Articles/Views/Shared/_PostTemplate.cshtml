@@ -27,13 +27,13 @@
                 }  </span>
                 &nbsp
                 
-              @Model.LikeCount likes
-              @Model.LikesPerDayString()
-              @Model.ViewsPerDayString()
-              @await Component.InvokeAsync("Likes", new { post = Model } )
                
+           
+              @await Component.InvokeAsync("Likes", new { post = Model } )
                 &nbsp
-               @await Component.InvokeAsync("Save", new { post = Model })
+               
+              @await Component.InvokeAsync("Save", new { post = Model })
+                
                
             </div>
 

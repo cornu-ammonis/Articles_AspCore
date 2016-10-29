@@ -41,6 +41,8 @@ namespace Articles.Migrations
 
                     b.Property<int>("page_size");
 
+                    b.Property<int>("subscribers_count");
+
                     b.Property<string>("user_name");
 
                     b.HasKey("BlogUserId");

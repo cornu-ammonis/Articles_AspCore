@@ -10,6 +10,9 @@ using Articles.Models.Core;
 using Articles.Models.BlogViewModels;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
+using Articles.ViewComponents;
+using myExtensions;
 
 namespace Articles.Controllers
 {
@@ -232,6 +235,27 @@ namespace Articles.Controllers
             return View("List", viewModel);
         }
 
+        public IActionResult partialSearch(string s, int p = 1)
+        {
+            ListViewModel viewModel;
+            if (User.Identity.IsAuthenticated)
+            {
+                viewModel = new ListViewModel(_blogRepository, s, "Search", p, User.Identity.Name);
+            }
+            else
+            {
+                viewModel = new ListViewModel(_blogRepository, s, "Search", p);
+            }
+
+
+            ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
+            return PartialView("List", viewModel);
+        }
+        public IActionResult AjaxSearch()
+        {
+            return View("_AjaxSearch");
+        }
+
         public IActionResult Post(int year, int month, string ti)
         {
             var post = _blogRepository.Post(year, month, ti);
@@ -306,14 +330,21 @@ namespace Articles.Controllers
         {
             _blogRepository.SavePostForUser(year, month, ti, User.Identity.Name);
             //return RedirectToAction("Post", new { year, month, ti });
-            return Redirect(Request.Headers["Referer"].ToString());
+            Post post = _blogRepository.Post(year, month, ti);
+            return PartialView("_Unsave", post);
         }
 
         [Authorize]
         public IActionResult UnsavePost(int year, int month, string ti)
         {
             _blogRepository.UnsavePostForUser(year, month, ti, User.Identity.Name);
-            return Redirect(Request.Headers["Referer"].ToString());
+            Post post = _blogRepository.Post(year, month, ti);
+            return PartialView("_Save", post);
+        }
+
+        public IActionResult SaveViewComponent()
+        {
+            return ViewComponent("SaveViewComponent");
         }
 
         [Authorize]
@@ -339,7 +370,9 @@ namespace Articles.Controllers
         {
             string user_name = User.Identity.Name;
             _blogRepository.SubscribeAuthor(user_name, authorname);
-            return Redirect(Request.Headers["Referer"].ToString());
+            BlogUser author = _blogRepository.RetrieveUser(authorname);
+            return PartialView("~/Views/Shared/Components/Subscribe/Unsubscribe.cshtml", author);
+            
         }
 
         [Authorize]
@@ -347,21 +380,25 @@ namespace Articles.Controllers
         {
             string user_name = User.Identity.Name;
             _blogRepository.UnsubscribeAuthor(user_name, authorname);
-            return Redirect(Request.Headers["Referer"].ToString());
+            BlogUser author = _blogRepository.RetrieveUser(authorname);
+            return PartialView("~/Views/Shared/Components/Subscribe/Subscribe.cshtml", author);
+            
         }
 
         [Authorize]
         public IActionResult LikePost(int year, int month, string ti)
         {
             _blogRepository.LikePostForUser( year, month, ti, User.Identity.Name);
-            return Redirect(Request.Headers["Referer"].ToString());
+            Post post = _blogRepository.Post(year, month, ti);
+            return PartialView("_Unlike", post);
         }
 
         [Authorize]
         public IActionResult UnlikePost(int year, int month, string ti)
         {
             _blogRepository.UnlikePostForUser(year, month, ti, User.Identity.Name);
-            return Redirect(Request.Headers["Referer"].ToString());
+            Post post = _blogRepository.Post(year, month, ti);
+            return PartialView("_Like", post);
         }
     }
 }

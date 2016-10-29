@@ -1,5 +1,10 @@
-﻿@model Articles.Models.Core.BlogUser
+﻿
+<span class="@Model.AuthorSubscribeAjaxId()">
+    @Model.subscribers_count.ToString() subscribers
+    <a asp-action="Unsubscribe" asp-controller="Blog" asp-route-authorname=@Model.user_name
+       data-ajax="true" data-ajax-mode="replace-with" data-ajax-update=".@Model.AuthorSubscribeAjaxId()">
+        <b>Unsubscribe</b>
+    </a>
 
-<a asp-action="Unsubscribe" asp-controller="Blog" asp-route-authorname=@Model.user_name><b>Unsubscribe</b></a>
 
-
+</span>

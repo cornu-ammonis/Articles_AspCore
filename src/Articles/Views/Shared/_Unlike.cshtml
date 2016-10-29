@@ -1,0 +1,8 @@
+﻿@model Articles.Models.Post
+<span id="@Model.LikeAjaxId()">
+    @Model.LikeCount likes
+    <a asp-action="UnlikePost" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+       asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug
+       data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#@Model.LikeAjaxId()"
+     ><b>Unlike Post </b></a>
+    </span>

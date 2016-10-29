@@ -25,18 +25,19 @@
 
         @await Component.InvokeAsync("Pagination", new { total_posts = Model.TotalPosts, page_size = Model.PageSize })
    
-
-    @if (Model.Posts.Count > 0)
-    {
-        foreach (var post in Model.Posts)
+    <div id="posts_lists">
+        @if (Model.Posts.Count > 0)
         {
-            @Html.Partial("_PostTemplate", post)
+            foreach (var post in Model.Posts)
+            {
+                @Html.Partial("_PostTemplate", post)
+            }
         }
-    }
-    else
-    {
-        <p>No posts found!</p>
-    }
+        else
+        {
+            <p>No posts found!</p>
+        }
+    </div>
 
     <cache vary-by-query="p,category,tag" vary-by-route="action"> 
         @await Component.InvokeAsync("Pagination", new { total_posts = Model.TotalPosts, page_size = Model.PageSize })

@@ -5,10 +5,26 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+ 
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        function sTest() {
+            $("div#demoContainer").html("searching...");
 
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+        }
+
+        function sTestR() {
+            $("div#statusResultContainer").html("search completed");
+
+        }
+    </script>
+   
      <!-- <script src="Url.Content("~/Scripts/app.js")"></script>
-
+          <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+          
    Stylesheets -->
     <link rel="stylesheet" type="text/css"
           href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.css")" />
@@ -61,7 +77,7 @@
         <!-- Site Content -->
         <div id="site_content">
             
-            @Html.Partial("_Search")
+            @Html.Partial("_AjaxSearch")
             @RenderBody()
 
             <!--calls a 'child action' which creates a widget view model and returns the sidebar partial view given the model-->

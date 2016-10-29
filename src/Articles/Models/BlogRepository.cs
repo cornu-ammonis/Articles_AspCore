@@ -191,6 +191,7 @@ namespace Articles.Models
                         && ua.author.user_name == key);
                         user.UserAuthorSubscribes.Remove(to_remove);
                         author.AuthorUserSubscribes.Remove(to_remove);
+                        author.subscribers_count = author.subscribers_count - 1;
                         db.UserAuthorSubscribes.Remove(to_remove);
                     }
                 }
@@ -206,6 +207,7 @@ namespace Articles.Models
                         nsubscription.author = author;
                         nsubscription.user = user;
                         author.AuthorUserSubscribes.Add(nsubscription);
+                        author.subscribers_count = author.subscribers_count + 1;
                         user.UserAuthorSubscribes.Add(nsubscription);
                         db.UserAuthorSubscribes.Add(nsubscription);
                     }
@@ -563,6 +565,7 @@ namespace Articles.Models
                
                 user.UserAuthorSubscribes.Add(nsubscription);
                 author.AuthorUserSubscribes.Add(nsubscription);
+                author.subscribers_count = author.subscribers_count + 1;
                 db.UserAuthorSubscribes.Add(nsubscription);
                 db.SaveChanges();
                 
@@ -593,6 +596,7 @@ namespace Articles.Models
                 db.Update(author);
                 user.UserAuthorSubscribes.Remove(to_remove);
                 author.AuthorUserSubscribes.Remove(to_remove);
+                author.subscribers_count = author.subscribers_count - 1;
                 db.UserAuthorSubscribes.Remove(to_remove);
                 db.SaveChanges();
             }
