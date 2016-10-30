@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using myExtensions;
 
 namespace Articles.ViewComponents
 {
@@ -13,9 +14,18 @@ namespace Articles.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(int total_posts, int page_size)
         {
+
+          
             PaginationViewModel paginationViewModel = new PaginationViewModel();
+            if (Request.IsAjaxRequest())
+            {
+                paginationViewModel.current_page = 1;
+                paginationViewModel.total_pages = Math.Ceiling((double)total_posts / page_size);
+                return View("Empty", paginationViewModel);
+            }
             paginationViewModel.n_visible = false;
             paginationViewModel.p_visible = false;
+
 
             var queryStrings = Request.Query;
             var keys = queryStrings.Keys;
@@ -29,6 +39,8 @@ namespace Articles.ViewComponents
             }
 
             paginationViewModel.total_pages = Math.Ceiling((double)total_posts / page_size);
+
+
 
             if (paginationViewModel.current_page > 1 )
             {

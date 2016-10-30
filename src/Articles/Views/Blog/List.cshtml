@@ -23,6 +23,7 @@
         </div>
     }
 
+    <div id="fullListLink"></div>
         @await Component.InvokeAsync("Pagination", new { total_posts = Model.TotalPosts, page_size = Model.PageSize })
    
     <div id="posts_lists">

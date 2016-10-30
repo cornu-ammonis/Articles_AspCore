@@ -104,16 +104,34 @@ namespace Articles.Models
             string viewsPerDayString = String.Format("{0} views/day", this.ViewsPerDay());
             return viewsPerDayString;
         }
+        
+        public string SaveAjaxId()
+        {
+            return this.UrlSlug + "save";
+        }
 
-        /*
-        public double HeatIndex(string type = "default", string user_name = null)
+        public string LikeAjaxId()
+        {
+            return this.UrlSlug + "like";
+        }
+        
+      /*  public double HeatIndex(string type = "default", string user_name = null)
         {
             double likesPerDay = this.LikesPerDay();
+            double viewsPerDay = this.ViewsPerDay();
             double heat = 0;
 
+            //handles case where someone has liked a post but hasnt viewed it in full. really, a like should also count as a view,
+            //but they are handled separately for now 
+            if(viewsPerDay < likesPerDay)
+            {
+                viewsPerDay = likesPerDay;
+            }
+
+            heat = likesPerDay * viewsPerDay;
             
 
-        } */
+        }  */
 
     }
 }
