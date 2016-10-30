@@ -16,8 +16,11 @@
 
         }
 
-        function sTestR() {
+        function searchSuccess() {
             $("div#statusResultContainer").html("search completed");
+            var s = $("#txtS").val();
+            var link = "<a href=\"/Blog/Search?s=" + s + "\">Load Full Results</a>";
+            $("div#fullListLink").html(link);
 
         }
 

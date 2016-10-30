@@ -218,6 +218,7 @@ namespace Articles.Controllers
             return View("List", viewModel);
         }
 
+        /*
         public ViewResult Search(string s, int p = 1)
         {
             ListViewModel viewModel;
@@ -233,10 +234,10 @@ namespace Articles.Controllers
 
             ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
             return View("List", viewModel);
-        }
+        } */
 
         //returns a partial view of search results if ajax request; else, returns full List View
-        public IActionResult partialSearch(string s, int p = 1)
+        public IActionResult Search(string s, int p = 1)
         {
             ListViewModel viewModel;
             if (User.Identity.IsAuthenticated)
@@ -252,6 +253,7 @@ namespace Articles.Controllers
             ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
             if (Request.IsAjaxRequest())
             {
+                ViewBag.s = String.Format("<a href=\"/Blog/partialSearch?s={0}\">Load Full Results</a>", s);
                 return PartialView("List", viewModel);
             }
             else
