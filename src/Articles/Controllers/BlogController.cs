@@ -369,6 +369,21 @@ namespace Articles.Controllers
             
         }
 
+        //called via AJAX from the list of saved posts, which will hide the post in question, and then 
+        //insert a link to undo the unsave which is returned by this method as a partial view
+        public IActionResult UnsaveAndHide(int year, int month, string ti)
+        {
+            _blogRepository.UnsavePostForUser(year, month, ti, User.Identity.Name);
+            Post post = _blogRepository.Post(year, month, ti);
+            return PartialView("_UndoUnsave", post);
+        }
+
+        public IActionResult UndoUnsave(int year, int month, string ti)
+        {
+            _blogRepository.SavePostForUser(year, month, ti, User.Identity.Name);
+            Post post = _blogRepository.Post(year, month, ti);
+            return PartialView("_PostTemplate", post);
+        }
         public IActionResult SaveViewComponent()
         {
             return ViewComponent("SaveViewComponent");

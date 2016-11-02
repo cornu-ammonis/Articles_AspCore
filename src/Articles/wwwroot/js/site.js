@@ -21,5 +21,5 @@ function savedFullLink() {
 function hideUnsavedPost() {
     var postdivid = $(this).attr('data-postslug');
     var posttitle = $(this).attr('data-posttitle');
-    $("div#" + postdivid).html("unsaved post titled: " + posttitle);
+    $("div#" + postdivid).html("unsaved post titled: " + posttitle + "&nbsp");
 }

@@ -20,7 +20,7 @@ namespace Articles.ViewComponents
             if (User.Identity.IsAuthenticated)
             {
                 string current_action = RouteData.Values["action"].ToString().ToLower();
-                if (current_action == "savedposts")
+                if (current_action == "savedposts" || current_action=="undounsave")
                 {
 
                     return View("UnsaveFromSavedList", post);
