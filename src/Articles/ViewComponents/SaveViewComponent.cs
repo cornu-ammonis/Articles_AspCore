@@ -19,7 +19,18 @@ namespace Articles.ViewComponents
         {
             if (User.Identity.IsAuthenticated)
             {
+                string current_action = RouteData.Values["action"].ToString().ToLower();
+                if (current_action == "savedposts")
+                {
+
+                    return View("UnsaveFromSavedList", post);
+
+
+                }
+
                 bool saved = await _blogRepository.CheckIfSavedAsync(post, User.Identity.Name);
+               
+                
                 if(saved)
                 {
                     return View("Unsave", post);

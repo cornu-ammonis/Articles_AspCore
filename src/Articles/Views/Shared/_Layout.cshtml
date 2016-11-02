@@ -10,26 +10,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
-    <script type="text/javascript">
-        function sTest() {
-            $("div#demoContainer").html("searching...");
-
-        }
-
-        function searchSuccess() {
-            $("div#statusResultContainer").html("search completed");
-            var s = $("#txtS").val();
-            var link = "<a href=\"/Blog/Search?s=" + s + "\">Load Full Results</a>";
-            $("div#fullListLink").html(link);
-
-        }
-
-        function savedFullLink() {
-            $("div#fullListLink")
-                .html("<a href=\"/Blog/SavedPosts\">Load All Saved Posts As Fresh Page</a>");
-
-        }
-    </script>
+    
    
      <!-- <script src="Url.Content("~/Scripts/app.js")"></script>
           <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
