@@ -253,7 +253,8 @@ namespace Articles.Models
             IEnumerable<Post> post_query =
                 (from p in db.Posts
                  where p.Published == true &&
-                db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == p.Author.user_name)
+                user.UserAuthorSubscribes.Any(ua => ua.authorId == p.Author.BlogUserId)
+                //p.Author.AuthorUserSubscribes.Any(au => au.userId == user.BlogUserId)
                  orderby p.PostedOn descending
                  select p).Skip(pageNo * pageSize).Take(pageSize)
                  .Include<Post, BlogUser>(p => p.Author)
@@ -263,6 +264,7 @@ namespace Articles.Models
 
             foreach (Post post in post_query)
             {
+                
                 posts.Add(post);
             }
 
@@ -277,7 +279,8 @@ namespace Articles.Models
             IEnumerable<Post> post_query =
                 (from p in db.Posts
                  where p.Published == true &&
-                  db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == p.Author.user_name)
+                 user.UserAuthorSubscribes.Any(ua => ua.authorId == p.Author.BlogUserId)
+                //p.Author.AuthorUserSubscribes.Any(au => au.userId == user.BlogUserId)
                  orderby p.PostedOn descending
                  select p);
 
@@ -628,7 +631,7 @@ namespace Articles.Models
         public BlogUser RetrieveUser(string username)
         {
             BlogUser user = db.BlogUser
-             .Include<BlogUser, List<BlogUser>>(u => u.SubscribedAuthors)
+             .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UserAuthorSubscribes)
              .Include<BlogUser, List<PostUserSave>>(u => u.PostUserSaves)
              .Include<BlogUser, List<PostUserLike>>(u => u.PostUserLikes)
              .SingleOrDefault(u => u.user_name == username);

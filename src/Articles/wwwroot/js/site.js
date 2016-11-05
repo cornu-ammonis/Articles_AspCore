@@ -23,3 +23,15 @@ function hideUnsavedPost() {
     var posttitle = $(this).attr('data-posttitle');
     $("div#" + postdivid).html("unsaved post titled: " + posttitle + "&nbsp");
 }
+
+function unsubscribeUpdate() {
+    var authorname = $(this).attr('data-authorname');
+    var undolink = "<a href=\"/Blog/UndoUnsubscribe?authorname=" + authorname +
+        "\" data-ajax=\"true\" data-ajax-mode=\"replace-with\" data-ajax-update=\"#content\"" +
+        "data-ajax-success=\"scrubUndo\"> Undo </a>";
+    $("div#undoButton").append("<p> unsubscribed from author " + authorname + undolink + "</p>");
+    $("div#fullListLink").html("<a href=\"/Blog/Subscribed\">Load All Subscribed Posts As Fresh Page</a>")
+}
+function scrubUndo() {
+    $("div#undoButton").html(" ");
+}

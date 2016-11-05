@@ -451,6 +451,27 @@ namespace Articles.Controllers
             }
         }
 
+        public IActionResult UnsubscribeUpdate(string authorname)
+        {
+            string user_name = User.Identity.Name;
+            _blogRepository.UnsubscribeAuthor(user_name, authorname);
+
+            var viewModel = new ListViewModel(_blogRepository, 1, "Subscribed", user_name);
+            ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes",
+                viewModel.TotalPosts, user_name);
+            return PartialView("List", viewModel);
+        }
+
+        public IActionResult UndoUnsubscribe(string authorname)
+        {
+            string user_name = User.Identity.Name;
+            _blogRepository.SubscribeAuthor(user_name, authorname);
+            var viewModel = new ListViewModel(_blogRepository, 1, "Subscribed", user_name);
+            ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes",
+                viewModel.TotalPosts, user_name);
+            return PartialView("List", viewModel);
+        }
+
         [Authorize]
         public IActionResult LikePost(int year, int month, string ti)
         {
