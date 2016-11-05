@@ -5,10 +5,16 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+ 
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    
+   
      <!-- <script src="Url.Content("~/Scripts/app.js")"></script>
-
+          <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+          
    Stylesheets -->
     <link rel="stylesheet" type="text/css"
           href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.css")" />
@@ -39,10 +45,12 @@
                     <li><a asp-action="Posts" asp-controller="Blog">Posts</a></li>
                     <li> <a asp-action="CustomPosts" asp-controller="Blog">Custom Feed</a> </li>
                     <li><a asp-action="Subscribed" asp-controller="Blog">Subscribed Posts</a></li>
-                    <li><a asp-action="SavedPosts" asp-controller="Blog">Saved Posts</a></li>
+                    <li><a asp-action="SavedPosts" asp-controller="Blog" data-ajax="true" 
+                           data-ajax-mode="replace-with" data-ajax-update="#content"
+                           data-ajax-success="savedFullLink">Saved Posts</a></li>
                     <li><a asp-action="Customize" asp-controller="Blog">Account Settings</a></li>
                  
-                   
+                  
                    
                 </ul>
                
@@ -61,7 +69,8 @@
         <!-- Site Content -->
         <div id="site_content">
             
-            @Html.Partial("_Search")
+            @Html.Partial("_AjaxSearch")
+            <div id="undoButton"></div>
             @RenderBody()
 
             <!--calls a 'child action' which creates a widget view model and returns the sidebar partial view given the model-->

@@ -1,0 +1,4 @@
+﻿@model Articles.Models.Post
+<a asp-action="UndoUnsave" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+   asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug data-ajax="true" data-ajax-mode="replace-with"
+   data-ajax-update="#@Model.UrlSlug" id="@Model.SaveAjaxId()"><b>Undo</b></a>

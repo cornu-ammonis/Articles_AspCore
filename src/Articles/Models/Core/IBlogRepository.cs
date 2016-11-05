@@ -60,13 +60,16 @@ namespace Articles.Models
 
         BlogUser RetrieveUser(string username);
         IList<BlogUser> AllAuthors();
-       
+
+        IList<Post> PostsByLikesPerDay(int pageNo, int pageSize);
+        int TotalPostsByLikesPerDay();
 
         IList<Post> PostsByAuthor(string user_name, int pageNo, int pageSize);
         int TotalPostsByAuthor(string user_name);
 
         //returns a post for full display identified via year/month posted and title slug 
         Post Post(int year, int month, string titleSlug);
+        Post IncrementViews(Post post);
 
         //returns all categories or tags -- this is used for widget
         IList<Category> Categories();

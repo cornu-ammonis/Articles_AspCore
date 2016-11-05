@@ -1,6 +1,6 @@
 ﻿@model Articles.Models.Post
 
-<div class="post">
+<div class="post" id="@Model.UrlSlug">
     <div class="post-meta">
         <div class="row">
 
@@ -27,11 +27,13 @@
                 }  </span>
                 &nbsp
                 
-              @Model.LikeCount likes
-              @await Component.InvokeAsync("Likes", new { post = Model } )
                
+           
+              @await Component.InvokeAsync("Likes", new { post = Model } )
                 &nbsp
-               @await Component.InvokeAsync("Save", new { post = Model })
+               
+              @await Component.InvokeAsync("Save", new { post = Model })
+                
                
             </div>
 

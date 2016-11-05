@@ -10,6 +10,9 @@ using Articles.Models.Core;
 using Articles.Models.BlogViewModels;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
+using Articles.ViewComponents;
+using myExtensions;
 
 namespace Articles.Controllers
 {
@@ -96,6 +99,21 @@ namespace Articles.Controllers
                 ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
                 return View("List", viewModel);
             }
+        }
+
+        public IActionResult HotPosts(int p = 1)
+        {
+            ListViewModel viewModel;
+            if (User.Identity.IsAuthenticated)
+            {
+                string active_user = User.Identity.Name;
+                 viewModel = new ListViewModel(_blogRepository, p, "Hot", active_user);
+            }
+            else
+            {
+                 viewModel = new ListViewModel(_blogRepository, p, "Hot");
+            }
+            return View("List", viewModel);
         }
 
         [Authorize]
@@ -200,6 +218,7 @@ namespace Articles.Controllers
             return View("List", viewModel);
         }
 
+        /*
         public ViewResult Search(string s, int p = 1)
         {
             ListViewModel viewModel;
@@ -215,6 +234,37 @@ namespace Articles.Controllers
 
             ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
             return View("List", viewModel);
+        } */
+
+        //returns a partial view of search results if ajax request; else, returns full List View
+        public IActionResult Search(string s, int p = 1)
+        {
+            ListViewModel viewModel;
+            if (User.Identity.IsAuthenticated)
+            {
+                viewModel = new ListViewModel(_blogRepository, s, "Search", p, User.Identity.Name);
+            }
+            else
+            {
+                viewModel = new ListViewModel(_blogRepository, s, "Search", p);
+            }
+
+
+            ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
+            if (Request.IsAjaxRequest())
+            {
+                ViewBag.s = String.Format("<a href=\"/Blog/partialSearch?s={0}\">Load Full Results</a>", s);
+                return PartialView("List", viewModel);
+            }
+            else
+            {
+                return View("List", viewModel);
+            }
+           
+        }
+        public IActionResult AjaxSearch()
+        {
+            return View("_AjaxSearch");
         }
 
         public IActionResult Post(int year, int month, string ti)
@@ -270,12 +320,13 @@ namespace Articles.Controllers
                     {
                         ViewBag.Name = ptag.Tag.Name;
                         ViewBag.Slug = ptag.Tag.UrlSlug;
+                        post = _blogRepository.IncrementViews(post);
                         return View(post);
                     }
                 }
             }
 
-           
+            post = _blogRepository.IncrementViews(post);
             return View(post);
         }
 
@@ -290,14 +341,52 @@ namespace Articles.Controllers
         {
             _blogRepository.SavePostForUser(year, month, ti, User.Identity.Name);
             //return RedirectToAction("Post", new { year, month, ti });
-            return Redirect(Request.Headers["Referer"].ToString());
+            if (Request.IsAjaxRequest())
+            {
+                Post post = _blogRepository.Post(year, month, ti);
+                return PartialView("_Unsave", post);
+            }
+            else
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            
         }
 
         [Authorize]
         public IActionResult UnsavePost(int year, int month, string ti)
         {
             _blogRepository.UnsavePostForUser(year, month, ti, User.Identity.Name);
-            return Redirect(Request.Headers["Referer"].ToString());
+            if(Request.IsAjaxRequest())
+            {
+                Post post = _blogRepository.Post(year, month, ti);
+                return PartialView("_Save", post);
+            }
+            else
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            
+        }
+
+        //called via AJAX from the list of saved posts, which will hide the post in question, and then 
+        //insert a link to undo the unsave which is returned by this method as a partial view
+        public IActionResult UnsaveAndHide(int year, int month, string ti)
+        {
+            _blogRepository.UnsavePostForUser(year, month, ti, User.Identity.Name);
+            Post post = _blogRepository.Post(year, month, ti);
+            return PartialView("_UndoUnsave", post);
+        }
+
+        public IActionResult UndoUnsave(int year, int month, string ti)
+        {
+            _blogRepository.SavePostForUser(year, month, ti, User.Identity.Name);
+            Post post = _blogRepository.Post(year, month, ti);
+            return PartialView("_PostTemplate", post);
+        }
+        public IActionResult SaveViewComponent()
+        {
+            return ViewComponent("SaveViewComponent");
         }
 
         [Authorize]
@@ -313,7 +402,17 @@ namespace Articles.Controllers
 
                 var viewModel = new ListViewModel(_blogRepository, p, "Saved", user_name);
                 ViewBag.Title = String.Format(@"{0} posts saved for user {1} ", viewModel.TotalPosts, user_name);
-                return View("List", viewModel);
+
+                if(Request.IsAjaxRequest())
+                {
+                    return PartialView("List", viewModel);
+                }
+                else
+                {
+                    return View("List", viewModel);
+                }
+
+                
             }
 
         }
@@ -323,7 +422,16 @@ namespace Articles.Controllers
         {
             string user_name = User.Identity.Name;
             _blogRepository.SubscribeAuthor(user_name, authorname);
-            return Redirect(Request.Headers["Referer"].ToString());
+            if (Request.IsAjaxRequest())
+            {
+                BlogUser author = _blogRepository.RetrieveUser(authorname);
+                return PartialView("~/Views/Shared/Components/Subscribe/Unsubscribe.cshtml", author);
+            }
+           else
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            
         }
 
         [Authorize]
@@ -331,21 +439,69 @@ namespace Articles.Controllers
         {
             string user_name = User.Identity.Name;
             _blogRepository.UnsubscribeAuthor(user_name, authorname);
-            return Redirect(Request.Headers["Referer"].ToString());
+            if(Request.IsAjaxRequest())
+            {
+                BlogUser author = _blogRepository.RetrieveUser(authorname);
+                return PartialView("~/Views/Shared/Components/Subscribe/Subscribe.cshtml", author);
+            }
+            
+            else
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+        }
+
+        public IActionResult UnsubscribeUpdate(string authorname)
+        {
+            string user_name = User.Identity.Name;
+            _blogRepository.UnsubscribeAuthor(user_name, authorname);
+
+            var viewModel = new ListViewModel(_blogRepository, 1, "Subscribed", user_name);
+            ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes",
+                viewModel.TotalPosts, user_name);
+            return PartialView("List", viewModel);
+        }
+
+        public IActionResult UndoUnsubscribe(string authorname)
+        {
+            string user_name = User.Identity.Name;
+            _blogRepository.SubscribeAuthor(user_name, authorname);
+            var viewModel = new ListViewModel(_blogRepository, 1, "Subscribed", user_name);
+            ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes",
+                viewModel.TotalPosts, user_name);
+            return PartialView("List", viewModel);
         }
 
         [Authorize]
         public IActionResult LikePost(int year, int month, string ti)
         {
             _blogRepository.LikePostForUser( year, month, ti, User.Identity.Name);
-            return Redirect(Request.Headers["Referer"].ToString());
+            if(Request.IsAjaxRequest())
+            {
+                Post post = _blogRepository.Post(year, month, ti);
+                return PartialView("_Unlike", post);
+            }
+            else
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            
         }
 
         [Authorize]
         public IActionResult UnlikePost(int year, int month, string ti)
         {
             _blogRepository.UnlikePostForUser(year, month, ti, User.Identity.Name);
-            return Redirect(Request.Headers["Referer"].ToString());
+            if(Request.IsAjaxRequest())
+            {
+                Post post = _blogRepository.Post(year, month, ti);
+                return PartialView("_Like", post);
+            }
+            else
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
         }
     }
 }

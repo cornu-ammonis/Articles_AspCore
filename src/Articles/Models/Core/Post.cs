@@ -51,8 +51,87 @@ namespace Articles.Models
         public int LikeCount
         { get; set; } = 0;
 
+        public int ViewCount
+        { get; set; } = 0;
+
         public List<PostUserSave> PostUserSaves { get; set; }
         public List<PostUserLike> PostUserLikes { get; set; }
+
+        public double DaysSincePosted()
+        {
+            DateTime now = DateTime.Now;
+
+            TimeSpan difference = now.Subtract(this.PostedOn);
+            return difference.TotalDays;
+        }
+
+        public double LikesPerDay()
+        {
+            if (this.LikeCount == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                double likesPerDay = this.LikeCount / this.DaysSincePosted();
+                return likesPerDay;
+            }
+        }
+
+        public string LikesPerDayString()
+        {
+           
+
+            string likesPerDayString = String.Format("{0} likes/day", this.LikesPerDay());
+            return likesPerDayString;
+        }
+
+        public double ViewsPerDay()
+        {
+            if(this.ViewCount == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                double viewsPerDay = this.ViewCount / this.DaysSincePosted();
+                return viewsPerDay;
+            }
+        }
+
+        public string ViewsPerDayString()
+        {
+            string viewsPerDayString = String.Format("{0} views/day", this.ViewsPerDay());
+            return viewsPerDayString;
+        }
+        
+        public string SaveAjaxId()
+        {
+            return this.UrlSlug + "save";
+        }
+
+        public string LikeAjaxId()
+        {
+            return this.UrlSlug + "like";
+        }
+        
+      /*  public double HeatIndex(string type = "default", string user_name = null)
+        {
+            double likesPerDay = this.LikesPerDay();
+            double viewsPerDay = this.ViewsPerDay();
+            double heat = 0;
+
+            //handles case where someone has liked a post but hasnt viewed it in full. really, a like should also count as a view,
+            //but they are handled separately for now 
+            if(viewsPerDay < likesPerDay)
+            {
+                viewsPerDay = likesPerDay;
+            }
+
+            heat = likesPerDay * viewsPerDay;
+            
+
+        }  */
 
     }
 }

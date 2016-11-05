@@ -19,7 +19,18 @@ namespace Articles.ViewComponents
         {
             if (User.Identity.IsAuthenticated)
             {
+                string current_action = RouteData.Values["action"].ToString().ToLower();
+                if (current_action == "savedposts" || current_action=="undounsave")
+                {
+
+                    return View("UnsaveFromSavedList", post);
+
+
+                }
+
                 bool saved = await _blogRepository.CheckIfSavedAsync(post, User.Identity.Name);
+               
+                
                 if(saved)
                 {
                     return View("Unsave", post);
@@ -34,6 +45,8 @@ namespace Articles.ViewComponents
                 return View("Save", post);
             }
         }
+
+       
 
     }
 }

@@ -203,7 +203,7 @@ namespace Articles.Data
                 Post post = new Post();
                 post.Title = "seed post" + i.ToString();
                 post.UrlSlug = "seed_post_" + i.ToString();
-                post.PostedOn = DateTime.Now.AddDays(i);
+                post.PostedOn = DateTime.Now.AddDays(-i);
                 post.PostTags = new List<PostTag>();
 
                 foreach (Tag tag in tagg)

@@ -20,6 +20,12 @@ namespace Articles.ViewComponents
         {
             if (User.Identity.IsAuthenticated)
             {
+                string current_action = RouteData.Values["action"].ToString().ToLower();
+                if(current_action == "subscribed" || current_action == "unsubscribeupdate" || 
+                    current_action == "undounsubscribe")
+                {
+                    return View("UnsubscribeUpdate", author);
+                }
                 bool subscribed = await _blogRepository.CheckIfSubscribedAsync(User.Identity.Name, author.user_name);
                 if(subscribed)
                 {

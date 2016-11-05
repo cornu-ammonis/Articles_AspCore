@@ -49,9 +49,9 @@
                 <div class="post-tags">
                     <span>Tags:</span> @Html.Partial("_PostTags", Model.PostTags)
                     &nbsp
-                    <span>Author:</span> <a asp-action="PostsByAuthor" asp-controller="Blog"
-                                            asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a>  
-                    @await Component.InvokeAsync("Subscribe", new { author = Model.Author })
+                    
+                    
+                    @await Component.InvokeAsync("Likes", new { post = Model })
                     &nbsp
                     @await Component.InvokeAsync("Save", new { post = Model})
                     
@@ -61,6 +61,12 @@
                     @Model.PostedOn
                 </div>
 
+            </div>
+
+            <div class="row">
+                <span>Author:</span> <a asp-action="PostsByAuthor" asp-controller="Blog"
+                                        asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a>
+                                        @await Component.InvokeAsync("Subscribe", new { author = Model.Author })
             </div>
         </div>
 

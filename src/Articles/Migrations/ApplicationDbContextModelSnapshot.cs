@@ -41,6 +41,8 @@ namespace Articles.Migrations
 
                     b.Property<int>("page_size");
 
+                    b.Property<int>("subscribers_count");
+
                     b.Property<string>("user_name");
 
                     b.HasKey("BlogUserId");
@@ -82,9 +84,9 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Articles.Models.Core.PostUserLike", b =>
                 {
-                    b.Property<int?>("PostId");
+                    b.Property<int>("PostId");
 
-                    b.Property<int?>("BlogUserId");
+                    b.Property<int>("BlogUserId");
 
                     b.HasKey("PostId", "BlogUserId");
 
@@ -151,6 +153,8 @@ namespace Articles.Migrations
                     b.Property<string>("Title");
 
                     b.Property<string>("UrlSlug");
+
+                    b.Property<int>("ViewCount");
 
                     b.HasKey("PostId");
 
@@ -411,13 +415,11 @@ namespace Articles.Migrations
                 {
                     b.HasOne("Articles.Models.Core.BlogUser", "author")
                         .WithMany("AuthorUserSubscribes")
-                        .HasForeignKey("authorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("authorId");
 
                     b.HasOne("Articles.Models.Core.BlogUser", "user")
                         .WithMany("UserAuthorSubscribes")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("userId");
                 });
 
             modelBuilder.Entity("Articles.Models.Post", b =>

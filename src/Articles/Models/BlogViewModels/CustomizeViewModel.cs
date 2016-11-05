@@ -57,7 +57,7 @@ namespace Articles.Models.BlogViewModels
             author_counts = _blogRepository.AuthorPostCounts(all_authors);
             foreach (BlogUser author in all_authors)
             {
-                if(current_user.SubscribedAuthors.Any(c => c.user_name == author.user_name))
+                if(current_user.UserAuthorSubscribes.Any(c => c.authorId == author.BlogUserId))
                 {
                     subscribed_authors[author.user_name] = true;
                 }

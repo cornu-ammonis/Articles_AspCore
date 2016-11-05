@@ -191,6 +191,7 @@ namespace Articles.Models
                         && ua.author.user_name == key);
                         user.UserAuthorSubscribes.Remove(to_remove);
                         author.AuthorUserSubscribes.Remove(to_remove);
+                        author.subscribers_count = author.subscribers_count - 1;
                         db.UserAuthorSubscribes.Remove(to_remove);
                     }
                 }
@@ -206,6 +207,7 @@ namespace Articles.Models
                         nsubscription.author = author;
                         nsubscription.user = user;
                         author.AuthorUserSubscribes.Add(nsubscription);
+                        author.subscribers_count = author.subscribers_count + 1;
                         user.UserAuthorSubscribes.Add(nsubscription);
                         db.UserAuthorSubscribes.Add(nsubscription);
                     }
@@ -251,7 +253,8 @@ namespace Articles.Models
             IEnumerable<Post> post_query =
                 (from p in db.Posts
                  where p.Published == true &&
-                db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == p.Author.user_name)
+                user.UserAuthorSubscribes.Any(ua => ua.authorId == p.Author.BlogUserId)
+                //p.Author.AuthorUserSubscribes.Any(au => au.userId == user.BlogUserId)
                  orderby p.PostedOn descending
                  select p).Skip(pageNo * pageSize).Take(pageSize)
                  .Include<Post, BlogUser>(p => p.Author)
@@ -261,6 +264,7 @@ namespace Articles.Models
 
             foreach (Post post in post_query)
             {
+                
                 posts.Add(post);
             }
 
@@ -275,7 +279,8 @@ namespace Articles.Models
             IEnumerable<Post> post_query =
                 (from p in db.Posts
                  where p.Published == true &&
-                  db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == p.Author.user_name)
+                 user.UserAuthorSubscribes.Any(ua => ua.authorId == p.Author.BlogUserId)
+                //p.Author.AuthorUserSubscribes.Any(au => au.userId == user.BlogUserId)
                  orderby p.PostedOn descending
                  select p);
 
@@ -563,6 +568,7 @@ namespace Articles.Models
                
                 user.UserAuthorSubscribes.Add(nsubscription);
                 author.AuthorUserSubscribes.Add(nsubscription);
+                author.subscribers_count = author.subscribers_count + 1;
                 db.UserAuthorSubscribes.Add(nsubscription);
                 db.SaveChanges();
                 
@@ -593,6 +599,7 @@ namespace Articles.Models
                 db.Update(author);
                 user.UserAuthorSubscribes.Remove(to_remove);
                 author.AuthorUserSubscribes.Remove(to_remove);
+                author.subscribers_count = author.subscribers_count - 1;
                 db.UserAuthorSubscribes.Remove(to_remove);
                 db.SaveChanges();
             }
@@ -624,7 +631,7 @@ namespace Articles.Models
         public BlogUser RetrieveUser(string username)
         {
             BlogUser user = db.BlogUser
-             .Include<BlogUser, List<BlogUser>>(u => u.SubscribedAuthors)
+             .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UserAuthorSubscribes)
              .Include<BlogUser, List<PostUserSave>>(u => u.PostUserSaves)
              .Include<BlogUser, List<PostUserLike>>(u => u.PostUserLikes)
              .SingleOrDefault(u => u.user_name == username);
@@ -677,7 +684,44 @@ namespace Articles.Models
             return AuthorCounts;
         }
 
-       
+        public IList<Post> PostsByLikesPerDay(int pageNo, int pageSize)
+        {
+            List<Post> posts = new List<Post>();
+
+            IEnumerable<Post> p_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 p.LikeCount > 0
+                 orderby p.LikesPerDay() descending
+                 select p).Skip(pageNo * pageSize).Take(pageSize)
+                 .Include<Post, BlogUser>(p => p.Author)
+                 .Include<Post, Category>(p => p.Category)
+                 .Include(p => p.PostTags)
+                 .ThenInclude(posttag => posttag.Tag);
+
+            foreach (Post post in p_query)
+            {
+                posts.Add(post);
+            }
+            return posts;
+        }
+        
+        public int TotalPostsByLikesPerDay()
+        {
+            int count = 0;
+            IEnumerable<Post> p_query =
+                (from p in db.Posts
+                 where p.Published == true &&
+                 p.LikeCount > 0
+                 orderby p.LikesPerDay() descending
+                 select p);
+
+            foreach (Post post in p_query)
+            {
+                count = count + 1;
+            }
+            return count;
+        }
 
         public IList<Post> PostsByAuthor(string user_name, int pageNo, int pageSize)
         {
@@ -839,9 +883,17 @@ namespace Articles.Models
             {
                 throw new InvalidOperationException("Post selection failed due to title and date-published duplication");
             }
+            
             return post;
 
            
+        }
+        public Post IncrementViews(Post post)
+        {
+            db.Posts.Update(post);
+            post.ViewCount = post.ViewCount + 1;
+            db.SaveChanges();
+            return post;
         }
 
        
