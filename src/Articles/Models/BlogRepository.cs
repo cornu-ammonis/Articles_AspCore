@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 namespace Articles.Models
 
 {
+    //unless indicated otherwise, all methods which return IList<Post> and which contain pageNo and pageSize
+    // parameters return [pageSize] posts, sorted by date posted (descending; recent first)
+    //after skipping [pageNo]*[pageSize] posts such that only posts for the current page are returned.
+
     class BlogRepository : IBlogRepository
     {
 
@@ -24,6 +28,7 @@ namespace Articles.Models
             db = database;
         }
 
+        //used to return some posts from all published posts for a "recent posts" feed
         public IList<Post> Posts(int pageNo, int pageSize) {
 
             List<Post> posts = new List<Post>();
@@ -49,6 +54,8 @@ namespace Articles.Models
 
             }
 
+        //used to return some posts from a particlar category, identified by that category's UrlSlug
+        //which is given as the first parameter. 
         public IList<Post> PostsForCategory(string categorySlug, int pageNo, int pageSize)
         {
             List<Post> posts = new List<Post>();
@@ -73,6 +80,8 @@ namespace Articles.Models
             return posts;
         }
 
+        //used to return some posts with a particular tag, identified by that tag's UrlSlug which
+        //is given as the first parameter.
         public IList<Post> PostsForTag(string tagSlug, int pageNo, int pageSize)
         {
             List<Post> posts = new List<Post>();
@@ -97,6 +106,9 @@ namespace Articles.Models
             return posts;
         }
 
+        //used to return some posts matching a particular search term, which is given as a string as the
+        //first parameter. queries for posts whose title contains the search term, or whose category's name
+        //equals the search term, or whose list of tags contains a tag whose name equals the search term.
         public IList<Post> PostsForSearch(string search, int pageNo, int pageSize)
         {
             List<Post> posts = new List<Post>();
@@ -104,7 +116,10 @@ namespace Articles.Models
             IEnumerable<Post> post_query =
                 (from p in db.Posts
                  where p.Published == true &&
-                 ( p.Title.Contains(search) || p.Category.Name.Equals(search) || p.PostTags.Any(t => t.Tag.Name.Equals(search)))
+                 //if the post's title contains the search term, or the post's category's name or any of its 
+                 //tags' names equal the search term , return that post 
+                
+                 (p.Title.Contains(search) || p.Category.Name.Equals(search) || p.PostTags.Any(t => t.Tag.Name.Equals(search)))
                  orderby p.PostedOn descending
                  select p)
                  .Skip(pageNo * pageSize).Take(pageSize)
@@ -245,6 +260,8 @@ namespace Articles.Models
 
         }
 
+        //used to return some posts where the current user has chosen to subscribe to the author of those 
+        //posts. 
         public IList<Post> SubscribedPostsForUser(string user_name, int pageNo, int pageSize)
         {
             List<Post> posts = new List<Post>();
@@ -271,6 +288,9 @@ namespace Articles.Models
             return posts;
         }
 
+        //returns the total number of posts which the SubSubscribedPostsForUser method could return; 
+        //i.e., counts the number of posts in the database where the current user has chosen to subscribe 
+        //to the author of those posts 
         public int TotalSubscribedPostsForUser(string user_name)
         {
             int total = 0;
@@ -307,6 +327,8 @@ namespace Articles.Models
             }
         }
 
+        //counts the total number of posts which the PostsForUser method could access, i.e. counts the 
+        //number of posts whose category is included in the current user's custom feed
         public int TotalPostsForUser(string user_name)
         {
             int totalPosts = 0;
@@ -378,6 +400,8 @@ namespace Articles.Models
             return IsSaved;
         }
 
+
+        //reuturns some posts which the current user has saved.
         public IList<Post> PostsUserSaved(string username, int pageNo, int pageSize)
         {
             List<Post> posts = new List<Post>();
@@ -410,6 +434,7 @@ namespace Articles.Models
             return posts;
         }
 
+        //counts the number of posts which the current user has saved
         public int TotalPostsUserSaved(string username)
         {
             List<Post> posts = new List<Post>();
