@@ -13,7 +13,7 @@ namespace Articles
         {
             var host = new WebHostBuilder()
                 .CaptureStartupErrors(true)
-            .UseSetting("detailedErrors", "true")
+                .UseSetting("detailedErrors", "true")
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
