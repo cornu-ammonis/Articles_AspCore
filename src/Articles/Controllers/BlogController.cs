@@ -38,10 +38,6 @@ namespace Articles.Controllers
         //size will be used, defaulting to 10 either if user is not authenticaed or user has not submitted custom page size.
         public IActionResult Posts(int p = 1)
         {
-            //these were replaced by the viewmodel, which now handles generation of posts and total posts 
-            // var posts = _blogRepository.Posts(p - 1, 10);
-            // var total_posts = _blogRepository.TotalPosts();
-
             ListViewModel viewModel;
             if (User.Identity.IsAuthenticated)
             {
@@ -156,8 +152,6 @@ namespace Articles.Controllers
 
                 _blogRepository.UpdateCustomization(ViewModel, User.Identity.Name);
                 return RedirectToAction("CustomPosts");
-
-                //return View("Test", ViewModel);
             }
 
             else
@@ -168,7 +162,6 @@ namespace Articles.Controllers
 
         public IActionResult Category(string category, int p = 1)
         {
-
             ListViewModel viewModel;
             if (User.Identity.IsAuthenticated)
             {
@@ -218,23 +211,7 @@ namespace Articles.Controllers
             return View("List", viewModel);
         }
 
-        /*
-        public ViewResult Search(string s, int p = 1)
-        {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, s, "Search", p, User.Identity.Name);
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, s, "Search", p);
-            }
-
-
-            ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
-            return View("List", viewModel);
-        } */
+       
 
         //returns a partial view of search results if ajax request; else, returns full List View
         public IActionResult Search(string s, int p = 1)
@@ -340,7 +317,6 @@ namespace Articles.Controllers
         public IActionResult SavePost(int year, int month, string ti)
         {
             _blogRepository.SavePostForUser(year, month, ti, User.Identity.Name);
-            //return RedirectToAction("Post", new { year, month, ti });
             if (Request.IsAjaxRequest())
             {
                 Post post = _blogRepository.Post(year, month, ti);
