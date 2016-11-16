@@ -24,6 +24,30 @@ namespace Articles.Models
 
             //constructor used for two types of list view generation -- all posts, and custom posts. string "type" determines which.
             // if user name exists, attempts to return their customized page size, otherwise defaults to 10.
+
+        protected ListViewModel(IBlogRepository blogRepository,
+            string user_name = null)
+        {
+            PageSize = 10;
+            if(user_name != null)
+            {
+                PageSize = blogRepository.UserPageSize(user_name);
+
+                //avoids error where page size gets set to zero and various SQL fetch errors are generated and 
+                // pagination says there are  infinite pages
+                if (PageSize < 1)
+                {
+                    PageSize = 10;
+                }
+            }
+        }
+
+        protected virtual void PopulatePostFields(IList<Post> _posts, int _totalPosts)
+        {
+            Posts = _posts;
+            TotalPosts = _totalPosts;
+        }
+
         public ListViewModel(IBlogRepository blogRepository, int p, string type, string user_name = null)
         {
             PageSize = 10;
