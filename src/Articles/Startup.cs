@@ -31,7 +31,8 @@ namespace Articles
             if (env.IsDevelopment())
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
+               
+               // builder.AddUserSecrets();
 
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
@@ -88,12 +89,12 @@ namespace Articles
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions()
+           /* app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(
             Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Uploads")),
                 RequestPath = new PathString("/StaticFiles")
-            });
+            }); */
 
 
             app.UseIdentity();
