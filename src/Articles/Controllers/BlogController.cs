@@ -91,16 +91,8 @@ namespace Articles.Controllers
 
         public IActionResult HotPosts(int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                string active_user = User.Identity.Name;
-                 viewModel = new ListViewModel(_blogRepository, p, "Hot", active_user);
-            }
-            else
-            {
-                 viewModel = new ListViewModel(_blogRepository, p, "Hot");
-            }
+            ListViewModel viewModel = new HotPostsListViewModel(_blogRepository, p, User.Identity.IsAuthenticated ?
+                User.Identity.Name : null);
             return View("List", viewModel);
         }
 
@@ -412,7 +404,8 @@ namespace Articles.Controllers
             string user_name = User.Identity.Name;
             _blogRepository.UnsubscribeAuthor(user_name, authorname);
 
-            var viewModel = new ListViewModel(_blogRepository, 1, "Subscribed", user_name);
+            //****need to add way to retrieve page number****
+            ListViewModel viewModel = new SubscribedListViewModel(_blogRepository, 1, user_name);
             ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes",
                 viewModel.TotalPosts, user_name);
             return PartialView("List", viewModel);
@@ -422,7 +415,9 @@ namespace Articles.Controllers
         {
             string user_name = User.Identity.Name;
             _blogRepository.SubscribeAuthor(user_name, authorname);
-            var viewModel = new ListViewModel(_blogRepository, 1, "Subscribed", user_name);
+
+            //****need to add way to retrieve page number****
+            ListViewModel viewModel = new SubscribedListViewModel(_blogRepository, 1, user_name);
             ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes",
                 viewModel.TotalPosts, user_name);
             return PartialView("List", viewModel);
