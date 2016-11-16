@@ -89,12 +89,12 @@ namespace Articles
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions()
+           /* app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(
             Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Uploads")),
                 RequestPath = new PathString("/StaticFiles")
-            });
+            }); */
 
 
             app.UseIdentity();
