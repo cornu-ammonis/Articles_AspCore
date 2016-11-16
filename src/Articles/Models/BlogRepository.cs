@@ -234,7 +234,7 @@ namespace Articles.Models
 
         //returns only posts in a category for which the junction table link between that category
         //and the current BlogUser exists 
-        public IList<Post> PostsForUser(string user_name, int pageNo, int pageSize)
+        public IList<Post> CustomPostsForUser(string user_name, int pageNo, int pageSize)
         {
          
 
@@ -329,7 +329,7 @@ namespace Articles.Models
 
         //counts the total number of posts which the PostsForUser method could access, i.e. counts the 
         //number of posts whose category is included in the current user's custom feed
-        public int TotalPostsForUser(string user_name)
+        public int TotalCustomPostsForUser(string user_name)
         {
             int totalPosts = 0;
             IEnumerable<Post> post_query =

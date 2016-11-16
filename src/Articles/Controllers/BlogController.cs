@@ -67,7 +67,7 @@ namespace Articles.Controllers
             {
                 string user_name = User.Identity.Name;
 
-                var viewModel = new ListViewModel(_blogRepository, p, "Custom", user_name);
+                ListViewModel viewModel = new CustomListViewModel(_blogRepository, p, user_name);
                 ViewBag.Title = String.Format(@"{0} posts found for user {1} ", viewModel.TotalPosts, user_name);
                 return View("List", viewModel);
             }

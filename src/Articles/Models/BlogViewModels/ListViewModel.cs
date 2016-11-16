@@ -65,10 +65,6 @@ namespace Articles.Models
             switch(type)
             {
                 
-                case "Custom":
-                    Posts = blogRepository.PostsForUser(user_name, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsForUser(user_name);
-                    break;
                 case "All":
                     Posts = blogRepository.Posts(p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPosts();
