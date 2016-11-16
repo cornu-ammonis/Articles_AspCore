@@ -64,10 +64,7 @@ namespace Articles.Models
             }
             switch(type)
             {
-                case "Subscribed":
-                    Posts = blogRepository.SubscribedPostsForUser(user_name, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalSubscribedPostsForUser(user_name);
-                    break;
+                
                 case "Custom":
                     Posts = blogRepository.PostsForUser(user_name, p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsForUser(user_name);
@@ -76,10 +73,7 @@ namespace Articles.Models
                     Posts = blogRepository.Posts(p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPosts();
                     break;
-                case "Saved":
-                    Posts = blogRepository.PostsUserSaved(user_name, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsUserSaved(user_name);
-                    break;
+               
                 case "Hot":
                     Posts = blogRepository.PostsByLikesPerDay(p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsByLikesPerDay();

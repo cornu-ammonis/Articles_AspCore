@@ -118,7 +118,7 @@ namespace Articles.Controllers
         {
 
             string current_username = User.Identity.Name;
-            var viewModel = new ListViewModel(_blogRepository, p, "Subscribed", current_username);
+            ListViewModel viewModel = new SubscribedListViewModel(_blogRepository, p, current_username);
             ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes", 
                 viewModel.TotalPosts, current_username);
             return View("List", viewModel);
@@ -369,29 +369,6 @@ namespace Articles.Controllers
         [Authorize]
         public IActionResult SavedPosts(int p = 1)
         {
-            /*   if (!User.Identity.IsAuthenticated)
-               {
-                   return RedirectToAction("Login", "Account");
-               }
-               else
-               {
-                   string user_name = User.Identity.Name;
-
-                   var viewModel = new ListViewModel(_blogRepository, p, "Saved", user_name);
-                   ViewBag.Title = String.Format(@"{0} posts saved for user {1} ", viewModel.TotalPosts, user_name);
-
-                   if(Request.IsAjaxRequest())
-                   {
-                       return PartialView("List", viewModel);
-                   }
-                   else
-                   {
-                       return View("List", viewModel);
-                   }
-
-
-               }
-               */
             ListViewModel viewModel = new SavedListViewModel(_blogRepository, p, User.Identity.Name);
             ViewBag.Title = String.Format(@"{0} posts saved for user {1} ", viewModel.TotalPosts, User.Identity.Name);
 
