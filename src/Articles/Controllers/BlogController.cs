@@ -39,17 +39,8 @@ namespace Articles.Controllers
         //size will be used, defaulting to 10 either if user is not authenticaed or user has not submitted custom page size.
         public IActionResult Posts(int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, p, "All", User.Identity.Name);
-                
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, p, "All");
-                
-            }
+            ListViewModel viewModel = new AllPostsListViewModel(_blogRepository, p,
+                User.Identity.IsAuthenticated ? User.Identity.Name : null);
             
             ViewBag.Title = "Latest Posts";
             

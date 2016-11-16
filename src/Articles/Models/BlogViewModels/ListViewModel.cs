@@ -64,12 +64,6 @@ namespace Articles.Models
             }
             switch(type)
             {
-                
-                case "All":
-                    Posts = blogRepository.Posts(p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPosts();
-                    break;
-               
                 case "Hot":
                     Posts = blogRepository.PostsByLikesPerDay(p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsByLikesPerDay();
