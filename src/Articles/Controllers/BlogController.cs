@@ -181,18 +181,11 @@ namespace Articles.Controllers
         //returns a partial view of search results if ajax request; else, returns full List View
         public IActionResult Search(string s, int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, s, "Search", p, User.Identity.Name);
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, s, "Search", p);
-            }
+            ListViewModel viewModel = new SearchListViewModel(_blogRepository, s, p,
+                User.Identity.IsAuthenticated ? User.Identity.Name : null);
 
-
-            ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
+            ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, 
+                viewModel.Search);
             if (Request.IsAjaxRequest())
             {
                 ViewBag.s = String.Format("<a href=\"/Blog/partialSearch?s={0}\">Load Full Results</a>", s);
