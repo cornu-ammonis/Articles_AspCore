@@ -49,30 +49,7 @@ namespace Articles.Models
 
         //used for generating a list of posts either by tag, category, or search term, the instance of which is specified by 
         // string "text" and which case specified by string "type" 
-        public ListViewModel(IBlogRepository blogRepository, string text, string type, int p, string user_name = null)
-        {
-            PageSize = 10;
-            if (user_name != null)
-            {
-               
-                PageSize = blogRepository.UserPageSize(user_name);
-
-                if (PageSize < 1)
-                {
-                    PageSize = 10;
-                }
-            }
-
-            switch (type)
-            {
-                case "Author":
-                    Posts = blogRepository.PostsByAuthor(text, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsByAuthor(text);
-                break;
-               
-            }
-           
-        }
+        
 
 
         public IList<Post>  Posts { get; private set; }

@@ -67,26 +67,19 @@ namespace Articles.Controllers
         [Authorize]
         public IActionResult YourAuthoredPosts(int p =1)
         {
-            var viewModel = new ListViewModel(_blogRepository, User.Identity.Name, "Author", p,  User.Identity.Name);
+            ListViewModel viewModel = new AuthorListViewModel(_blogRepository, User.Identity.Name, p,
+                User.Identity.Name);
             ViewBag.SaveUnsave = false;
             return View("List", viewModel);
         }
 
         public IActionResult PostsByAuthor( string author, int p = 1)
         {
-            if(User.Identity.IsAuthenticated)
-            {
-                string active_user = User.Identity.Name;
-                var viewModel = new ListViewModel(_blogRepository, author, "Author", p, active_user );
-                ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
+            ListViewModel viewModel = new AuthorListViewModel(_blogRepository, author, p,
+                 User.Identity.IsAuthenticated ? User.Identity.Name : null);
+            ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
                 return View("List", viewModel);
-            }
-            else
-            {
-                var viewModel = new ListViewModel(_blogRepository, author, "Author", p);
-                ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
-                return View("List", viewModel);
-            }
+          
         }
 
         public IActionResult HotPosts(int p = 1)
