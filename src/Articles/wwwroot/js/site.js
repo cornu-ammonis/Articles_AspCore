@@ -26,12 +26,20 @@ function hideUnsavedPost() {
 
 function unsubscribeUpdate() {
     var authorname = $(this).attr('data-authorname');
+    var authorElementId = $(this).attr('data-authorid');
     var undolink = "<a href=\"/Blog/UndoUnsubscribe?authorname=" + authorname +
         "\" data-ajax=\"true\" data-ajax-mode=\"replace-with\" data-ajax-update=\"#content\"" +
-        "data-ajax-success=\"scrubUndo\"> Undo </a>";
-    $("div#undoButton").append("<p> unsubscribed from author " + authorname + undolink + "</p>");
+        "data-ajax-success=\"scrubUndoUnsub\" data-authorname=\"" + authorname + "\" data-authorid=\"" +
+        authorElementId + "\"> Undo </a>";
+    $("div#undoButton").append("<p id=\"undo" + authorElementId + "\"> unsubscribed from author " + authorname + undolink + "</p>");
     $("div#fullListLink").html("<a href=\"/Blog/Subscribed\">Load All Subscribed Posts As Fresh Page</a>")
 }
 function scrubUndo() {
     $("div#undoButton").html(" ");
+}
+
+function scrubUndoUnsub() {
+    var authorElementId = $(this).attr('data-authorid');
+    var authorname = $(this).attr('data-authorname');
+    $("p#undo" + authorElementId).html("successfully resubscribed to author " + authorname );
 }

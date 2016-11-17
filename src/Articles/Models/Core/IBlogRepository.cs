@@ -32,8 +32,8 @@ namespace Articles.Models
         IList<Post> PostsForSearch(string search, int pageNo, int pageSize);
         int TotalPostsForSearch(string search);
 
-        IList<Post> PostsForUser(string user_name, int pageNo, int pageSize);
-        int TotalPostsForUser(string user_name);
+        IList<Post> CustomPostsForUser(string user_name, int pageNo, int pageSize);
+        int TotalCustomPostsForUser(string user_name);
         void UpdateCustomization(CustomizeViewModel viewModel, string user_name);
         int UserPageSize(string user_name);
 

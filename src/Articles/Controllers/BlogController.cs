@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Articles.ViewComponents;
 using myExtensions;
+using Articles.Models.BlogViewModels.ListViewModels;
 
 namespace Articles.Controllers
 {
@@ -38,17 +39,8 @@ namespace Articles.Controllers
         //size will be used, defaulting to 10 either if user is not authenticaed or user has not submitted custom page size.
         public IActionResult Posts(int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, p, "All", User.Identity.Name);
-                
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, p, "All");
-                
-            }
+            ListViewModel viewModel = new AllPostsListViewModel(_blogRepository, p,
+                User.Identity.IsAuthenticated ? User.Identity.Name : null);
             
             ViewBag.Title = "Latest Posts";
             
@@ -66,7 +58,7 @@ namespace Articles.Controllers
             {
                 string user_name = User.Identity.Name;
 
-                var viewModel = new ListViewModel(_blogRepository, p, "Custom", user_name);
+                ListViewModel viewModel = new CustomListViewModel(_blogRepository, p, user_name);
                 ViewBag.Title = String.Format(@"{0} posts found for user {1} ", viewModel.TotalPosts, user_name);
                 return View("List", viewModel);
             }
@@ -75,40 +67,25 @@ namespace Articles.Controllers
         [Authorize]
         public IActionResult YourAuthoredPosts(int p =1)
         {
-            var viewModel = new ListViewModel(_blogRepository, User.Identity.Name, "Author", p,  User.Identity.Name);
+            ListViewModel viewModel = new AuthorListViewModel(_blogRepository, User.Identity.Name, p,
+                User.Identity.Name);
             ViewBag.SaveUnsave = false;
             return View("List", viewModel);
         }
 
         public IActionResult PostsByAuthor( string author, int p = 1)
         {
-            if(User.Identity.IsAuthenticated)
-            {
-                string active_user = User.Identity.Name;
-                var viewModel = new ListViewModel(_blogRepository, author, "Author", p, active_user );
-                ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
+            ListViewModel viewModel = new AuthorListViewModel(_blogRepository, author, p,
+                 User.Identity.IsAuthenticated ? User.Identity.Name : null);
+            ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
                 return View("List", viewModel);
-            }
-            else
-            {
-                var viewModel = new ListViewModel(_blogRepository, author, "Author", p);
-                ViewBag.Title = String.Format("{0} posts found by author {1}", viewModel.TotalPosts, author);
-                return View("List", viewModel);
-            }
+          
         }
 
         public IActionResult HotPosts(int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                string active_user = User.Identity.Name;
-                 viewModel = new ListViewModel(_blogRepository, p, "Hot", active_user);
-            }
-            else
-            {
-                 viewModel = new ListViewModel(_blogRepository, p, "Hot");
-            }
+            ListViewModel viewModel = new HotPostsListViewModel(_blogRepository, p, User.Identity.IsAuthenticated ?
+                User.Identity.Name : null);
             return View("List", viewModel);
         }
 
@@ -117,7 +94,7 @@ namespace Articles.Controllers
         {
 
             string current_username = User.Identity.Name;
-            var viewModel = new ListViewModel(_blogRepository, p, "Subscribed", current_username);
+            ListViewModel viewModel = new SubscribedListViewModel(_blogRepository, p, current_username);
             ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes", 
                 viewModel.TotalPosts, current_username);
             return View("List", viewModel);
@@ -162,19 +139,8 @@ namespace Articles.Controllers
 
         public IActionResult Category(string category, int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, category, "Category", p, User.Identity.Name);
-                
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, category, "Category", p);
-             
-                ViewBag.SaveUnsave = false;
-            }
-
+            ListViewModel viewModel = new CategoryListViewModel(_blogRepository, category, p,
+                User.Identity.IsAuthenticated ? User.Identity.Name : null);
 
             if (viewModel.Category == null)
                 return new StatusCodeResult(400);
@@ -189,16 +155,8 @@ namespace Articles.Controllers
 
         public IActionResult Tag(string tag, int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, tag, "Tag", p, User.Identity.Name);
-                
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, tag, "Tag", p);
-            }
+            ListViewModel viewModel = new TagListViewModel(_blogRepository, tag, p, User.Identity.IsAuthenticated ?
+                User.Identity.Name : null);
 
 
             if (viewModel.Tag == null)
@@ -216,18 +174,11 @@ namespace Articles.Controllers
         //returns a partial view of search results if ajax request; else, returns full List View
         public IActionResult Search(string s, int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, s, "Search", p, User.Identity.Name);
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, s, "Search", p);
-            }
+            ListViewModel viewModel = new SearchListViewModel(_blogRepository, s, p,
+                User.Identity.IsAuthenticated ? User.Identity.Name : null);
 
-
-            ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, s);
+            ViewBag.Title = String.Format(@"{0} posts found for search ""{1}""", viewModel.TotalPosts, 
+                viewModel.Search);
             if (Request.IsAjaxRequest())
             {
                 ViewBag.s = String.Format("<a href=\"/Blog/partialSearch?s={0}\">Load Full Results</a>", s);
@@ -368,29 +319,17 @@ namespace Articles.Controllers
         [Authorize]
         public IActionResult SavedPosts(int p = 1)
         {
-            if (!User.Identity.IsAuthenticated)
+            ListViewModel viewModel = new SavedListViewModel(_blogRepository, p, User.Identity.Name);
+            ViewBag.Title = String.Format(@"{0} posts saved for user {1} ", viewModel.TotalPosts, User.Identity.Name);
+
+            if (Request.IsAjaxRequest())
             {
-                return RedirectToAction("Login", "Account");
+                return PartialView("List", viewModel);
             }
             else
             {
-                string user_name = User.Identity.Name;
-
-                var viewModel = new ListViewModel(_blogRepository, p, "Saved", user_name);
-                ViewBag.Title = String.Format(@"{0} posts saved for user {1} ", viewModel.TotalPosts, user_name);
-
-                if(Request.IsAjaxRequest())
-                {
-                    return PartialView("List", viewModel);
-                }
-                else
-                {
-                    return View("List", viewModel);
-                }
-
-                
+                return View("List", viewModel);
             }
-
         }
 
         [Authorize]
@@ -432,7 +371,8 @@ namespace Articles.Controllers
             string user_name = User.Identity.Name;
             _blogRepository.UnsubscribeAuthor(user_name, authorname);
 
-            var viewModel = new ListViewModel(_blogRepository, 1, "Subscribed", user_name);
+            //****need to add way to retrieve page number****
+            ListViewModel viewModel = new SubscribedListViewModel(_blogRepository, 1, user_name);
             ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes",
                 viewModel.TotalPosts, user_name);
             return PartialView("List", viewModel);
@@ -442,7 +382,9 @@ namespace Articles.Controllers
         {
             string user_name = User.Identity.Name;
             _blogRepository.SubscribeAuthor(user_name, authorname);
-            var viewModel = new ListViewModel(_blogRepository, 1, "Subscribed", user_name);
+
+            //****need to add way to retrieve page number****
+            ListViewModel viewModel = new SubscribedListViewModel(_blogRepository, 1, user_name);
             ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes",
                 viewModel.TotalPosts, user_name);
             return PartialView("List", viewModel);

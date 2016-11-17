@@ -9,25 +9,11 @@ namespace Articles.Models
 {
     public class ListViewModel
     {
-      /*  public ListViewModel(IBlogRepository _blogRepository, int p)
-        {
-            Posts = _blogRepository.Posts(p - 1, 10);
-            TotalPosts = _blogRepository.TotalPosts();
-        }
-
-      /*  public ListViewModel(IBlogRepository blogRepository, string categorySlug, int p)
-        {
-            Posts = blogRepository.PostsForCategory(categorySlug, p - 1, 10);
-            TotalPosts = blogRepository.TotalPostsForCategory(categorySlug);
-            Category = blogRepository.Category(categorySlug);
-        } */
-
-            //constructor used for two types of list view generation -- all posts, and custom posts. string "type" determines which.
-            // if user name exists, attempts to return their customized page size, otherwise defaults to 10.
-        public ListViewModel(IBlogRepository blogRepository, int p, string type, string user_name = null)
+        protected ListViewModel(IBlogRepository blogRepository,
+            string user_name = null)
         {
             PageSize = 10;
-            if (user_name != null)
+            if(user_name != null)
             {
                 PageSize = blogRepository.UserPageSize(user_name);
 
@@ -38,75 +24,32 @@ namespace Articles.Models
                     PageSize = 10;
                 }
             }
-            switch(type)
-            {
-                case "Subscribed":
-                    Posts = blogRepository.SubscribedPostsForUser(user_name, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalSubscribedPostsForUser(user_name);
-                    break;
-                case "Custom":
-                    Posts = blogRepository.PostsForUser(user_name, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsForUser(user_name);
-                    break;
-                case "All":
-                    Posts = blogRepository.Posts(p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPosts();
-                    break;
-                case "Saved":
-                    Posts = blogRepository.PostsUserSaved(user_name, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsUserSaved(user_name);
-                    break;
-                case "Hot":
-                    Posts = blogRepository.PostsByLikesPerDay(p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsByLikesPerDay();
-                    break;
-            }
-           
-           
-        } 
+        }
 
+        protected virtual void PopulatePostFields(IList<Post> _posts, int _totalPosts)
+        {
+            Posts = _posts;
+            TotalPosts = _totalPosts;
+        }
+
+        protected virtual void PopulateTag(Tag _tag)
+        {
+            Tag = _tag;
+        }
+
+        protected virtual void PopulateCategory(Category _category)
+        {
+            Category = _category;
+        }
+
+        protected virtual void PopulateSearch(string _search)
+        {
+            Search = _search;
+        } 
 
         //used for generating a list of posts either by tag, category, or search term, the instance of which is specified by 
         // string "text" and which case specified by string "type" 
-        public ListViewModel(IBlogRepository blogRepository, string text, string type, int p, string user_name = null)
-        {
-            PageSize = 10;
-            if (user_name != null)
-            {
-               
-                PageSize = blogRepository.UserPageSize(user_name);
-
-                if (PageSize < 1)
-                {
-                    PageSize = 10;
-                }
-            }
-
-            switch (type)
-            {
-                case "Tag":
-                    Posts = blogRepository.PostsForTag(text, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsForTag(text);
-                    Tag = blogRepository.Tag(text);
-                    break;
-                case "Category":
-                    Posts = blogRepository.PostsForCategory(text, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsForCategory(text);
-                    Category = blogRepository.Category(text);
-                    break;
-                case "Search":
-                    Posts = blogRepository.PostsForSearch(text, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsForSearch(text);
-                    Search = text;
-                    break;
-                case "Author":
-                    Posts = blogRepository.PostsByAuthor(text, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsByAuthor(text);
-                break;
-               
-            }
-           
-        }
+        
 
 
         public IList<Post>  Posts { get; private set; }
