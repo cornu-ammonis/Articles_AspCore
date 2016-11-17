@@ -146,19 +146,8 @@ namespace Articles.Controllers
 
         public IActionResult Category(string category, int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, category, "Category", p, User.Identity.Name);
-                
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, category, "Category", p);
-             
-                ViewBag.SaveUnsave = false;
-            }
-
+            ListViewModel viewModel = new CategoryListViewModel(_blogRepository, category, p,
+                User.Identity.IsAuthenticated ? User.Identity.Name : null);
 
             if (viewModel.Category == null)
                 return new StatusCodeResult(400);
