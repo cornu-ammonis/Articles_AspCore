@@ -3,7 +3,8 @@
     @Model.subscribers_count.ToString() subscribers
     <a asp-action="UnsubscribeUpdate" asp-controller="Blog" asp-route-authorname=@Model.user_name
        data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#content" 
-       data-ajax-success="unsubscribeUpdate" data-authorname="@Model.user_name">
+       data-ajax-success="unsubscribeUpdate" data-authorname="@Model.user_name" 
+       data-authorid="@Model.AuthorSubscribeAjaxId()">
         <b>Unsubscribe</b>
     </a>
 
