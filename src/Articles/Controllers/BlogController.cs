@@ -173,16 +173,8 @@ namespace Articles.Controllers
 
         public IActionResult Tag(string tag, int p = 1)
         {
-            ListViewModel viewModel;
-            if (User.Identity.IsAuthenticated)
-            {
-                viewModel = new ListViewModel(_blogRepository, tag, "Tag", p, User.Identity.Name);
-                
-            }
-            else
-            {
-                viewModel = new ListViewModel(_blogRepository, tag, "Tag", p);
-            }
+            ListViewModel viewModel = new TagListViewModel(_blogRepository, tag, p, User.Identity.IsAuthenticated ?
+                User.Identity.Name : null);
 
 
             if (viewModel.Tag == null)

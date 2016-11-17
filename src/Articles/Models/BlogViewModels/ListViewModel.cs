@@ -32,6 +32,11 @@ namespace Articles.Models
             TotalPosts = _totalPosts;
         }
 
+        protected virtual void PopulateTag(Tag _tag)
+        {
+            Tag = _tag;
+        }
+
         //used for generating a list of posts either by tag, category, or search term, the instance of which is specified by 
         // string "text" and which case specified by string "type" 
         public ListViewModel(IBlogRepository blogRepository, string text, string type, int p, string user_name = null)
@@ -50,11 +55,7 @@ namespace Articles.Models
 
             switch (type)
             {
-                case "Tag":
-                    Posts = blogRepository.PostsForTag(text, p - 1, PageSize);
-                    TotalPosts = blogRepository.TotalPostsForTag(text);
-                    Tag = blogRepository.Tag(text);
-                    break;
+          
                 case "Category":
                     Posts = blogRepository.PostsForCategory(text, p - 1, PageSize);
                     TotalPosts = blogRepository.TotalPostsForCategory(text);
