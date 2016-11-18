@@ -65,6 +65,7 @@ namespace Articles
 
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
+            services.AddScoped<ILinkRepository, LinkRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

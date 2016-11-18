@@ -17,6 +17,7 @@ namespace Articles.Data
             : base(options)
         { }
 
+
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet <Tag> Tags { get; set; }
@@ -26,6 +27,7 @@ namespace Articles.Data
         public DbSet<PostUserSave> PostUserSaves { get; set; }
         public DbSet<PostUserLike> PostUserLikes { get; set; }
         public DbSet<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
+        public DbSet<Link> Links { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder builder)

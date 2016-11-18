@@ -8,9 +8,10 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161118010130_links")]
+    partial class links
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -125,22 +126,6 @@ namespace Articles.Migrations
                     b.HasIndex("userId");
 
                     b.ToTable("UserAuthorSubscribes");
-                });
-
-            modelBuilder.Entity("Articles.Models.Link", b =>
-                {
-                    b.Property<int>("LinkId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("category");
-
-                    b.Property<string>("title");
-
-                    b.Property<string>("url");
-
-                    b.HasKey("LinkId");
-
-                    b.ToTable("Links");
                 });
 
             modelBuilder.Entity("Articles.Models.Post", b =>

@@ -1,0 +1,52 @@
+@model IEnumerable<Articles.Models.Link>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div id="linkcontent">
+    <h2>Index</h2>
+    <div id="creatediv">
+        <p>
+            <a asp-action="Create" data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#creatediv">
+                Create New
+            </a>
+        </p>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.category)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.url)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.category)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.title)
+                    </td>
+                    <td>
+                        <a href="@item.url">@item.url</a>
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LinkId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.LinkId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.LinkId">Delete</a>
+            </td>
+        </tr>
+            }
+        </tbody>
+    </table>
+</div>
