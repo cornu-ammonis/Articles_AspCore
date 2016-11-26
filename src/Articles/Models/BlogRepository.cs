@@ -655,6 +655,12 @@ namespace Articles.Models
 
         public BlogUser RetrieveUser(string username)
         {
+            //user doesnt exist; generate a new user to avoid errors
+            if(db.BlogUser.Any(u => u.user_name == username) == false)
+            {
+                return this.GenerateUser(username);
+            }
+
             BlogUser user = db.BlogUser
              .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UserAuthorSubscribes)
              .Include<BlogUser, List<PostUserSave>>(u => u.PostUserSaves)
