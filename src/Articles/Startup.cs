@@ -21,6 +21,7 @@ namespace Articles
 {
     public class Startup
     {
+        public static string ConnectionString { get; private set; }
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -40,6 +41,7 @@ namespace Articles
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+            ConnectionString = Configuration.GetConnectionString("defaultConnection");
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -51,7 +53,7 @@ namespace Articles
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()

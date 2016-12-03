@@ -61,7 +61,7 @@ namespace TestLibrary
             context.Posts.Add(testPost1);
             context.Posts.Add(testPost2);
             context.Posts.Add(testPost3);
-            context.SaveChanges();
+           
 
             IList<Post> repositoryList = repository.PostsForCategory(testCategory.UrlSlug, 0, 10);
 
@@ -71,7 +71,7 @@ namespace TestLibrary
             context.Posts.Remove(testPost2);
             context.Posts.Remove(testPost3);
             context.Categories.Remove(testCategory);
-            context.SaveChanges();
+            
         }
     }
 }
