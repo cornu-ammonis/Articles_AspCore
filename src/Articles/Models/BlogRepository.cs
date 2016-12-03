@@ -17,7 +17,7 @@ namespace Articles.Models
     // parameters return [pageSize] posts, sorted by date posted (descending; recent first)
     //after skipping [pageNo]*[pageSize] posts such that only posts for the current page are returned.
 
-    class BlogRepository : IBlogRepository
+   public class BlogRepository : IBlogRepository
     {
 
         public ApplicationDbContext db;
