@@ -265,6 +265,279 @@ namespace TestLibrary
         }
 
 
+        [TestCase]
+        public void CustomListViewModelRetrievesPostList()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+            mockRepository.Setup(r => r.CustomPostsForUser("testUserName", 0, 10)).Returns(postList);
+            ListViewModel testViewModel = new CustomListViewModel(mockRepository.Object, 1, "testUserName");
+
+            Assert.That(testViewModel.Posts, Is.EquivalentTo(postList));
+        }
+
+        [TestCase]
+        public void CustomListViewModelRetrievesPostCount()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+            mockRepository.Setup(r => r.TotalCustomPostsForUser("testUserName")).Returns(postList.Count);
+            ListViewModel testViewModel = new CustomListViewModel(mockRepository.Object, 1, "testUserName");
+
+            Assert.That(testViewModel.TotalPosts, Is.EqualTo(postList.Count));
+        }
+
+        [TestCase]
+        public void SearchListViewModelRetrievesPostListFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.PostsForSearch("testSearch", 0, 10)).Returns(postList);
+            ListViewModel searchListViewModel = new SearchListViewModel(mockRepository.Object, "testSearch", 1);
+            Assert.That(searchListViewModel.Posts, Is.EquivalentTo(postList));
+        }
+
+        [TestCase]
+        public void SearchListViewModelRetrievesPostCountFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.TotalPostsForSearch("testSearch")).Returns(postList.Count);
+            ListViewModel searchListViewModel = new SearchListViewModel(mockRepository.Object, "testSearch", 1);
+            Assert.That(searchListViewModel.TotalPosts, Is.EqualTo(postList.Count));
+        }
+
+        [TestCase]
+        public void SubscribedListVIewModelRetrievesPostListFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.SubscribedPostsForUser("testUser", 0, 10)).Returns(postList);
+            ListViewModel subscribedListViewModel = new SubscribedListViewModel(mockRepository.Object, 1, "testUser");
+            Assert.That(subscribedListViewModel.Posts, Is.EquivalentTo(postList));
+        }
+
+        [TestCase]
+        public void SubscribedListViewModelRetrievesPostCountFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.TotalSubscribedPostsForUser("testUser")).Returns(postList.Count);
+            ListViewModel subscribedListViewModel = new SubscribedListViewModel(mockRepository.Object, 1, "testUser");
+            Assert.That(subscribedListViewModel.TotalPosts, Is.EqualTo(postList.Count));
+        }
+
+        [TestCase]
+        public void AuthorListViewModelRetrievesPostListFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.PostsByAuthor("testAuthorName", 0, 10)).Returns(postList);
+            ListViewModel authorListViewModel = new AuthorListViewModel(mockRepository.Object, "testAuthorName", 1, null);
+            Assert.That(authorListViewModel.Posts, Is.EquivalentTo(postList));
+        }
+
+        [TestCase]
+        public void AuthorListViewModelRetrievesPostCountFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.TotalPostsByAuthor("testAuthorName")).Returns(postList.Count);
+            ListViewModel authorListViewModel = new AuthorListViewModel(mockRepository.Object, "testAuthorName", 1, null);
+            Assert.That(authorListViewModel.TotalPosts, Is.EqualTo(postList.Count));
+        }
+
+        [TestCase]
+        public void TagListViewModelRetrievesPostListFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.PostsForTag("testTagSlug", 0, 10)).Returns(postList);
+            ListViewModel tagListViewModel = new TagListViewModel(mockRepository.Object, "testTagSlug", 1);
+
+            Assert.That(tagListViewModel.Posts, Is.EquivalentTo(postList));
+
+        }
+
+        [TestCase]
+        public void TagListViewModelRetrievesPostCountFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.TotalPostsForTag("testTagSlug")).Returns(postList.Count);
+
+            ListViewModel tagListViewModel = new TagListViewModel(mockRepository.Object, "testTagSlug", 1);
+
+            Assert.That(tagListViewModel.TotalPosts, Is.EqualTo(postList.Count));
+        }
         /* [TestCase]
          public void PostsByCategoryTest()
          {
