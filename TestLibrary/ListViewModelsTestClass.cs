@@ -427,6 +427,60 @@ namespace TestLibrary
             Assert.That(subscribedListViewModel.TotalPosts, Is.EqualTo(postList.Count));
         }
 
+        [TestCase]
+        public void AuthorListViewModelRetrievesPostListFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.PostsByAuthor("testAuthorName", 0, 10)).Returns(postList);
+            ListViewModel authorListViewModel = new AuthorListViewModel(mockRepository.Object, "testAuthorName", 1, null);
+            Assert.That(authorListViewModel.Posts, Is.EquivalentTo(postList));
+        }
+
+        [TestCase]
+        public void AuthorListViewModelRetrievesPostCountFromRepository()
+        {
+            var mockRepository = new Mock<IBlogRepository>();
+            Post post1 = new Post();
+            Post post2 = new Post();
+            Post post3 = new Post();
+            Post post4 = new Post();
+
+            Category testCat1 = new Category();
+            Category testCat2 = new Category();
+            post1.Category = testCat1;
+            post2.Category = testCat2;
+            post3.Category = testCat1;
+            post4.Category = testCat2;
+
+            List<Post> postList = new List<Post>();
+            postList.Add(post1);
+            postList.Add(post2);
+            postList.Add(post3);
+            postList.Add(post4);
+
+            mockRepository.Setup(r => r.TotalPostsByAuthor("testAuthorName")).Returns(postList.Count);
+            ListViewModel authorListViewModel = new AuthorListViewModel(mockRepository.Object, "testAuthorName", 1, null);
+            Assert.That(authorListViewModel.TotalPosts, Is.EqualTo(postList.Count));
+        }
+
         /* [TestCase]
          public void PostsByCategoryTest()
          {
