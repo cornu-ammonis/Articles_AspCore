@@ -15,6 +15,7 @@ using Articles.Services;
 namespace Articles.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
