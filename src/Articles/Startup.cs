@@ -74,6 +74,7 @@ namespace Articles
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();

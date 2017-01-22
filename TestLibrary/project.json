@@ -6,7 +6,8 @@
     "dotnet-test-nunit": "3.4.0-beta-3",
     "Microsoft.DotNet.InternalAbstractions": "1.0.0",
     "Moq": "4.6.38-alpha",
-    "NUnit": "3.5.0"
+    "NUnit": "3.5.0",
+    "SendGrid.NetCore": "1.0.0-rtm-00002"
   },
 
   "frameworks": {
