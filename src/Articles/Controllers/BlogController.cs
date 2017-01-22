@@ -14,6 +14,7 @@ using System.ComponentModel;
 using Articles.ViewComponents;
 using myExtensions;
 using Articles.Models.BlogViewModels.ListViewModels;
+using Microsoft.Extensions.Options;
 
 namespace Articles.Controllers
 {
@@ -27,16 +28,22 @@ namespace Articles.Controllers
             return View();
         }
 
-        
+        public IActionResult secretsTest()
+        {
+            ViewBag.User = Options.SendGridUser;
+            ViewBag.Key = Options.SendGridKey;
+            ViewBag.Test = "test";
+            return View("secretsTest");
+        }
 
         private readonly IBlogRepository _blogRepository;
-       
+        public Services.AuthMessageSenderOptions Options { get; } //set only via Secret Manager
 
         //constructer for  dependency injection, registered in the startup.cs service. repository DI is configured her to use a 
         //scoped lifetime, which means one instance is used in all cases within one request, and a new instance is created each request 
-        public BlogController(IBlogRepository blogRepository)
+        public BlogController(IBlogRepository blogRepository, IOptions<Services.AuthMessageSenderOptions> optionsAccessor)
         {
-          
+            Options = optionsAccessor.Value;
         
             _blogRepository = blogRepository;
         }
