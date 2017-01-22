@@ -21,6 +21,8 @@ namespace Articles.Services
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
+
+            
             var myMessage = new SendGrid.SendGridMessage();
             myMessage.AddTo(email);
             myMessage.From = new System.Net.Mail.MailAddress("Andrewjones232@gmail.com", "Andrew Jones");
