@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Articles.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class LinksController : Controller
     {
         private readonly ApplicationDbContext _context;

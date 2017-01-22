@@ -17,6 +17,7 @@ using Articles.Models.BlogViewModels.ListViewModels;
 
 namespace Articles.Controllers
 {
+    [RequireHttps]
     public class BlogController : Controller
     {
         public IActionResult Index()

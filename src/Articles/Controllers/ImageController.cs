@@ -17,6 +17,7 @@ using Articles.Models.Core;
 
 namespace Articles.Controllers
 {
+    [RequireHttps]
     public class ImageController : Controller
     {
 
