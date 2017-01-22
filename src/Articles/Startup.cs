@@ -16,6 +16,7 @@ using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Articles.Models.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Articles
 {
@@ -60,6 +61,12 @@ namespace Articles
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
+
+            //require HTTPS
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
