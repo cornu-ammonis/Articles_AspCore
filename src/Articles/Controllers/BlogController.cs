@@ -22,16 +22,22 @@ namespace Articles.Controllers
     {
         public IActionResult Index()
         {
+
+
             return View();
         }
 
+        
 
         private readonly IBlogRepository _blogRepository;
+       
 
         //constructer for  dependency injection, registered in the startup.cs service. repository DI is configured her to use a 
         //scoped lifetime, which means one instance is used in all cases within one request, and a new instance is created each request 
         public BlogController(IBlogRepository blogRepository)
         {
+          
+        
             _blogRepository = blogRepository;
         }
 

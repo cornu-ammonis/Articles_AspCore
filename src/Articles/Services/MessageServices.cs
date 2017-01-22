@@ -3,6 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.Mail;
+using MailKit;
+using MimeKit;
+using MailKit.Security;
+using MailKit.Net.Smtp;
 
 namespace Articles.Services
 {
@@ -18,7 +23,7 @@ namespace Articles.Services
 
         public AuthMessageSenderOptions Options { get; } //set only via Secret Manager
 
-
+        /*
         public Task SendEmailAsync(string email, string subject, string message)
         {
 
@@ -35,6 +40,30 @@ namespace Articles.Services
             // Create a Web transport for sending email.
             var transportWeb = new SendGrid.Web(credentials);
             return transportWeb.DeliverAsync(myMessage);
+
+        }*/
+
+        public async Task SendEmailAsync(string email, string subject, string message)
+        {
+            var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress("AGGNDEV", "jbloggs@example.com"));
+            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.Subject = subject;
+            emailMessage.Body = new TextPart("plain") { Text = message };
+            var credentials = new System.Net.NetworkCredential(
+                Options.SendGridUser,
+                Options.SendGridKey);
+            using (var client = new SmtpClient())
+            {
+               
+               // client.LocalDomain = "some.domain.com";
+                await client.ConnectAsync("smtp.sendgrid.net", 465, true).ConfigureAwait(false);
+                await client.AuthenticateAsync(credentials);
+                await client.SendAsync(emailMessage).ConfigureAwait(false);
+                await client.DisconnectAsync(true).ConfigureAwait(false);
+            }
+
 
         }
 
