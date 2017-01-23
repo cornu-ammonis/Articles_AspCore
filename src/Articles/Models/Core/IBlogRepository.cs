@@ -58,6 +58,9 @@ namespace Articles.Models
         int TotalSubscribedPostsForUser(string user_name);
         int TotalPostsUserSaved(string username);
 
+        void BlockUser(string user_name, string user_to_block);
+        void UnblockUser(string user_name, string user_to_unblock);
+
         BlogUser RetrieveUser(string username);
         IList<BlogUser> AllAuthors();
 
