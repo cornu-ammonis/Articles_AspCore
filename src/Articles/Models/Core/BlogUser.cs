@@ -24,8 +24,18 @@ namespace Articles.Models.Core
         //junction table from author --> user direction
         public List<UserAuthorSubscribe> AuthorUserSubscribes { get; set; }
 
+        //user -- > user to block direction 
         public List<UserBlocksUser> UsersThisUserBlocks { get; set; }
+
+        // blocked user --> blocking user direction
         public List<UserBlocksUser> UsersBlockingThisUser { get; set; }
+
+        //authorizing user --> authorized user direction
+        public List<UserAuthorizesUser> UsersThisUserAuthorizes { get; set; }
+
+        //authorized user --> authorizing user direction
+        public List<UserAuthorizesUser> UsersAuthorizingThisUser { get; set; }
+
 
         public string AuthorSubscribeAjaxId()
         {

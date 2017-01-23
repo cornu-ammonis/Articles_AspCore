@@ -28,6 +28,8 @@ namespace Articles.Data
         public DbSet<PostUserLike> PostUserLikes { get; set; }
         public DbSet<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
         public DbSet<Link> Links { get; set; }
+        public DbSet<UserBlocksUser> UserBlocksUsers { get; set; }
+        public DbSet<UserAuthorizesUser> UserAuthorizesUsers { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -125,7 +127,22 @@ namespace Articles.Data
                 .WithMany(u => u.UsersBlockingThisUser)
                 .HasForeignKey(ub => ub.userBlockedId)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
-                
+
+
+            builder.Entity<UserAuthorizesUser>()
+                .HasKey(ua => new { ua.authorizingUserId, ua.userAuthorizedId });
+
+            builder.Entity<UserAuthorizesUser>()
+                .HasOne(ua => ua.authorizingUser)
+                .WithMany(u => u.UsersThisUserAuthorizes)
+                .HasForeignKey(ua => ua.authorizingUserId)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+
+            builder.Entity<UserAuthorizesUser>()
+                .HasOne(ua => ua.userAuthorized)
+                .WithMany(u => u.UsersAuthorizingThisUser)
+                .HasForeignKey(ua => ua.userAuthorizedId)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
 
         }
