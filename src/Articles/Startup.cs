@@ -87,7 +87,7 @@ namespace Articles
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseApplicationInsightsRequestTelemetry();
+          //obsolete for 1.1  app.UseApplicationInsightsRequestTelemetry();
 
             if (env.IsDevelopment())
             {
@@ -100,7 +100,7 @@ namespace Articles
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseApplicationInsightsExceptionTelemetry();
+          //obsolate for 1.1  app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
            /* app.UseStaticFiles(new StaticFileOptions()
@@ -112,7 +112,7 @@ namespace Articles
 
 
             app.UseIdentity();
-            // app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
+            app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
 
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
