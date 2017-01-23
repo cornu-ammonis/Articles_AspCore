@@ -47,7 +47,7 @@ namespace Articles.Services
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("AGGNDEV", "jbloggs@example.com"));
+            emailMessage.From.Add(new MailboxAddress("AGGNDEV", "donotreply@AGGNDEV.net"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("plain") { Text = message };
