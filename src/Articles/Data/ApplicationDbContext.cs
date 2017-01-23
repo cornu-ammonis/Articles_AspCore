@@ -103,13 +103,29 @@ namespace Articles.Data
                 .HasOne(ua => ua.user)
                 .WithMany(ua => ua.UserAuthorSubscribes)
                 .HasForeignKey(ua => ua.userId)
-                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict; ;
+                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict; 
 
             builder.Entity<UserAuthorSubscribe>()
                 .HasOne(ua => ua.author)
                 .WithMany(ua => ua.AuthorUserSubscribes)
                 .HasForeignKey(ua => ua.authorId)
-                .Metadata.DeleteBehavior = DeleteBehavior.Restrict; 
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+
+            builder.Entity<UserBlocksUser>()
+                .HasKey(ub => new { ub.blockingUserId, ub.userBlockedId });
+
+            builder.Entity<UserBlocksUser>()
+                .HasOne(ub => ub.blockingUser)
+                .WithMany(u => u.UsersThisUserBlocks)
+                .HasForeignKey(ub => ub.blockingUserId)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+
+            builder.Entity<UserBlocksUser>()
+                .HasOne(ub => ub.userBlocked)
+                .WithMany(u => u.UsersBlockingThisUser)
+                .HasForeignKey(ub => ub.userBlockedId)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                
 
 
         }
