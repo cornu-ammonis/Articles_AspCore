@@ -542,11 +542,81 @@ namespace Articles.Models
                 fresh_user.PostUserSaves = new List<PostUserSave>();
                 fresh_user.PostUserLikes = new List<PostUserLike>();
                 fresh_user.CategoryBlogUsers = new List<CategoryBlogUser>();
+                fresh_user.UsersThisUserBlocks = new List<UserBlocksUser>();
+                fresh_user.UsersBlockingThisUser = new List<UserBlocksUser>();
+                fresh_user.UsersThisUserAuthorizes = new List<UserAuthorizesUser>();
+                fresh_user.UsersAuthorizingThisUser = new List<UserAuthorizesUser>();
                 db.BlogUser.Add(fresh_user);
                 db.SaveChanges();
                 fresh_user = db.BlogUser.Single(u => u.user_name == user_name);
                 return fresh_user;
                
+            }
+        }
+
+        public void BlockUser(string user_name, string user_to_block)
+        {
+            //checks that there is no user matching current user who already blocks target user 
+            if(db.BlogUser.Any(bu => bu.user_name == user_name && 
+            bu.UsersThisUserBlocks.Any(ub => ub.userBlocked.user_name == user_to_block )) == false)
+            {
+                BlogUser user;
+                if (db.BlogUser.Any(u => u.user_name == user_name) == false)
+                {
+                    user = this.GenerateUser(user_name);
+
+                }
+                else
+                {
+                    user = db.BlogUser.Include<BlogUser, List<UserBlocksUser>>(u => u.UsersThisUserBlocks)
+                        .Single(u => u.user_name == user_name);
+                }
+                db.BlogUser.Update(user);
+
+                BlogUser blocked_user;
+                if (db.BlogUser.Any(u => u.user_name == user_to_block) == false)
+                {
+                    blocked_user = this.GenerateUser(user_to_block);
+                }
+                else
+                {
+                    blocked_user = db.BlogUser.Include<BlogUser, List<UserBlocksUser>>(u => u.UsersBlockingThisUser)
+                        .Single(u => u.user_name == user_to_block);
+                }
+                db.BlogUser.Update(blocked_user);
+
+                UserBlocksUser blockingRelationship = new UserBlocksUser();
+                blockingRelationship.blockingUserId = user.BlogUserId;
+                blockingRelationship.userBlockedId = blocked_user.BlogUserId;
+                blockingRelationship.blockingUser = user;
+                blockingRelationship.userBlocked = blocked_user;
+
+                user.UsersThisUserBlocks.Add(blockingRelationship);
+                blocked_user.UsersBlockingThisUser.Add(blockingRelationship);
+                db.UserBlocksUsers.Add(blockingRelationship);
+                db.SaveChanges();
+            }
+        }
+
+        public void UnblockUser(string user_name, string user_to_unblock)
+        {
+            //checks current user blocks target user
+            if (db.UserBlocksUsers.Any(ub => ub.blockingUser.user_name == user_name && 
+            ub.userBlocked.user_name == user_to_unblock))
+            {
+                BlogUser user = this.RetrieveUser(user_name);
+                BlogUser blockedUser = this.RetrieveUser(user_to_unblock);
+                db.BlogUser.Update(user);
+                db.BlogUser.Update(blockedUser);
+
+                UserBlocksUser toUnblock = db.UserBlocksUsers.Single(ub => ub.blockingUser.user_name == user_name
+                && ub.userBlocked.user_name == user_to_unblock);
+
+                user.UsersThisUserBlocks.Remove(toUnblock);
+                blockedUser.UsersBlockingThisUser.Remove(toUnblock);
+                db.UserBlocksUsers.Remove(toUnblock);
+                db.SaveChanges();
+
             }
         }
 
@@ -665,6 +735,8 @@ namespace Articles.Models
              .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UserAuthorSubscribes)
              .Include<BlogUser, List<PostUserSave>>(u => u.PostUserSaves)
              .Include<BlogUser, List<PostUserLike>>(u => u.PostUserLikes)
+             .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersThisUserBlocks)
+             .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersBlockingThisUser)
              .SingleOrDefault(u => u.user_name == username);
             return user;
         }

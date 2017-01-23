@@ -341,6 +341,14 @@ namespace Articles.Controllers
         }
 
         [Authorize]
+        public IActionResult BlockUser (string blockUserName)
+        {
+            string user_name = User.Identity.Name;
+            _blogRepository.BlockUser(user_name, blockUserName);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        [Authorize]
         public IActionResult Subscribe(string authorname)
         {
             string user_name = User.Identity.Name;
