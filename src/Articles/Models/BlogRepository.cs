@@ -595,6 +595,12 @@ namespace Articles.Models
                 blocked_user.UsersBlockingThisUser.Add(blockingRelationship);
                 db.UserBlocksUsers.Add(blockingRelationship);
                 db.SaveChanges();
+
+                //unsubscribes  if user  is subscribed to blocked user 
+                if (db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == user_to_block))
+                {
+                    this.UnsubscribeAuthor(user_name, user_to_block);
+                }
             }
         }
 
