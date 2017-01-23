@@ -598,7 +598,7 @@ namespace Articles.Models
             }
         }
 
-        public void Unblockuser(string user_name, string user_to_unblock)
+        public void UnblockUser(string user_name, string user_to_unblock)
         {
             //checks current user blocks target user
             if (db.UserBlocksUsers.Any(ub => ub.blockingUser.user_name == user_name && 
