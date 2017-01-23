@@ -21,8 +21,11 @@ namespace Articles.Models.Core
         public List<PostUserLike> PostUserLikes { get; set; }
         //junction table from user --> author direction
         public List<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
-        //junctino table from author --> user direction
+        //junction table from author --> user direction
         public List<UserAuthorSubscribe> AuthorUserSubscribes { get; set; }
+
+        public List<UserBlocksUser> UsersThisUserBlocks { get; set; }
+        public List<UserBlocksUser> UsersBlockingThisUser { get; set; }
 
         public string AuthorSubscribeAjaxId()
         {
