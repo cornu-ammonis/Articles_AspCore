@@ -702,6 +702,17 @@ namespace Articles.Models
             }
         }
 
+        public void DisablePublicMessaging(string user_name)
+        {
+            if(this.CheckIfPublicMessaging(user_name))
+            {
+                BlogUser user = this.RetrieveUser(user_name);
+                db.BlogUser.Update(user);
+                user.publicMessaging = false;
+                db.SaveChanges();
+            }
+        }
+
 
         public bool CheckIfPublicMessaging(string user_name)
         {
