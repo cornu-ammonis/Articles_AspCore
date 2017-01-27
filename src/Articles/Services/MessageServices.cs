@@ -43,7 +43,7 @@ namespace Articles.Services
 
         }*/
 
-        public async Task SendEmailAsync(string email, string subject, string message)
+        public async Task<bool> SendEmailAsync(string email, string subject, string message)
         {
             var emailMessage = new MimeMessage();
 
@@ -54,15 +54,32 @@ namespace Articles.Services
             var credentials = new System.Net.NetworkCredential(
                 Options.SendGridUser,
                 Options.SendGridKey);
-            using (var client = new SmtpClient())
+
+            try
             {
-               
-               // client.LocalDomain = "some.domain.com";
-                await client.ConnectAsync("smtp.sendgrid.net", 465, true).ConfigureAwait(false);
-                await client.AuthenticateAsync(credentials);
-                await client.SendAsync(emailMessage).ConfigureAwait(false);
-                await client.DisconnectAsync(true).ConfigureAwait(false);
+                using (var client = new SmtpClient())
+                {
+
+                    // client.LocalDomain = "some.domain.com";
+                    await client.ConnectAsync("smtp.sendgrid.net", 465, true).ConfigureAwait(false);
+                    await client.AuthenticateAsync(credentials);
+                    await client.SendAsync(emailMessage).ConfigureAwait(false);
+                    await client.DisconnectAsync(true).ConfigureAwait(false);
+                }
+                return true;
             }
+
+            //in the future, log exception message details
+            catch (Exception)
+            {
+
+                
+                return false;
+                
+                
+                
+            }
+           
 
 
         }

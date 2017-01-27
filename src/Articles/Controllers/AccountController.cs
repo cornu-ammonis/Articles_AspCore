@@ -130,11 +130,23 @@ namespace Articles.Controllers
                     // Send an email with this link
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                    bool succeeded;
+                     succeeded  = await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                         $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                     //await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+
+                    if (succeeded) {
+                            _logger.LogInformation(3, "User created a new account with password.");
+                            return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, 
+                            "Error encountered while sending confirmation email, try again or contact a site admin.");
+                       //  result = await _userManager.DeleteAsync(user);
+                        return View(model);
+                    }
+                   
                 }
                 AddErrors(result);
             }
