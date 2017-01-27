@@ -3,10 +3,16 @@
 <div id="content">
 
     <h1>@ViewBag.Title</h1>
-    @await Component.InvokeAsync("AuthorBlock", /*temp uses first post authorname as authorname */
-    new {author_name = Model.Posts[0].Author.user_name } )
-    
-   
+    @if (Model.Posts.Count > 0)
+    {
+        @await Component.InvokeAsync("AuthorBlock",
+       new { author_name = Model.Posts[0].Author.user_name })/*temp uses first post authorname as authorname */
+
+    }
+
+        
+
+
     @if (ViewBag.ByCategory == true)
     {
         <div>
