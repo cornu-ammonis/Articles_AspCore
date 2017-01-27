@@ -68,6 +68,11 @@ namespace Articles.Models
         Task<bool> CheckIfAuthorizedAsync(string user_name, string author_name);
         bool CheckIfAuthorized(string user_name, string author_name);
 
+        void EnablePublicMessaging(string user_name);
+        void DisablePublicMessaging(string user_name);
+        bool CheckIfPublicMessaging(string user_name);
+        Task<bool> CheckIfPublicMessagingAsync(string user_name);
+
         BlogUser RetrieveUser(string username);
         IList<BlogUser> AllAuthors();
 
