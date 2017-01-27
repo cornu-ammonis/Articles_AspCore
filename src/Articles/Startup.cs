@@ -121,10 +121,20 @@ namespace Articles
 
             app.UseMvc(routes =>
             {
+
+                routes.MapRoute(name: "Author",
+                   template: "{controller=Blog}/{action=PostsByAuthor}/{author}");
+
+                routes.MapRoute(name: "Subscribe",
+                    template: "{controller=Blog}/{action=Subscribe}/{authorname}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            
+
+               
+
+
             /*
                 routes.MapRoute(
                     name: "tag",

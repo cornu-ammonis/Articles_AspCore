@@ -59,9 +59,9 @@ namespace Articles.ViewComponents
             string query_concat;
             switch (action)
             {
-                case "postsbyauthor":
+               /* case "postsbyauthor":
                     query_concat = string.Format("?author={0}", queryStrings["author"]);
-                    break;
+                    break;*/
                 case "category":
                     query_concat = string.Format("?category={0}", queryStrings["category"]);
                     break;
