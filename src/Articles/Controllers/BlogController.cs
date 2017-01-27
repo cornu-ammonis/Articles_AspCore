@@ -369,6 +369,30 @@ namespace Articles.Controllers
         }
 
         [Authorize]
+        public IActionResult AuthorizeUser(string authorizeUserName)
+        {
+            _blogRepository.AuthorizeUser(User.Identity.Name, authorizeUserName);
+
+            try { return Redirect(Request.Headers["Referer"].ToString()); }
+            catch
+            {
+                return RedirectToAction("Posts");
+            }
+        }
+
+        [Authorize]
+        public IActionResult UnAuthorizeUser(string unAuthorizeUserName)
+        {
+            _blogRepository.UnAuthorizeUser(User.Identity.Name, unAuthorizeUserName);
+
+            try { return Redirect(Request.Headers["Referer"].ToString()); }
+            catch
+            {
+                return RedirectToAction("Posts");
+            }
+        }
+
+        [Authorize]
         public IActionResult Subscribe(string authorname)
         {
             string user_name = User.Identity.Name;
