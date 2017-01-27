@@ -626,6 +626,12 @@ namespace Articles.Models
             }
         }
 
+        public async Task<bool> CheckIfBlockedAsync(string user_name, string author_name)
+        {
+            return await db.BlogUser.AnyAsync(bu => bu.user_name == user_name
+            && bu.UserAuthorSubscribes.Any(ua => ua.author.user_name == author_name));
+        }
+
         public void SubscribeAuthor(string user_name, string author_name)
         {
 
