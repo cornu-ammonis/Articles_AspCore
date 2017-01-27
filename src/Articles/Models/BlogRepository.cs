@@ -693,8 +693,15 @@ namespace Articles.Models
 
         public void EnablePublicMessaging(string user_name)
         {
-
+            if(!this.CheckIfPublicMessaging(user_name))
+            {
+                BlogUser user = this.RetrieveUser(user_name);
+                db.BlogUser.Update(user);
+                user.publicMessaging = true;
+                db.SaveChanges();
+            }
         }
+
 
         public bool CheckIfPublicMessaging(string user_name)
         {
