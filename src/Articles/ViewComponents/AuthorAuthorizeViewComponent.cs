@@ -8,11 +8,11 @@ using Articles.Models.Core;
 
 namespace Articles.ViewComponents
 {
-    public class AuthorBlockViewComponent : ViewComponent
+    public class AuthorAuthorizeViewComponent : ViewComponent
     {
         IBlogRepository _blogRepository;
 
-        public AuthorBlockViewComponent(IBlogRepository blogRepository)
+        public AuthorAuthorizeViewComponent(IBlogRepository blogRepository)
         {
             _blogRepository = blogRepository;
         }
@@ -20,14 +20,14 @@ namespace Articles.ViewComponents
         {
             if (User.Identity.IsAuthenticated && RouteData.Values["action"].ToString().ToLower().Equals("postsbyauthor"))
             {
-                bool isBlocked = await _blogRepository.CheckIfBlockedAsync(User.Identity.Name, author_name);
-                if (isBlocked)
+                bool isAuthorized = await _blogRepository.CheckIfAuthorizedAsync(User.Identity.Name, author_name);
+                if (isAuthorized)
                 {
-                    return View("Unblock", author_name);
+                    return View("UnAuthorize", author_name);
                 }
                 else
                 {
-                    return View("Block", author_name);
+                    return View("Authorize", author_name);
                 }
             }
             else

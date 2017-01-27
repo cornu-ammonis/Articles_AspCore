@@ -6,7 +6,10 @@
     @if (Model.Posts.Count > 0)
     {
         @await Component.InvokeAsync("AuthorBlock",
-       new { author_name = Model.Posts[0].Author.user_name })/*temp uses first post authorname as authorname */
+       new { author_name = Model.Posts[0].Author.user_name })     /*temp uses first post authorname as authorname */
+
+        @await Component.InvokeAsync("AuthorAuthorize",
+       new {author_name = Model.Posts[0].Author.user_name })/*temp uses first post authorname as authorname */
 
     }
 
