@@ -691,6 +691,22 @@ namespace Articles.Models
             && bu.UsersThisUserAuthorizes.Any(ua => ua.userAuthorized.user_name == author_name));
         }
 
+        public void EnablePublicMessaging(string user_name)
+        {
+
+        }
+
+        public bool CheckIfPublicMessaging(string user_name)
+        {
+            return db.BlogUser.Single(u => u.user_name == user_name).publicMessaging;
+        }
+
+        public async Task<bool> CheckIfPublicMessagingAsync(string user_name)
+        {
+            BlogUser user = await db.BlogUser.SingleAsync(u => u.user_name == user_name);
+            return user.publicMessaging;
+        }
+
         public void SubscribeAuthor(string user_name, string author_name)
         {
 
