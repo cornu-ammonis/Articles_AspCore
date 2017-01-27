@@ -16,17 +16,18 @@ namespace Articles.ViewComponents
         {
             _blogRepository = blogRepository;
         }
-        public async Task<IViewComponentResult> InvokeAsync(BlogUser author)
+        public async Task<IViewComponentResult> InvokeAsync(string author_name)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated && RouteData.Values["action"].ToString().ToLower().Equals("postsbyauthor"))
             {
-                if (await _blogRepository.CheckIfBlockedAsync(User.Identity.Name, author.user_name))
+                bool isBlocked = await _blogRepository.CheckIfBlockedAsync(User.Identity.Name, author_name);
+                if (isBlocked)
                 {
-                    return View("Unblock", author);
+                    return View("Unblock", author_name);
                 }
                 else
                 {
-                    return View("Block", author);
+                    return View("Block", author_name);
                 }
             }
             else
