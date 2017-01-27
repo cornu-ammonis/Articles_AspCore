@@ -345,7 +345,13 @@ namespace Articles.Controllers
         {
             string user_name = User.Identity.Name;
             _blogRepository.BlockUser(user_name, blockUserName);
-            return Redirect(Request.Headers["Referer"].ToString());
+
+            try { return Redirect(Request.Headers["Referer"].ToString()); }
+            catch
+            {
+                return RedirectToAction("Posts"); 
+            }
+            
         }
 
         [Authorize]
