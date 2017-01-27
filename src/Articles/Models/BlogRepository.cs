@@ -632,6 +632,65 @@ namespace Articles.Models
             && bu.UsersThisUserBlocks.Any(ua => ua.userBlocked.user_name == author_name));
         }
 
+        public void AuthorizeUser(string user_name, string user_to_authorize)
+        {
+            if(!CheckIfAuthorized(user_name, user_to_authorize))
+            {
+                BlogUser user = this.RetrieveUser(user_name);
+                BlogUser toAuthorize = this.RetrieveUser(user_to_authorize);
+
+                db.BlogUser.Update(user);
+                db.BlogUser.Update(toAuthorize);
+
+                UserAuthorizesUser toAdd = new UserAuthorizesUser();
+                toAdd.authorizingUserId = user.BlogUserId;
+                toAdd.authorizingUser = user;
+                toAdd.userAuthorizedId = toAuthorize.BlogUserId;
+                toAdd.userAuthorized = toAuthorize;
+
+                user.UsersThisUserAuthorizes.Add(toAdd);
+                toAuthorize.UsersAuthorizingThisUser.Add(toAdd);
+
+                db.SaveChanges();
+                
+            }
+        }
+
+        public void UnAuthorizeUser(string user_name, string user_to_unauthorize)
+        {
+            if(CheckIfAuthorized(user_name, user_to_unauthorize))
+            {
+                BlogUser user = this.RetrieveUser(user_name);
+                BlogUser toUnAuthorize = this.RetrieveUser(user_to_unauthorize);
+
+                db.BlogUser.Update(user);
+                db.BlogUser.Update(toUnAuthorize);
+
+                UserAuthorizesUser toRemove = db.UserAuthorizesUsers.Single(ua => ua.authorizingUser.user_name == user_name
+                && ua.userAuthorized.user_name == user_to_unauthorize);
+
+                user.UsersThisUserAuthorizes.Remove(toRemove);
+                toUnAuthorize.UsersAuthorizingThisUser.Remove(toRemove);
+
+                db.UserAuthorizesUsers.Remove(toRemove);
+
+                db.SaveChanges();
+
+            }
+        }
+
+        public async Task<bool> CheckIfAuthorizedAsync(string user_name, string author_name)
+        {
+            return await db.BlogUser.AnyAsync(bu => bu.user_name == user_name
+           && bu.UsersThisUserAuthorizes.Any(ua => ua.userAuthorized.user_name == author_name));
+        }
+
+        public bool CheckIfAuthorized(string user_name, string author_name)
+        {
+            return db.BlogUser.Any(bu => bu.user_name == user_name
+            && bu.UsersThisUserAuthorizes.Any(ua => ua.userAuthorized.user_name == author_name));
+        }
+
         public void SubscribeAuthor(string user_name, string author_name)
         {
 
@@ -749,6 +808,8 @@ namespace Articles.Models
              .Include<BlogUser, List<PostUserLike>>(u => u.PostUserLikes)
              .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersThisUserBlocks)
              .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersBlockingThisUser)
+             .Include<BlogUser, List<UserAuthorizesUser>>(u => u.UsersThisUserAuthorizes)
+             .Include<BlogUser, List<UserAuthorizesUser>>(u => u.UsersAuthorizingThisUser)
              .SingleOrDefault(u => u.user_name == username);
             return user;
         }
