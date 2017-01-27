@@ -18,6 +18,7 @@ namespace Articles.Models.BlogViewModels
         public CustomizeViewModel(IBlogRepository _blogRepository, string user_name)
         {
             user_page_size = _blogRepository.UserPageSize(user_name);
+            publicMessaging = _blogRepository.CheckIfPublicMessaging(user_name);
             IList<Category> all_categories = _blogRepository.Categories();
 
             //generates <string, string> dictionary where the key is each category's category.UrlSlug and the entry is 
@@ -73,6 +74,7 @@ namespace Articles.Models.BlogViewModels
         public IDictionary<string, bool> categories { get; set; }
         public IDictionary<string, string> category_counts { get; set; }
         public int user_page_size { get; set; }
+        public bool publicMessaging { get; set; }
         //used for converting from url slug to name in view 
         public IDictionary<string, string> category_names { get; set; }
         public IDictionary<string, bool> subscribed_authors { get; set; }

@@ -11,6 +11,7 @@ namespace Articles.Models.Core
         public string user_name { get; set; }
         public int page_size { get; set; } = 10;
         public int subscribers_count { get; set; } = 0;
+        public bool publicMessaging { get; set; } = false;
         
         public List<CategoryBlogUser> CategoryBlogUsers { get; set; }
        // public List<Post> BlogUserPosts { get; set; }

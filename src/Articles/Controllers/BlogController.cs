@@ -124,7 +124,7 @@ namespace Articles.Controllers
         }
 
         [HttpPost]
-        public IActionResult Customize([Bind(include: "categories, category_counts, user_page_size, subscribed_authors")] CustomizeViewModel ViewModel)
+        public IActionResult Customize([Bind(include: "categories, category_counts, user_page_size, subscribed_authors, publicMessaging")] CustomizeViewModel ViewModel)
         {
             if (ModelState.IsValid)
             {
