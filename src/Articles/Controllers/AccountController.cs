@@ -143,7 +143,7 @@ namespace Articles.Controllers
                     {
                         ModelState.AddModelError(string.Empty, 
                             "Error encountered while sending confirmation email, try again or contact a site admin.");
-                       //  result = await _userManager.DeleteAsync(user);
+                         result = await _userManager.DeleteAsync(user);
                         return View(model);
                     }
                    
