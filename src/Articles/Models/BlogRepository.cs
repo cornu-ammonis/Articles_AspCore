@@ -230,6 +230,14 @@ namespace Articles.Models
             }
             db.SaveChanges();
            
+            if(viewModel.publicMessaging)
+            {
+                this.EnablePublicMessaging(user.user_name);
+            }
+            else
+            {
+                this.DisablePublicMessaging(user.user_name);
+            }
         }
 
         //returns only posts in a category for which the junction table link between that category
