@@ -12,11 +12,11 @@ namespace Articles.Models.Core
         public int page_size { get; set; } = 10;
         public int subscribers_count { get; set; } = 0;
         public bool publicMessaging { get; set; } = false;
-        
+
         public List<CategoryBlogUser> CategoryBlogUsers { get; set; }
-       // public List<Post> BlogUserPosts { get; set; }
+        // public List<Post> BlogUserPosts { get; set; }
         public List<Post> AuthoredPosts { get; set; }
-       // public List<Post> LikedPosts { get; set; }
+        // public List<Post> LikedPosts { get; set; }
         public List<BlogUser> SubscribedAuthors { get; set; }
         public List<PostUserSave> PostUserSaves { get; set; }
         public List<PostUserLike> PostUserLikes { get; set; }
@@ -36,6 +36,9 @@ namespace Articles.Models.Core
 
         //authorized user --> authorizing user direction
         public List<UserAuthorizesUser> UsersAuthorizingThisUser { get; set; }
+
+        public List<Message> ReceivedMessages { get; set; }
+        public List<Message> SentMessages { get; set; }
 
 
         public string AuthorSubscribeAjaxId()
