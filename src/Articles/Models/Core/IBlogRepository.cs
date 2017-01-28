@@ -12,6 +12,8 @@ namespace Articles.Models
    public interface IBlogRepository
     {
 
+        
+
         BlogUser GenerateUser(string user_name);
         
         //returns posts ordered by PostedOn descending and selected by pagination values

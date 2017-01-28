@@ -16,7 +16,7 @@ namespace Articles.Models.Core
         public BlogUser Sender { get; set; }
         public BlogUser Recipient { get; set; }
 
-        public UserMessageUser userMessageUser { get; set; }
+        
 
 
     }
