@@ -13,16 +13,30 @@ namespace Articles.Models
         {
         }
 
+        //persists new message to database if sender is permitted to message receiver
         public void SendMessage(Message message)
         {
-            
+            if(CanMessage(message.Sender.user_name, message.Recipient.user_name))
+            {
+                db.Messages.Add(message);
+                db.SaveChanges();
+            }
         }
 
+        //currently retrieves all messages sent to specified user with no specified ordering 
+        //only filter is that sender is still permitted to message recipient
         public List<Message> RetrieveMessages(string user_name)
         {
-            return new List<Message>();
+            List<Message> messageList = new List<Message>();
+            messageList =
+                (from m in db.Messages
+                 where m.Recipient.user_name == user_name &&
+                 CanMessage(m.Sender.user_name, m.Recipient.user_name)
+                 select m).ToList();
+            return messageList;
         }
 
+        //checks whether specified sender may message specified recipient, according to user names
         public bool CanMessage(string sender_name, string recipient_name)
         {
             if(CheckIfBlocked(recipient_name, sender_name)) {
