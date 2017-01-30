@@ -63,6 +63,7 @@ namespace Articles.Models
         void BlockUser(string user_name, string user_to_block);
         void UnblockUser(string user_name, string user_to_unblock);
         Task<bool> CheckIfBlockedAsync(string user_name, string author_name);
+        bool CheckIfBlocked(string user_name, string author_name);
 
 
         void AuthorizeUser(string user_name, string user_to_authorize);

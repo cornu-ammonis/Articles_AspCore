@@ -120,6 +120,7 @@ namespace Articles.Models
                  //tags' names equal the search term , return that post 
                 
                  (p.Title.Contains(search) || p.Category.Name.Equals(search) || p.PostTags.Any(t => t.Tag.Name.Equals(search)))
+
                  orderby p.PostedOn descending
                  select p)
                  .Skip(pageNo * pageSize).Take(pageSize)
@@ -127,6 +128,8 @@ namespace Articles.Models
                  .Include<Post, Category>(p => p.Category)
                 .Include<Post, List<PostTag>>(p => p.PostTags)
                 .ThenInclude(posttag => posttag.Tag);
+
+            
 
             foreach (Post post in post_query)
             {
@@ -638,6 +641,14 @@ namespace Articles.Models
         {
             return await db.BlogUser.AnyAsync(bu => bu.user_name == user_name
             && bu.UsersThisUserBlocks.Any(ua => ua.userBlocked.user_name == author_name));
+        }
+
+
+        //checks if user_name blocks author_name
+        public bool CheckIfBlocked(string user_name, string author_name)
+        {
+            return db.BlogUser.Any(bu => bu.user_name == user_name &&
+            bu.UsersThisUserBlocks.Any(ua => ua.userBlocked.user_name == author_name));
         }
 
         public void AuthorizeUser(string user_name, string user_to_authorize)
