@@ -483,11 +483,12 @@ namespace Articles.Controllers
         }
 
 
-      /*  [Authorize]
+       [Authorize]
         public IActionResult YourMessages()
         {
-
-        }*/
+            List<Message> viewModel = _messageRepository.RetrieveMessages(User.Identity.Name);
+            return View("Messages", viewModel);
+        }
 
        // public IActionResult SendMessages 
     }

@@ -316,6 +316,19 @@ namespace Articles.Data
             context.BlogUser.Add(user1);
             context.BlogUser.Add(user2);
             context.SaveChanges();
+
+            IBlogRepository seedRepo = new BlogRepository(context);
+            BlogUser me = seedRepo.RetrieveUser("andrewjones232@gmail.com");
+            BlogUser sender = seedRepo.RetrieveUser("messagetest@gmail.com");
+
+            seedRepo.AuthorizeUser(me.user_name, sender.user_name);
+            Message testMessage = new Message();
+            testMessage.Contents = "this is a test message which will hopefully display properly.";
+            testMessage.Subject = "does it work?";
+            testMessage.Sender = sender;
+            testMessage.Recipient = me;
+            IMessageRepository messageRepo = new MessageRepository(context);
+            messageRepo.SendMessage(testMessage);
         }
     }
 

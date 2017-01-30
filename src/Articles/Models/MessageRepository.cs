@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Articles.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Articles.Models
 {
@@ -30,9 +31,12 @@ namespace Articles.Models
             List<Message> messageList = new List<Message>();
             messageList =
                 (from m in db.Messages
-                 where m.Recipient.user_name == user_name &&
-                 CanMessage(m.Sender.user_name, m.Recipient.user_name)
-                 select m).ToList();
+                 where m.Recipient.user_name == user_name /*&&
+                 CanMessage(m.Sender.user_name, m.Recipient.user_name)*/ //commented out -- causes multiple threads error, try different implementation 
+                 select m)
+                 .Include<Message, BlogUser>(m => m.Sender)
+                 .Include<Message, BlogUser>(m => m.Recipient)
+                 .ToList();
             return messageList;
         }
 
