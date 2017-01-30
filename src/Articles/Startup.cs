@@ -36,7 +36,7 @@ namespace Articles
                
 
                 //commented for deployment because this throws an error if run on azure 
-              // builder.AddUserSecrets();
+               //builder.AddUserSecrets();
 
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
@@ -79,6 +79,7 @@ namespace Articles
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<ILinkRepository, LinkRepository>();
         }

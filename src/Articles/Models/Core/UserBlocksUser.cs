@@ -12,5 +12,6 @@ namespace Articles.Models.Core
 
         public int? userBlockedId { get; set; }
         public BlogUser userBlocked { get; set; }
+
     }
 }

@@ -30,6 +30,8 @@ namespace Articles.Data
         public DbSet<Link> Links { get; set; }
         public DbSet<UserBlocksUser> UserBlocksUsers { get; set; }
         public DbSet<UserAuthorizesUser> UserAuthorizesUsers { get; set; }
+        public DbSet<Message> Messages { get; set; }
+
         
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -144,6 +146,15 @@ namespace Articles.Data
                 .HasForeignKey(ua => ua.userAuthorizedId)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany(u => u.SentMessages);
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Recipient)
+                .WithMany(u => u.ReceivedMessages);
+                
 
         }
 
@@ -290,12 +301,34 @@ namespace Articles.Data
 
             }
 
+            Message message1 = new Message();
+            user1.SentMessages = new List<Message>();
+            user2.ReceivedMessages = new List<Message>();
 
+            message1.Sender = user1;
+            message1.Recipient = user2;
 
+            user1.SentMessages.Add(message1);
+            user2.ReceivedMessages.Add(message1);
+
+            context.Messages.Add(message1);
 
             context.BlogUser.Add(user1);
             context.BlogUser.Add(user2);
             context.SaveChanges();
+
+            IBlogRepository seedRepo = new BlogRepository(context);
+            BlogUser me = seedRepo.RetrieveUser("andrewjones232@gmail.com");
+            BlogUser sender = seedRepo.RetrieveUser("messagetest@gmail.com");
+
+            seedRepo.AuthorizeUser(me.user_name, sender.user_name);
+            Message testMessage = new Message();
+            testMessage.Contents = "this is a test message which will hopefully display properly.";
+            testMessage.Subject = "does it work?";
+            testMessage.Sender = sender;
+            testMessage.Recipient = me;
+            IMessageRepository messageRepo = new MessageRepository(context);
+            messageRepo.SendMessage(testMessage);
         }
     }
 

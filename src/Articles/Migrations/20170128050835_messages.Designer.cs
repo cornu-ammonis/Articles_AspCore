@@ -8,9 +8,10 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170128050835_messages")]
+    partial class messages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
@@ -75,10 +76,6 @@ namespace Articles.Migrations
                     b.Property<string>("Contents");
 
                     b.Property<DateTime>("ModifiedTime");
-
-                    b.Property<bool>("Read");
-
-                    b.Property<DateTime>("ReadTime");
 
                     b.Property<int?>("RecipientBlogUserId");
 

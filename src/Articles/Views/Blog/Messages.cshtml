@@ -1,0 +1,13 @@
+@model List<Articles.Models.Core.Message>
+
+
+@foreach(Message m in Model)
+{
+    <p> sent by @m.Sender.user_name</p>
+    <p>subject @m.Subject</p>
+    <p>@m.Contents</p>
+
+}
+
+
+
