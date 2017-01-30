@@ -16,6 +16,10 @@ namespace Articles.Models.Core
         public BlogUser Sender { get; set; }
         public BlogUser Recipient { get; set; }
 
+        public bool Read { get; set; }
+        public DateTime ReadTime { get; set; }
+
+
         
 
 
