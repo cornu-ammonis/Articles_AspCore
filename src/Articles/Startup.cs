@@ -79,6 +79,7 @@ namespace Articles
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<ILinkRepository, LinkRepository>();
         }
