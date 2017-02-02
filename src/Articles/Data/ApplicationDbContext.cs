@@ -8,6 +8,7 @@ using Articles.Models;
 using Articles.Models.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Articles.Models.MessageViewModels;
 
 namespace Articles.Data
 {
@@ -328,7 +329,15 @@ namespace Articles.Data
             testMessage.Sender = sender;
             testMessage.Recipient = me;
             IMessageRepository messageRepo = new MessageRepository(context);
+
             messageRepo.SendMessage(testMessage);
+
+            MessageCreationViewModel testMessageViewModel = new MessageCreationViewModel();
+            testMessageViewModel.AuthorName = "messagetest@gmail.com";
+            testMessageViewModel.RecipientName = "andrewjones232@gmail.com";
+            testMessageViewModel.Subject = "test2 subject - vm";
+            testMessageViewModel.Contents = "this was sent with the view model";
+            testMessageViewModel.sendMessage(messageRepo);
         }
     }
 
