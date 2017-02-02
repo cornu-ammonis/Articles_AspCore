@@ -651,17 +651,7 @@ namespace Articles.Models
                 BlogUser user = this.RetrieveUser(user_name);
                 BlogUser toAuthorize = this.RetrieveUser(user_to_authorize);
 
-                db.BlogUser.Update(user);
-                db.BlogUser.Update(toAuthorize);
-
-                UserAuthorizesUser toAdd = new UserAuthorizesUser();
-                toAdd.authorizingUserId = user.BlogUserId;
-                toAdd.authorizingUser = user;
-                toAdd.userAuthorizedId = toAuthorize.BlogUserId;
-                toAdd.userAuthorized = toAuthorize;
-
-                user.UsersThisUserAuthorizes.Add(toAdd);
-                toAuthorize.UsersAuthorizingThisUser.Add(toAdd);
+                db.UserAuthorizesUsers.Add(user.authorizeUser(toAuthorize));
 
                 db.SaveChanges();
                 

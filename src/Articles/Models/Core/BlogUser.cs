@@ -63,5 +63,19 @@ namespace Articles.Models.Core
             return blockingRelationship;
         }
 
+        public UserAuthorizesUser authorizeUser(BlogUser authorizedUser)
+        {
+            UserAuthorizesUser authorizationRelationship = new UserAuthorizesUser();
+            authorizationRelationship.authorizingUser = this;
+            authorizationRelationship.authorizingUserId = this.BlogUserId;
+
+            authorizationRelationship.userAuthorized = authorizedUser;
+            authorizationRelationship.userAuthorizedId = authorizedUser.BlogUserId;
+
+            this.UsersThisUserAuthorizes.Add(authorizationRelationship);
+            authorizedUser.UsersAuthorizingThisUser.Add(authorizationRelationship);
+            return authorizationRelationship;
+        }
+
     }
 }
