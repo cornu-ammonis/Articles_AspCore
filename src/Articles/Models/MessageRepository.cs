@@ -60,6 +60,11 @@ namespace Articles.Models
             }
         }
 
+       public BlogUser RetrieveUserForMessaging(string user_name)
+        {
+            return RetrieveUser(user_name);
+        }
+
 
     }
 }
