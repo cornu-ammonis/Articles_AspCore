@@ -50,5 +50,18 @@ namespace Articles.Models.Core
             return this.AuthorUserSubscribes.Count.ToString();
         }
 
+        public UserBlocksUser blockUser(BlogUser blocked_user)
+        {
+            UserBlocksUser blockingRelationship = new UserBlocksUser();
+            blockingRelationship.blockingUserId = this.BlogUserId;
+            blockingRelationship.userBlockedId = blocked_user.BlogUserId;
+            blockingRelationship.blockingUser = this;
+            blockingRelationship.userBlocked = blocked_user;
+
+            this.UsersThisUserBlocks.Add(blockingRelationship);
+            blocked_user.UsersBlockingThisUser.Add(blockingRelationship);
+            return blockingRelationship;
+        }
+
     }
 }
