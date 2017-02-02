@@ -31,5 +31,23 @@ namespace TestLibrary
 
         }
 
+        [TestCase]
+        public void BlogUserAuthorizeUserMethodReturnsCorrectAuthorizationRelationship()
+        {
+            BlogUser authorizingUser = new BlogUser();
+            authorizingUser.user_name = "thisUserDoesTheAuthorizing";
+            authorizingUser.UsersThisUserAuthorizes = new List<UserAuthorizesUser>();
+
+            BlogUser authorizedUser = new BlogUser();
+            authorizedUser.user_name = "thisUserGetsAuthorized";
+            authorizedUser.UsersAuthorizingThisUser = new List<UserAuthorizesUser>();
+
+            UserAuthorizesUser result = authorizingUser.authorizeUser(authorizedUser);
+
+            Assert.That(result.authorizingUser, Is.EqualTo(authorizingUser));
+            Assert.That(result.userAuthorized, Is.EqualTo(authorizedUser));
+            Assert.That(authorizingUser.UsersThisUserAuthorizes, Is.EquivalentTo(authorizedUser.UsersAuthorizingThisUser));
+        }
+
     }
 }
