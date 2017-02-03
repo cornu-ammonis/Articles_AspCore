@@ -2,18 +2,22 @@
 rebuilt blog in asp.net core
 
 1. install dotnet core SDK/tools and if necessary VS  from https://www.microsoft.com/net/download/core#/current/sdk     
-  a. make sure to click current -- not LTS-- as we are running 1.1
+ 	 a. make sure to click current -- not LTS-- as we are running 1.1
 2. clone repository 
 3. open project/solution from visual studio 
-  a. if you receive an error about the wrong SDK version, update global.json under solution items so that the SDK version reflects your currently installed version (found under programfiles / dotnet)
+
+  	a. if you receive an error about the wrong SDK version, update global.json under solution items so that the SDK version reflects your currently installed version (found under programfiles / dotnet)
 4. open/navigate to package manager console
 5. from project root directory run command ‘dotnet restore’
 6. cd .\src, then cd .\Articles (from package manager console not terminal)
 7. run ‘dotnet build’
 8. run add-migrations init -- this will enable migrations and should create a blank migration file named init
-  a. if the init file is not blank, either you modified an entity's model or something went wrong
-  b. if command is not recognized, first try closing and reopening visual studio
-  c. if command is still not recognized ensure that entity framework pacakges are installed by following these instructions https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db
+ 	 a. if the init file is not blank, either you modified an entity's model or something went wrong
+	 
+ 	 b. if command is not recognized, first try closing and reopening visual studio
+	 
+ 	 c. if command is still not recognized ensure that entity framework pacakges are installed by following these instructions https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db
+	 
     I. Install-Package Microsoft.EntityFrameworkCore.Tools –Pre
     II. Install-Package Microsoft.EntityFrameworkCore.Design
 9. run update-databse. this will create a new sql database locally (if this is the first time you’ve run the command), and create the appropriate tables according to the entity builder / migrations information included in the github repository
