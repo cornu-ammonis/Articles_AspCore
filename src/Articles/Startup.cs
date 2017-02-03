@@ -36,7 +36,7 @@ namespace Articles
                
 
                 //commented for deployment because this throws an error if run on azure 
-               //builder.AddUserSecrets();
+               builder.AddUserSecrets();
 
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
@@ -115,7 +115,7 @@ namespace Articles
 
 
             app.UseIdentity();
-           // app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
+           app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
 
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
