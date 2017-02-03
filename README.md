@@ -1,3 +1,4 @@
+
 # Articles_AspCore
 rebuilt blog in asp.net core
 
@@ -39,3 +40,5 @@ FOR ACCOUNT REGISTRATION:
     b. dotnet user-secrets set SendGridKey [key here]
     
 4. if the command is not recognized, make sure user secrets are installed via the pakcage manager (this should happen automatically when previously running dotnet restore
+
+5. uncomment the line " builder.AddUserSecrets();" in startup.cs at line 39
