@@ -2,7 +2,8 @@
 rebuilt blog in asp.net core
 
 1. install dotnet core SDK/tools and if necessary VS  from https://www.microsoft.com/net/download/core#/current/sdk     
- 	 a. make sure to click current -- not LTS-- as we are running 1.1
+ 	
+	a. make sure to click current -- not LTS-- as we are running 1.1
 2. clone repository 
 3. open project/solution from visual studio 
 
