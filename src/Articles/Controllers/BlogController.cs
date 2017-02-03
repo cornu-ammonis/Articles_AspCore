@@ -16,6 +16,7 @@ using myExtensions;
 using Articles.Models.BlogViewModels.ListViewModels;
 using Microsoft.Extensions.Options;
 using Articles.Models.MessageViewModels;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Articles.Controllers
 {
@@ -512,10 +513,16 @@ namespace Articles.Controllers
             if(_messageRepository.CanMessage(User.Identity.Name, viewModel.RecipientName))
             {
                 viewModel.sendMessage(_messageRepository);
+                return RedirectToAction("YourMessages");
+            }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
+                return View(viewModel);
             }
            
 
-            return RedirectToAction("YourMessages");
+           
         }
 
        // public IActionResult SendMessages 
