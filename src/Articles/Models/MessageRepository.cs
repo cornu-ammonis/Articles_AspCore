@@ -33,6 +33,7 @@ namespace Articles.Models
                 (from m in db.Messages
                  where m.Recipient.user_name == user_name /*&&
                  CanMessage(m.Sender.user_name, m.Recipient.user_name)*/ //commented out -- causes multiple threads error, try different implementation 
+                 orderby m.SentTime descending
                  select m)
                  .Include<Message, BlogUser>(m => m.Sender)
                  .Include<Message, BlogUser>(m => m.Recipient)
