@@ -1,5 +1,10 @@
 @model List<Articles.Models.Core.Message>
 
+<div id="sendMessage">
+<a asp-action="sendMessage" asp-controller="Blog" data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#sendMessage">
+    [+] send a message
+</a>
+</div>
 
 @foreach(Message m in Model)
 {
