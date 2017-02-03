@@ -496,6 +496,11 @@ namespace Articles.Controllers
         public IActionResult SendMessage()
         {
             MessageCreationViewModel viewModel = new MessageCreationViewModel();
+
+            if(Request.IsAjaxRequest())
+            {
+                return PartialView(viewModel);
+            }
             return View(viewModel);
            
         }
@@ -509,7 +514,8 @@ namespace Articles.Controllers
                 viewModel.sendMessage(_messageRepository);
             }
            
-            return View();
+
+            return RedirectToAction("YourMessages");
         }
 
        // public IActionResult SendMessages 
