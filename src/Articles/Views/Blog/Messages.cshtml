@@ -10,9 +10,9 @@
 <div><a asp-action="YourAuthorizedMessages" asp-controller="Blog">Authorized Messages</a></div>
 
 
-@foreach(var m in Model.getMessages())
+@foreach(Message m in Model.getMessages())
 {
-    @Html.RenderPartial("_MessagePartial", m)
+    @Html.Partial("_MessagePartial", m)
 
 }
 
