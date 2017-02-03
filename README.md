@@ -22,7 +22,9 @@ rebuilt blog in asp.net core
 
 
 FOR ACCOUNT REGISTRATION:
+
 1. navigate from the root directory to the ‘articles’ directory -- e.g., cd .\src, cd .\Articles 
+
 2. two variables are needed 
   a. SendGridUser = apikey
   b. SendGridKey = [Paste Key Here]
