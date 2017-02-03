@@ -15,6 +15,7 @@ using Articles.ViewComponents;
 using myExtensions;
 using Articles.Models.BlogViewModels.ListViewModels;
 using Microsoft.Extensions.Options;
+using Articles.Models.MessageViewModels;
 
 namespace Articles.Controllers
 {
@@ -488,6 +489,27 @@ namespace Articles.Controllers
         {
             List<Message> viewModel = _messageRepository.RetrieveMessages(User.Identity.Name);
             return View("Messages", viewModel);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult SendMessage()
+        {
+            MessageCreationViewModel viewModel = new MessageCreationViewModel();
+            return View(viewModel);
+           
+        }
+
+        [HttpPost]
+        public IActionResult SendMessage([Bind(include: "RecipientName, Subject, Contents")] MessageCreationViewModel viewModel)
+        {
+            viewModel.AuthorName = User.Identity.Name;
+            if(_messageRepository.CanMessage(User.Identity.Name, viewModel.RecipientName))
+            {
+                viewModel.sendMessage(_messageRepository);
+            }
+           
+            return View();
         }
 
        // public IActionResult SendMessages 
