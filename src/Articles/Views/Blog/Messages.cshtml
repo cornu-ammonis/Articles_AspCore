@@ -1,4 +1,4 @@
-@model List<Articles.Models.Core.Message>
+@model  Articles.Models.MessageViewModels.MessageListViewModel
 
 <div id="sendMessage">
 <a asp-action="sendMessage" asp-controller="Blog" data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#sendMessage">
@@ -6,11 +6,13 @@
 </a>
 </div>
 
-@foreach(Message m in Model)
+<div><a asp-action="YourUnauthorizedMessages" asp-controller="Blog">Unauthorized Messages</a> </div>
+<div><a asp-action="YourAuthorizedMessages" asp-controller="Blog">Authorized Messages</a></div>
+
+
+@foreach(var m in Model.getMessages())
 {
-    <p> sent by @m.Sender.user_name</p>
-    <p>subject @m.Subject</p>
-    <p>@m.Contents</p>
+    @Html.RenderPartial("_MessagePartial", m)
 
 }
 
