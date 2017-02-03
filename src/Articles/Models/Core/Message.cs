@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Articles.Models.MessageViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,8 +21,17 @@ namespace Articles.Models.Core
         public DateTime ReadTime { get; set; }
 
 
-        
+        public Message(MessageCreationViewModel viewModel, IMessageRepository messageRepository)
+        {
+            SentTime = DateTime.Now;
+            Sender = messageRepository.RetrieveUserForMessaging(viewModel.AuthorName);
+            Recipient = messageRepository.RetrieveUserForMessaging(viewModel.RecipientName);
+            Contents = viewModel.Contents;
+            Subject = viewModel.Subject;
+        }
 
-
+        public Message()
+        {
+        }
     }
 }

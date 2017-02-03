@@ -596,15 +596,8 @@ namespace Articles.Models
                 }
                 db.BlogUser.Update(blocked_user);
 
-                UserBlocksUser blockingRelationship = new UserBlocksUser();
-                blockingRelationship.blockingUserId = user.BlogUserId;
-                blockingRelationship.userBlockedId = blocked_user.BlogUserId;
-                blockingRelationship.blockingUser = user;
-                blockingRelationship.userBlocked = blocked_user;
-
-                user.UsersThisUserBlocks.Add(blockingRelationship);
-                blocked_user.UsersBlockingThisUser.Add(blockingRelationship);
-                db.UserBlocksUsers.Add(blockingRelationship);
+              
+                db.UserBlocksUsers.Add(user.blockUser(blocked_user));
                 db.SaveChanges();
 
                 //unsubscribes  if user  is subscribed to blocked user 
@@ -658,17 +651,7 @@ namespace Articles.Models
                 BlogUser user = this.RetrieveUser(user_name);
                 BlogUser toAuthorize = this.RetrieveUser(user_to_authorize);
 
-                db.BlogUser.Update(user);
-                db.BlogUser.Update(toAuthorize);
-
-                UserAuthorizesUser toAdd = new UserAuthorizesUser();
-                toAdd.authorizingUserId = user.BlogUserId;
-                toAdd.authorizingUser = user;
-                toAdd.userAuthorizedId = toAuthorize.BlogUserId;
-                toAdd.userAuthorized = toAuthorize;
-
-                user.UsersThisUserAuthorizes.Add(toAdd);
-                toAuthorize.UsersAuthorizingThisUser.Add(toAdd);
+                db.UserAuthorizesUsers.Add(user.authorizeUser(toAuthorize));
 
                 db.SaveChanges();
                 
