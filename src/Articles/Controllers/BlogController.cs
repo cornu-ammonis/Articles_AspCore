@@ -426,7 +426,7 @@ namespace Articles.Controllers
             
             else
             {
-                return Redirect(Request.Headers["Referer"].ToString());
+                return RedirectToAction("Posts");
             }
         }
 

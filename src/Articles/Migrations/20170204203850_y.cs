@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Articles.Migrations
 {
-    public partial class likes : Migration
+    public partial class y : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

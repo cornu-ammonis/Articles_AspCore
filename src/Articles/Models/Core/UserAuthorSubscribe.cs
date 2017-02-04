@@ -7,11 +7,11 @@ namespace Articles.Models.Core
 {
     public class UserAuthorSubscribe
     {
-        public int? userId { get; set; }
-        public BlogUser user { get; set; }
+        public int? subscribingUserId { get; set; }
+        public BlogUser subscribingUser { get; set; }
 
-        public int? authorId { get; set; }
-        public BlogUser author { get; set; }
+        public int? userSubscribedId { get; set; }
+        public BlogUser userSubscribed { get; set; }
 
     }
 }

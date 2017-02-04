@@ -160,7 +160,7 @@ namespace Articles.Models
                 db.SaveChanges();
                 user = db.BlogUser
                     .Include<BlogUser, List<CategoryBlogUser>>(c => c.CategoryBlogUsers)
-                    .Include<BlogUser, List<UserAuthorSubscribe>>(ua => ua.UserAuthorSubscribes)
+                    .Include<BlogUser, List<UserAuthorSubscribe>>(ua => ua.UsersThisUserSubscribesTo)
                     .Single(c => c.user_name == user_name);
             }
 
@@ -197,18 +197,18 @@ namespace Articles.Models
             db.Update(user);
             foreach(var key in viewModel.subscribed_authors.Keys)
             {
-                BlogUser author = db.BlogUser.Include<BlogUser, List<UserAuthorSubscribe>>(bu => bu.AuthorUserSubscribes)
+                BlogUser author = db.BlogUser.Include<BlogUser, List<UserAuthorSubscribe>>(bu => bu.UsersThisUserSubscribesTo)
                     .Single(c => c.user_name == key);
                 db.Update(author);
                 if (viewModel.subscribed_authors[key] == false)
                 {
-                    if(db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == key))
+                    if(db.UserAuthorSubscribes.Any(ua => ua.subscribingUser.user_name == user_name && ua.userSubscribed.user_name == key))
                     {
                         db.Update(user);
-                        UserAuthorSubscribe to_remove = db.UserAuthorSubscribes.Single(ua => ua.user.user_name == user_name
-                        && ua.author.user_name == key);
-                        user.UserAuthorSubscribes.Remove(to_remove);
-                        author.AuthorUserSubscribes.Remove(to_remove);
+                        UserAuthorSubscribe to_remove = db.UserAuthorSubscribes.Single(ua => ua.subscribingUser.user_name == user_name
+                        && ua.userSubscribed.user_name == key);
+                        user.UsersThisUserSubscribesTo.Remove(to_remove);
+                        author.UsersSubscribingToThisUser.Remove(to_remove);
                         author.subscribers_count = author.subscribers_count - 1;
                         db.UserAuthorSubscribes.Remove(to_remove);
                     }
@@ -216,17 +216,17 @@ namespace Articles.Models
 
                 if (viewModel.subscribed_authors[key] == true)
                 {
-                    if(db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == key)
+                    if(db.UserAuthorSubscribes.Any(ua => ua.subscribingUser.user_name == user_name && ua.userSubscribed.user_name == key)
                         == false)
                     {
                         UserAuthorSubscribe nsubscription = new UserAuthorSubscribe();
-                        nsubscription.authorId = author.BlogUserId;
-                        nsubscription.userId = user.BlogUserId;
-                        nsubscription.author = author;
-                        nsubscription.user = user;
-                        author.AuthorUserSubscribes.Add(nsubscription);
+                        nsubscription.userSubscribedId = author.BlogUserId;
+                        nsubscription.subscribingUserId = user.BlogUserId;
+                        nsubscription.userSubscribed = author;
+                        nsubscription.subscribingUser = user;
+                        author.UsersSubscribingToThisUser.Add(nsubscription);
                         author.subscribers_count = author.subscribers_count + 1;
-                        user.UserAuthorSubscribes.Add(nsubscription);
+                        user.UsersThisUserSubscribesTo.Add(nsubscription);
                         db.UserAuthorSubscribes.Add(nsubscription);
                     }
                 }
@@ -281,7 +281,7 @@ namespace Articles.Models
             IEnumerable<Post> post_query =
                 (from p in db.Posts
                  where p.Published == true &&
-                user.UserAuthorSubscribes.Any(ua => ua.authorId == p.Author.BlogUserId)
+                user.UsersThisUserSubscribesTo.Any(ua => ua.userSubscribedId == p.Author.BlogUserId)
                 //p.Author.AuthorUserSubscribes.Any(au => au.userId == user.BlogUserId)
                  orderby p.PostedOn descending
                  select p).Skip(pageNo * pageSize).Take(pageSize)
@@ -310,7 +310,7 @@ namespace Articles.Models
             IEnumerable<Post> post_query =
                 (from p in db.Posts
                  where p.Published == true &&
-                 user.UserAuthorSubscribes.Any(ua => ua.authorId == p.Author.BlogUserId)
+                 user.UsersThisUserSubscribesTo.Any(ua => ua.userSubscribedId == p.Author.BlogUserId)
                 //p.Author.AuthorUserSubscribes.Any(au => au.userId == user.BlogUserId)
                  orderby p.PostedOn descending
                  select p);
@@ -547,9 +547,14 @@ namespace Articles.Models
                
                 BlogUser fresh_user = new BlogUser();
                 fresh_user.user_name = user_name;
+                db.Add(fresh_user);
+                db.SaveChanges();
+                fresh_user = db.BlogUser.Single(u => u.user_name == user_name);
+                db.Update(fresh_user);
+                
                 fresh_user.AuthoredPosts = new List<Post>();
-                fresh_user.AuthorUserSubscribes = new List<UserAuthorSubscribe>();
-                fresh_user.UserAuthorSubscribes = new List<UserAuthorSubscribe>();
+                fresh_user.UsersSubscribingToThisUser = new List<UserAuthorSubscribe>();
+                fresh_user.UsersThisUserSubscribesTo = new List<UserAuthorSubscribe>();
                 fresh_user.PostUserSaves = new List<PostUserSave>();
                 fresh_user.PostUserLikes = new List<PostUserLike>();
                 fresh_user.CategoryBlogUsers = new List<CategoryBlogUser>();
@@ -557,9 +562,17 @@ namespace Articles.Models
                 fresh_user.UsersBlockingThisUser = new List<UserBlocksUser>();
                 fresh_user.UsersThisUserAuthorizes = new List<UserAuthorizesUser>();
                 fresh_user.UsersAuthorizingThisUser = new List<UserAuthorizesUser>();
-                db.BlogUser.Add(fresh_user);
-                db.SaveChanges();
-                fresh_user = db.BlogUser.Single(u => u.user_name == user_name);
+              
+                
+                /*fresh_user = db.BlogUser.Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UsersThisUserSubscribesTo)
+                    .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UsersSubscribingToThisUser)
+             .Include<BlogUser, List<PostUserSave>>(u => u.PostUserSaves)
+             .Include<BlogUser, List<PostUserLike>>(u => u.PostUserLikes)
+             .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersThisUserBlocks)
+             .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersBlockingThisUser)
+             .Include<BlogUser, List<UserAuthorizesUser>>(u => u.UsersThisUserAuthorizes)
+             .Include<BlogUser, List<UserAuthorizesUser>>(u => u.UsersAuthorizingThisUser)
+             .Single(u => u.user_name == user_name);*/
                 return fresh_user;
                
             }
@@ -601,7 +614,7 @@ namespace Articles.Models
                 db.SaveChanges();
 
                 //unsubscribes  if user  is subscribed to blocked user 
-                if (db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == user_to_block))
+                if (db.UserAuthorSubscribes.Any(ua => ua.subscribingUser.user_name == user_name && ua.userSubscribed.user_name == user_to_block))
                 {
                     this.UnsubscribeAuthor(user_name, user_to_block);
                 }
@@ -731,46 +744,17 @@ namespace Articles.Models
         {
 
             if(db.BlogUser.Any(bu => bu.user_name == user_name 
-            && bu.UserAuthorSubscribes.Any(ua => ua.author.user_name == author_name)) == false)
+            && bu.UsersThisUserSubscribesTo.Any(ua => ua.userSubscribed.user_name == author_name)) == false)
             {
                 BlogUser user;
-                if (db.BlogUser.Any(u => u.user_name == user_name) == false)
-                {
-                     user = this.GenerateUser(user_name);
-                    
-                }
-             else
-                {
-                     user = db.BlogUser.Include<BlogUser, List<UserAuthorSubscribe>>(u => u.UserAuthorSubscribes)
-                        .Single(u => u.user_name == user_name);
-                    
-                    
-                }
+                user = this.RetrieveUser(user_name);
                 db.BlogUser.Update(user);
 
                 BlogUser author;
-              if (db.BlogUser.Any(u => u.user_name == author_name))
-                {
-                    author = db.BlogUser.Include<BlogUser, List<UserAuthorSubscribe>>(u => u.AuthorUserSubscribes)
-                                        .Single(u => u.user_name == author_name);
-                }
-              else
-                {
-                    
-                    throw new InvalidOperationException("Author not found");
-                }
+                author = this.RetrieveUser(author_name);
                 db.BlogUser.Update(author);
 
-                UserAuthorSubscribe nsubscription = new UserAuthorSubscribe();
-                nsubscription.authorId = author.BlogUserId;
-                nsubscription.userId = user.BlogUserId;
-                nsubscription.author = author;
-                nsubscription.user = user;
-                
-               
-                user.UserAuthorSubscribes.Add(nsubscription);
-                author.AuthorUserSubscribes.Add(nsubscription);
-                author.subscribers_count = author.subscribers_count + 1;
+                UserAuthorSubscribe nsubscription = user.subscribeUser(author);
                 db.UserAuthorSubscribes.Add(nsubscription);
                 db.SaveChanges();
                 
@@ -791,16 +775,16 @@ namespace Articles.Models
         public void UnsubscribeAuthor(string user_name, string author_name)
         {
            
-            if(db.UserAuthorSubscribes.Any(ua => ua.user.user_name == user_name && ua.author.user_name == author_name))
+            if(db.UserAuthorSubscribes.Any(ua => ua.subscribingUser.user_name == user_name && ua.userSubscribed.user_name == author_name))
             {
                 BlogUser user = this.RetrieveUser(user_name);
                 BlogUser author = this.RetrieveUser(author_name);
-                UserAuthorSubscribe to_remove = db.UserAuthorSubscribes.Single(ua => ua.user.user_name == user_name
-                && ua.author.user_name == author_name);
+                UserAuthorSubscribe to_remove = db.UserAuthorSubscribes.Single(ua => ua.subscribingUser.user_name == user_name
+                && ua.userSubscribed.user_name == author_name);
                 db.Update(user);
                 db.Update(author);
-                user.UserAuthorSubscribes.Remove(to_remove);
-                author.AuthorUserSubscribes.Remove(to_remove);
+                user.UsersThisUserSubscribesTo.Remove(to_remove);
+                author.UsersSubscribingToThisUser.Remove(to_remove);
                 author.subscribers_count = author.subscribers_count - 1;
                 db.UserAuthorSubscribes.Remove(to_remove);
                 db.SaveChanges();
@@ -810,7 +794,7 @@ namespace Articles.Models
 
         public bool CheckIfSubscribed(string user_name, string author_name)
         {
-           if (db.UserAuthorSubscribes.Any(u => u.user.user_name == user_name && u.author.user_name == author_name))
+           if (db.UserAuthorSubscribes.Any(u => u.subscribingUser.user_name == user_name && u.userSubscribed.user_name == author_name))
             {
                 return true;
             }
@@ -824,8 +808,8 @@ namespace Articles.Models
 
         public async Task<bool> CheckIfSubscribedAsync(string user_name, string author_name)
         {
-            bool IsSubscribed = await db.UserAuthorSubscribes.AnyAsync(ua => ua.user.user_name == user_name
-            && ua.author.user_name == author_name);
+            bool IsSubscribed = await db.UserAuthorSubscribes.AnyAsync(ua => ua.subscribingUser.user_name == user_name
+            && ua.userSubscribed.user_name == author_name);
             
             return IsSubscribed;
         }
@@ -835,18 +819,22 @@ namespace Articles.Models
             //user doesnt exist; generate a new user to avoid errors
             if(db.BlogUser.Any(u => u.user_name == username) == false)
             {
-                return this.GenerateUser(username);
+                 BlogUser us = this.GenerateUser(username);
+                return us;
+            
+
             }
 
             BlogUser user = db.BlogUser
-             .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UserAuthorSubscribes)
+             .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UsersThisUserSubscribesTo)
+              .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UsersSubscribingToThisUser)
              .Include<BlogUser, List<PostUserSave>>(u => u.PostUserSaves)
              .Include<BlogUser, List<PostUserLike>>(u => u.PostUserLikes)
              .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersThisUserBlocks)
              .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersBlockingThisUser)
              .Include<BlogUser, List<UserAuthorizesUser>>(u => u.UsersThisUserAuthorizes)
              .Include<BlogUser, List<UserAuthorizesUser>>(u => u.UsersAuthorizingThisUser)
-             .SingleOrDefault(u => u.user_name == username);
+             .Single(u => u.user_name == username);
             return user;
         }
 
@@ -858,8 +846,8 @@ namespace Articles.Models
                  where u.AuthoredPosts.Any(p => p.Published == true)
                  orderby u.user_name
                  select u)
-                 .Include<BlogUser, List<UserAuthorSubscribe>>(u => u.UserAuthorSubscribes)
-                 .Include<BlogUser, List<UserAuthorSubscribe>>(u => u.AuthorUserSubscribes)
+                 .Include<BlogUser, List<UserAuthorSubscribe>>(u => u.UsersThisUserSubscribesTo)
+                 .Include<BlogUser, List<UserAuthorSubscribe>>(u => u.UsersSubscribingToThisUser)
                  .Include<BlogUser, List<PostUserSave>>(u => u.PostUserSaves);
 
             foreach (BlogUser author in u_query)

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Articles.Migrations
 {
-    public partial class custom : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,11 +30,36 @@ namespace Articles.Migrations
                 {
                     BlogUserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                  
+                    page_size = table.Column<int>(nullable: false),
+                    publicMessaging = table.Column<bool>(nullable: false),
+                    subscribers_count = table.Column<int>(nullable: false),
                     user_name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BlogUser", x => x.BlogUserId);
+                    table.ForeignKey(
+                        name: "FK_BlogUser_BlogUser_BlogUserId",
+                        column: x => x.BlogUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Links",
+                columns: table => new
+                {
+                    LinkId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    category = table.Column<string>(nullable: true),
+                    title = table.Column<string>(nullable: true),
+                    url = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Links", x => x.LinkId);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,33 +132,6 @@ namespace Articles.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Posts",
-                columns: table => new
-                {
-                    PostId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryId = table.Column<int>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Meta = table.Column<string>(nullable: true),
-                    Modified = table.Column<DateTime>(nullable: true),
-                    PostedOn = table.Column<DateTime>(nullable: false),
-                    Published = table.Column<bool>(nullable: false),
-                    ShortDescription = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    UrlSlug = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Posts", x => x.PostId);
-                    table.ForeignKey(
-                        name: "FK_Posts_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "CategoryId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CategoryBlogUser",
                 columns: table => new
                 {
@@ -155,6 +153,146 @@ namespace Articles.Migrations
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    MessageId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Contents = table.Column<string>(nullable: true),
+                    ModifiedTime = table.Column<DateTime>(nullable: false),
+                    Read = table.Column<bool>(nullable: false),
+                    ReadTime = table.Column<DateTime>(nullable: false),
+                    RecipientBlogUserId = table.Column<int>(nullable: true),
+                    SenderBlogUserId = table.Column<int>(nullable: true),
+                    SentTime = table.Column<DateTime>(nullable: false),
+                    Subject = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.MessageId);
+                    table.ForeignKey(
+                        name: "FK_Messages_BlogUser_RecipientBlogUserId",
+                        column: x => x.RecipientBlogUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_BlogUser_SenderBlogUserId",
+                        column: x => x.SenderBlogUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAuthorizesUsers",
+                columns: table => new
+                {
+                    authorizingUserId = table.Column<int>(nullable: false),
+                    userAuthorizedId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAuthorizesUsers", x => new { x.authorizingUserId, x.userAuthorizedId });
+                    table.ForeignKey(
+                        name: "FK_UserAuthorizesUsers_BlogUser_authorizingUserId",
+                        column: x => x.authorizingUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserAuthorizesUsers_BlogUser_userAuthorizedId",
+                        column: x => x.userAuthorizedId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAuthorSubscribes",
+                columns: table => new
+                {
+                    subscribingUserId = table.Column<int>(nullable: false),
+                    userSubscribedId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAuthorSubscribes", x => new { x.subscribingUserId, x.userSubscribedId });
+                    table.ForeignKey(
+                        name: "FK_UserAuthorSubscribes_BlogUser_subscribingUserId",
+                        column: x => x.subscribingUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserAuthorSubscribes_BlogUser_userSubscribedId",
+                        column: x => x.userSubscribedId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserBlocksUsers",
+                columns: table => new
+                {
+                    blockingUserId = table.Column<int>(nullable: false),
+                    userBlockedId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserBlocksUsers", x => new { x.blockingUserId, x.userBlockedId });
+                    table.ForeignKey(
+                        name: "FK_UserBlocksUsers_BlogUser_blockingUserId",
+                        column: x => x.blockingUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserBlocksUsers_BlogUser_userBlockedId",
+                        column: x => x.userBlockedId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    PostId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AuthorBlogUserId = table.Column<int>(nullable: true),
+                    CategoryId = table.Column<int>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    LikeCount = table.Column<int>(nullable: false),
+                    Meta = table.Column<string>(nullable: true),
+                    Modified = table.Column<DateTime>(nullable: true),
+                    PostedOn = table.Column<DateTime>(nullable: false),
+                    Published = table.Column<bool>(nullable: false),
+                    ShortDescription = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    UrlSlug = table.Column<string>(nullable: true),
+                    ViewCount = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.PostId);
+                    table.ForeignKey(
+                        name: "FK_Posts_BlogUser_AuthorBlogUserId",
+                        column: x => x.AuthorBlogUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Posts_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "CategoryId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -267,25 +405,108 @@ namespace Articles.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PostUserLikes",
+                columns: table => new
+                {
+                    PostId = table.Column<int>(nullable: false),
+                    BlogUserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostUserLikes", x => new { x.PostId, x.BlogUserId });
+                    table.ForeignKey(
+                        name: "FK_PostUserLikes_BlogUser_BlogUserId",
+                        column: x => x.BlogUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostUserLikes_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "PostId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostUserSaves",
+                columns: table => new
+                {
+                    PostId = table.Column<int>(nullable: false),
+                    BlogUserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostUserSaves", x => new { x.PostId, x.BlogUserId });
+                    table.ForeignKey(
+                        name: "FK_PostUserSaves_BlogUser_BlogUserId",
+                        column: x => x.BlogUserId,
+                        principalTable: "BlogUser",
+                        principalColumn: "BlogUserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostUserSaves_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "PostId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlogUser_BlogUserId",
+                table: "BlogUser",
+                column: "BlogUserId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryBlogUser_BlogUserId",
                 table: "CategoryBlogUser",
                 column: "BlogUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryBlogUser_CategoryId",
-                table: "CategoryBlogUser",
-                column: "CategoryId");
+                name: "IX_Messages_RecipientBlogUserId",
+                table: "Messages",
+                column: "RecipientBlogUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostTag_PostId",
-                table: "PostTag",
-                column: "PostId");
+                name: "IX_Messages_SenderBlogUserId",
+                table: "Messages",
+                column: "SenderBlogUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostTag_TagId",
                 table: "PostTag",
                 column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostUserLikes_BlogUserId",
+                table: "PostUserLikes",
+                column: "BlogUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostUserSaves_BlogUserId",
+                table: "PostUserSaves",
+                column: "BlogUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAuthorizesUsers_userAuthorizedId",
+                table: "UserAuthorizesUsers",
+                column: "userAuthorizedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAuthorSubscribes_userSubscribedId",
+                table: "UserAuthorSubscribes",
+                column: "userSubscribedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserBlocksUsers_userBlockedId",
+                table: "UserBlocksUsers",
+                column: "userBlockedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_AuthorBlogUserId",
+                table: "Posts",
+                column: "AuthorBlogUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_CategoryId",
@@ -295,7 +516,8 @@ namespace Articles.Migrations
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
-                column: "NormalizedName");
+                column: "NormalizedName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -327,11 +549,6 @@ namespace Articles.Migrations
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_UserId",
-                table: "AspNetUserRoles",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -340,7 +557,28 @@ namespace Articles.Migrations
                 name: "CategoryBlogUser");
 
             migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
                 name: "PostTag");
+
+            migrationBuilder.DropTable(
+                name: "PostUserLikes");
+
+            migrationBuilder.DropTable(
+                name: "PostUserSaves");
+
+            migrationBuilder.DropTable(
+                name: "UserAuthorizesUsers");
+
+            migrationBuilder.DropTable(
+                name: "UserAuthorSubscribes");
+
+            migrationBuilder.DropTable(
+                name: "UserBlocksUsers");
+
+            migrationBuilder.DropTable(
+                name: "Links");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -358,19 +596,19 @@ namespace Articles.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BlogUser");
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Posts");
-
-            migrationBuilder.DropTable(
-                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "BlogUser");
 
             migrationBuilder.DropTable(
                 name: "Categories");
