@@ -21,9 +21,9 @@ namespace Articles.Models.Core
         public List<PostUserSave> PostUserSaves { get; set; }
         public List<PostUserLike> PostUserLikes { get; set; }
         //junction table from user --> author direction
-        public List<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
+        public List<UserAuthorSubscribe> UsersThisUserSubscribesTo { get; set; }
         //junction table from author --> user direction
-        public List<UserAuthorSubscribe> AuthorUserSubscribes { get; set; }
+        public List<UserAuthorSubscribe> UsersSubscribingToThisUser { get; set; }
 
         //user -- > user to block direction 
         public List<UserBlocksUser> UsersThisUserBlocks { get; set; }
@@ -47,7 +47,7 @@ namespace Articles.Models.Core
         }
         public string AuthorSubscribeCount()
         {
-            return this.AuthorUserSubscribes.Count.ToString();
+            return this.UsersSubscribingToThisUser.Count.ToString();
         }
 
         public UserBlocksUser blockUser(BlogUser blocked_user)
@@ -75,6 +75,21 @@ namespace Articles.Models.Core
             this.UsersThisUserAuthorizes.Add(authorizationRelationship);
             authorizedUser.UsersAuthorizingThisUser.Add(authorizationRelationship);
             return authorizationRelationship;
+        }
+
+        public UserAuthorSubscribe subscribeUser(BlogUser subscribedUser)
+        {
+            UserAuthorSubscribe subscriptionRelationship = new UserAuthorSubscribe();
+            subscriptionRelationship.subscribingUser = this;
+            subscriptionRelationship.subscribingUserId = this.BlogUserId;
+
+            subscriptionRelationship.userSubscribed = subscribedUser;
+            subscriptionRelationship.userSubscribedId = subscribedUser.BlogUserId;
+
+            this.UsersThisUserSubscribesTo.Add(subscriptionRelationship);
+            subscribedUser.UsersSubscribingToThisUser.Add(subscriptionRelationship);
+
+            return subscriptionRelationship;
         }
 
     }
