@@ -35,7 +35,8 @@ namespace Articles.Migrations
             modelBuilder.Entity("Articles.Models.Core.BlogUser", b =>
                 {
                     b.Property<int>("BlogUserId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("BlogUserId1");
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace Articles.Models.Core
 {
     public class BlogUser
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BlogUserId { get; set; }
         public string user_name { get; set; }
         public int page_size { get; set; } = 10;
@@ -88,6 +90,8 @@ namespace Articles.Models.Core
 
             this.UsersThisUserSubscribesTo.Add(subscriptionRelationship);
             subscribedUser.UsersSubscribingToThisUser.Add(subscriptionRelationship);
+
+            subscribedUser.subscribers_count += 1;
 
             return subscriptionRelationship;
         }

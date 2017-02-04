@@ -8,13 +8,13 @@ using Articles.Data;
 namespace Articles.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161013213618_authors")]
-    partial class authors
+    [Migration("20170204203850_y")]
+    partial class y
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Articles.Models.Category", b =>
@@ -36,11 +36,16 @@ namespace Articles.Migrations
             modelBuilder.Entity("Articles.Models.Core.BlogUser", b =>
                 {
                     b.Property<int>("BlogUserId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("BlogUserId1");
 
                     b.Property<int>("page_size");
+
+                    b.Property<bool>("publicMessaging");
+
+                    b.Property<int>("subscribers_count");
 
                     b.Property<string>("user_name");
 
@@ -61,9 +66,37 @@ namespace Articles.Migrations
 
                     b.HasIndex("BlogUserId");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("CategoryBlogUser");
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.Message", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Contents");
+
+                    b.Property<DateTime>("ModifiedTime");
+
+                    b.Property<bool>("Read");
+
+                    b.Property<DateTime>("ReadTime");
+
+                    b.Property<int?>("RecipientBlogUserId");
+
+                    b.Property<int?>("SenderBlogUserId");
+
+                    b.Property<DateTime>("SentTime");
+
+                    b.Property<string>("Subject");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("RecipientBlogUserId");
+
+                    b.HasIndex("SenderBlogUserId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Articles.Models.Core.PostTag", b =>
@@ -74,11 +107,90 @@ namespace Articles.Migrations
 
                     b.HasKey("PostId", "TagId");
 
-                    b.HasIndex("PostId");
-
                     b.HasIndex("TagId");
 
                     b.ToTable("PostTag");
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.PostUserLike", b =>
+                {
+                    b.Property<int>("PostId");
+
+                    b.Property<int>("BlogUserId");
+
+                    b.HasKey("PostId", "BlogUserId");
+
+                    b.HasIndex("BlogUserId");
+
+                    b.ToTable("PostUserLikes");
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.PostUserSave", b =>
+                {
+                    b.Property<int>("PostId");
+
+                    b.Property<int>("BlogUserId");
+
+                    b.HasKey("PostId", "BlogUserId");
+
+                    b.HasIndex("BlogUserId");
+
+                    b.ToTable("PostUserSaves");
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.UserAuthorizesUser", b =>
+                {
+                    b.Property<int?>("authorizingUserId");
+
+                    b.Property<int?>("userAuthorizedId");
+
+                    b.HasKey("authorizingUserId", "userAuthorizedId");
+
+                    b.HasIndex("userAuthorizedId");
+
+                    b.ToTable("UserAuthorizesUsers");
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
+                {
+                    b.Property<int?>("subscribingUserId");
+
+                    b.Property<int?>("userSubscribedId");
+
+                    b.HasKey("subscribingUserId", "userSubscribedId");
+
+                    b.HasIndex("userSubscribedId");
+
+                    b.ToTable("UserAuthorSubscribes");
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.UserBlocksUser", b =>
+                {
+                    b.Property<int?>("blockingUserId");
+
+                    b.Property<int?>("userBlockedId");
+
+                    b.HasKey("blockingUserId", "userBlockedId");
+
+                    b.HasIndex("userBlockedId");
+
+                    b.ToTable("UserBlocksUsers");
+                });
+
+            modelBuilder.Entity("Articles.Models.Link", b =>
+                {
+                    b.Property<int>("LinkId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("category");
+
+                    b.Property<string>("title");
+
+                    b.Property<string>("url");
+
+                    b.HasKey("LinkId");
+
+                    b.ToTable("Links");
                 });
 
             modelBuilder.Entity("Articles.Models.Post", b =>
@@ -88,11 +200,11 @@ namespace Articles.Migrations
 
                     b.Property<int?>("AuthorBlogUserId");
 
-                    b.Property<int?>("BlogUserId");
-
                     b.Property<int?>("CategoryId");
 
                     b.Property<string>("Description");
+
+                    b.Property<int>("LikeCount");
 
                     b.Property<string>("Meta");
 
@@ -108,11 +220,11 @@ namespace Articles.Migrations
 
                     b.Property<string>("UrlSlug");
 
+                    b.Property<int>("ViewCount");
+
                     b.HasKey("PostId");
 
                     b.HasIndex("AuthorBlogUserId");
-
-                    b.HasIndex("BlogUserId");
 
                     b.HasIndex("CategoryId");
 
@@ -137,20 +249,22 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
+                        .IsUnique()
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
@@ -177,7 +291,8 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
 
@@ -188,7 +303,7 @@ namespace Articles.Migrations
                         .IsRequired();
 
                     b.Property<string>("Email")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
@@ -197,10 +312,10 @@ namespace Articles.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
 
@@ -213,7 +328,7 @@ namespace Articles.Migrations
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -276,8 +391,6 @@ namespace Articles.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("AspNetUserRoles");
                 });
 
@@ -326,6 +439,17 @@ namespace Articles.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Articles.Models.Core.Message", b =>
+                {
+                    b.HasOne("Articles.Models.Core.BlogUser", "Recipient")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("RecipientBlogUserId");
+
+                    b.HasOne("Articles.Models.Core.BlogUser", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderBlogUserId");
+                });
+
             modelBuilder.Entity("Articles.Models.Core.PostTag", b =>
                 {
                     b.HasOne("Articles.Models.Post", "Post")
@@ -339,15 +463,70 @@ namespace Articles.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Articles.Models.Core.PostUserLike", b =>
+                {
+                    b.HasOne("Articles.Models.Core.BlogUser", "BlogUser")
+                        .WithMany("PostUserLikes")
+                        .HasForeignKey("BlogUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Articles.Models.Post", "Post")
+                        .WithMany("PostUserLikes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.PostUserSave", b =>
+                {
+                    b.HasOne("Articles.Models.Core.BlogUser", "BlogUser")
+                        .WithMany("PostUserSaves")
+                        .HasForeignKey("BlogUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Articles.Models.Post", "Post")
+                        .WithMany("PostUserSaves")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.UserAuthorizesUser", b =>
+                {
+                    b.HasOne("Articles.Models.Core.BlogUser", "authorizingUser")
+                        .WithMany("UsersThisUserAuthorizes")
+                        .HasForeignKey("authorizingUserId");
+
+                    b.HasOne("Articles.Models.Core.BlogUser", "userAuthorized")
+                        .WithMany("UsersAuthorizingThisUser")
+                        .HasForeignKey("userAuthorizedId");
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
+                {
+                    b.HasOne("Articles.Models.Core.BlogUser", "subscribingUser")
+                        .WithMany("UsersThisUserSubscribesTo")
+                        .HasForeignKey("subscribingUserId");
+
+                    b.HasOne("Articles.Models.Core.BlogUser", "userSubscribed")
+                        .WithMany("UsersSubscribingToThisUser")
+                        .HasForeignKey("userSubscribedId");
+                });
+
+            modelBuilder.Entity("Articles.Models.Core.UserBlocksUser", b =>
+                {
+                    b.HasOne("Articles.Models.Core.BlogUser", "blockingUser")
+                        .WithMany("UsersThisUserBlocks")
+                        .HasForeignKey("blockingUserId");
+
+                    b.HasOne("Articles.Models.Core.BlogUser", "userBlocked")
+                        .WithMany("UsersBlockingThisUser")
+                        .HasForeignKey("userBlockedId");
+                });
+
             modelBuilder.Entity("Articles.Models.Post", b =>
                 {
                     b.HasOne("Articles.Models.Core.BlogUser", "Author")
                         .WithMany("AuthoredPosts")
                         .HasForeignKey("AuthorBlogUserId");
-
-                    b.HasOne("Articles.Models.Core.BlogUser")
-                        .WithMany("BlogUserPosts")
-                        .HasForeignKey("BlogUserId");
 
                     b.HasOne("Articles.Models.Category", "Category")
                         .WithMany("Posts")

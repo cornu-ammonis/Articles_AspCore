@@ -334,8 +334,7 @@ namespace Articles.Data
 
             context.Messages.Add(message1);
 
-            context.BlogUser.Add(user1);
-            context.BlogUser.Add(user2);
+     
            
 
            

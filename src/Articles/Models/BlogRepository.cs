@@ -547,6 +547,11 @@ namespace Articles.Models
                
                 BlogUser fresh_user = new BlogUser();
                 fresh_user.user_name = user_name;
+                db.Add(fresh_user);
+                db.SaveChanges();
+                fresh_user = db.BlogUser.Single(u => u.user_name == user_name);
+                db.Update(fresh_user);
+                
                 fresh_user.AuthoredPosts = new List<Post>();
                 fresh_user.UsersSubscribingToThisUser = new List<UserAuthorSubscribe>();
                 fresh_user.UsersThisUserSubscribesTo = new List<UserAuthorSubscribe>();
@@ -557,9 +562,9 @@ namespace Articles.Models
                 fresh_user.UsersBlockingThisUser = new List<UserBlocksUser>();
                 fresh_user.UsersThisUserAuthorizes = new List<UserAuthorizesUser>();
                 fresh_user.UsersAuthorizingThisUser = new List<UserAuthorizesUser>();
-              db.BlogUser.Add(fresh_user);
-                db.SaveChanges();
-                fresh_user = db.BlogUser.Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UsersThisUserSubscribesTo)
+              
+                
+                /*fresh_user = db.BlogUser.Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UsersThisUserSubscribesTo)
                     .Include<BlogUser, List<UserAuthorSubscribe>>(c => c.UsersSubscribingToThisUser)
              .Include<BlogUser, List<PostUserSave>>(u => u.PostUserSaves)
              .Include<BlogUser, List<PostUserLike>>(u => u.PostUserLikes)
@@ -567,7 +572,7 @@ namespace Articles.Models
              .Include<BlogUser, List<UserBlocksUser>>(u => u.UsersBlockingThisUser)
              .Include<BlogUser, List<UserAuthorizesUser>>(u => u.UsersThisUserAuthorizes)
              .Include<BlogUser, List<UserAuthorizesUser>>(u => u.UsersAuthorizingThisUser)
-             .Single(u => u.user_name == user_name);
+             .Single(u => u.user_name == user_name);*/
                 return fresh_user;
                
             }
