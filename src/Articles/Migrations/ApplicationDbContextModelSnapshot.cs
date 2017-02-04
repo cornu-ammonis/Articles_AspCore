@@ -151,13 +151,13 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
                 {
-                    b.Property<int?>("authorId");
+                    b.Property<int?>("subscribingUserId");
 
-                    b.Property<int?>("userId");
+                    b.Property<int?>("userSubscribedId");
 
-                    b.HasKey("authorId", "userId");
+                    b.HasKey("subscribingUserId", "userSubscribedId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("userSubscribedId");
 
                     b.ToTable("UserAuthorSubscribes");
                 });
@@ -500,13 +500,13 @@ namespace Articles.Migrations
 
             modelBuilder.Entity("Articles.Models.Core.UserAuthorSubscribe", b =>
                 {
-                    b.HasOne("Articles.Models.Core.BlogUser", "author")
-                        .WithMany("AuthorUserSubscribes")
-                        .HasForeignKey("authorId");
+                    b.HasOne("Articles.Models.Core.BlogUser", "subscribingUser")
+                        .WithMany("UsersThisUserSubscribesTo")
+                        .HasForeignKey("subscribingUserId");
 
-                    b.HasOne("Articles.Models.Core.BlogUser", "user")
-                        .WithMany("UserAuthorSubscribes")
-                        .HasForeignKey("userId");
+                    b.HasOne("Articles.Models.Core.BlogUser", "userSubscribed")
+                        .WithMany("UsersSubscribingToThisUser")
+                        .HasForeignKey("userSubscribedId");
                 });
 
             modelBuilder.Entity("Articles.Models.Core.UserBlocksUser", b =>

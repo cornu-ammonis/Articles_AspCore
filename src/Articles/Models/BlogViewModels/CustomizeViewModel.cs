@@ -17,6 +17,8 @@ namespace Articles.Models.BlogViewModels
         // identifies user by User.Identity.Name, the string username 
         public CustomizeViewModel(IBlogRepository _blogRepository, string user_name)
         {
+
+            BlogUser current_user = _blogRepository.RetrieveUser(user_name);
             user_page_size = _blogRepository.UserPageSize(user_name);
             publicMessaging = _blogRepository.CheckIfPublicMessaging(user_name);
             IList<Category> all_categories = _blogRepository.Categories();
@@ -53,12 +55,12 @@ namespace Articles.Models.BlogViewModels
             }
 
             IList<BlogUser> all_authors = _blogRepository.AllAuthors();
-            BlogUser current_user = _blogRepository.RetrieveUser(user_name);
+          
             subscribed_authors = new Dictionary<string, bool>();
             author_counts = _blogRepository.AuthorPostCounts(all_authors);
             foreach (BlogUser author in all_authors)
             {
-                if(current_user.UserAuthorSubscribes.Any(c => c.authorId == author.BlogUserId))
+                if(current_user.UsersThisUserSubscribesTo.Any(c => c.userSubscribedId == author.BlogUserId))
                 {
                     subscribed_authors[author.user_name] = true;
                 }
