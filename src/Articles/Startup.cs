@@ -115,19 +115,22 @@ namespace Articles
 
 
             app.UseIdentity();
-            //app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
+          // app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
 
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
             {
-
+                /*
                 routes.MapRoute(name: "Author",
                    template: "{controller=Blog}/{action=PostsByAuthor}/{author}");
 
                 routes.MapRoute(name: "Subscribe",
                     template: "{controller=Blog}/{action=Subscribe}/{authorname}");
+
+                routes.MapRoute(name: "Unsubscribe",
+                    template: "{controller=Blog}/{action=Unsubscribe}/{authorname}");*/
 
                 routes.MapRoute(
                     name: "default",

@@ -15,6 +15,8 @@ using Articles.ViewComponents;
 using myExtensions;
 using Articles.Models.BlogViewModels.ListViewModels;
 using Microsoft.Extensions.Options;
+using Articles.Models.MessageViewModels;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Articles.Controllers
 {
@@ -32,6 +34,8 @@ namespace Articles.Controllers
       
         private readonly IBlogRepository _blogRepository;
         private readonly IMessageRepository _messageRepository;
+
+       
 
         //constructer for  dependency injection, registered in the startup.cs service. repository DI is configured her to use a 
         //scoped lifetime, which means one instance is used in all cases within one request, and a new instance is created each request 
@@ -422,7 +426,7 @@ namespace Articles.Controllers
             
             else
             {
-                return Redirect(Request.Headers["Referer"].ToString());
+                return RedirectToAction("Posts");
             }
         }
 
@@ -484,10 +488,57 @@ namespace Articles.Controllers
 
 
        [Authorize]
-        public IActionResult YourMessages()
+        public IActionResult YourMessages() 
         {
-            List<Message> viewModel = _messageRepository.RetrieveMessages(User.Identity.Name);
+            MessageListViewModel viewModel = new AllMessageListViewModel(_messageRepository, User.Identity.Name);
             return View("Messages", viewModel);
+        }
+
+        [Authorize]
+        public IActionResult YourUnauthorizedMessages()
+        {
+            MessageListViewModel viewModel = new UnauthorizedMessageListViewModel(_messageRepository, User.Identity.Name);
+            return View("Messages", viewModel);
+        }
+
+        [Authorize]
+        public IActionResult YourAuthorizedMessages()
+        {
+            MessageListViewModel viewModel = new AuthorizedMessageListViewModel(_messageRepository, User.Identity.Name);
+            return View("Messages", viewModel);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult SendMessage()
+        {
+            MessageCreationViewModel viewModel = new MessageCreationViewModel();
+
+            if(Request.IsAjaxRequest())
+            {
+                return PartialView(viewModel);
+            }
+            return View(viewModel);
+           
+        }
+
+        [HttpPost]
+        public IActionResult SendMessage([Bind(include: "RecipientName, Subject, Contents")] MessageCreationViewModel viewModel)
+        {
+            viewModel.AuthorName = User.Identity.Name;
+            if(_messageRepository.CanMessage(User.Identity.Name, viewModel.RecipientName))
+            {
+                viewModel.sendMessage(_messageRepository);
+                return RedirectToAction("YourMessages");
+            }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
+                return View(viewModel);
+            }
+           
+
+           
         }
 
        // public IActionResult SendMessages 

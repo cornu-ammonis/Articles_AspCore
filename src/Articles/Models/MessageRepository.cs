@@ -26,17 +26,47 @@ namespace Articles.Models
 
         //currently retrieves all messages sent to specified user with no specified ordering 
         //only filter is that sender is still permitted to message recipient
-        public List<Message> RetrieveMessages(string user_name)
+        public List<Message> RetrieveAllMessages(string user_name)
         {
             List<Message> messageList = new List<Message>();
             messageList =
                 (from m in db.Messages
                  where m.Recipient.user_name == user_name /*&&
                  CanMessage(m.Sender.user_name, m.Recipient.user_name)*/ //commented out -- causes multiple threads error, try different implementation 
+                 orderby m.SentTime descending
                  select m)
                  .Include<Message, BlogUser>(m => m.Sender)
                  .Include<Message, BlogUser>(m => m.Recipient)
                  .ToList();
+            return messageList;
+        }
+
+        public List<Message> RetrieveUnauthorizedMessages(string user_name)
+        {
+            List<Message> messageList = new List<Message>();
+            messageList = 
+                (from m in db.Messages
+                 where m.Recipient.user_name == user_name &&
+                  !m.Recipient.UsersThisUserAuthorizes.Any(l => l.userAuthorized.user_name == m.Sender.user_name)
+                  orderby m.SentTime descending
+                 select m).Include<Message, BlogUser>(m => m.Sender)
+                 .Include<Message, BlogUser>(m => m.Recipient)
+                 .ToList();
+            return messageList;
+        }
+
+        public List<Message> RetrieveAuthorizedMessages(string user_name)
+        {
+            List<Message> messageList = new List<Message>();
+            messageList =
+                (from m in db.Messages
+                 where m.Recipient.user_name == user_name &&
+                 m.Recipient.UsersThisUserAuthorizes.Any(l => l.userAuthorized.user_name == m.Sender.user_name)
+                 orderby m.SentTime descending
+                 select m).Include<Message, BlogUser>(m => m.Sender)
+                 .Include<Message, BlogUser>(m => m.Recipient)
+                 .ToList();
+
             return messageList;
         }
 

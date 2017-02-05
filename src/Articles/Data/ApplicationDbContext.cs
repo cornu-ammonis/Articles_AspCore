@@ -27,7 +27,7 @@ namespace Articles.Data
         public DbSet<CategoryBlogUser> CategoryBlogUser { get; set; }
         public DbSet<PostUserSave> PostUserSaves { get; set; }
         public DbSet<PostUserLike> PostUserLikes { get; set; }
-        public DbSet<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
+       public DbSet<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<UserBlocksUser> UserBlocksUsers { get; set; }
         public DbSet<UserAuthorizesUser> UserAuthorizesUsers { get; set; }
@@ -101,6 +101,7 @@ namespace Articles.Data
                 .WithMany(bu => bu.PostUserLikes)
                 .HasForeignKey(pu => pu.BlogUserId);
 
+            /*
             builder.Entity<UserAuthorSubscribe>()
                 .HasKey(ua => new { ua.authorId, ua.userId });
 
@@ -114,7 +115,7 @@ namespace Articles.Data
                 .HasOne(ua => ua.author)
                 .WithMany(ua => ua.AuthorUserSubscribes)
                 .HasForeignKey(ua => ua.authorId)
-                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;*/
 
             builder.Entity<UserBlocksUser>()
                 .HasKey(ub => new { ub.blockingUserId, ub.userBlockedId });
@@ -146,6 +147,21 @@ namespace Articles.Data
                 .WithMany(u => u.UsersAuthorizingThisUser)
                 .HasForeignKey(ua => ua.userAuthorizedId)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+
+            builder.Entity<UserAuthorSubscribe>()
+                .HasKey(ua => new { ua.subscribingUserId, ua.userSubscribedId });
+
+            builder.Entity<UserAuthorSubscribe>()
+                .HasOne(ua => ua.subscribingUser)
+                .WithMany(u => u.UsersThisUserSubscribesTo)
+                .HasForeignKey(ua => ua.subscribingUserId)
+                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+
+            builder.Entity<UserAuthorSubscribe>()
+                .HasOne(ua => ua.userSubscribed)
+                .WithMany(u => u.UsersSubscribingToThisUser)
+                .HasForeignKey(u => u.userSubscribedId)
+                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
 
             builder.Entity<Message>()
@@ -227,7 +243,11 @@ namespace Articles.Data
             context.Tags.Add(seed_tag_2);
             context.Tags.Add(seed_tag_3);
 
-            BlogUser user1 = new BlogUser();
+            IBlogRepository seedRepo = new BlogRepository(context);
+
+            BlogUser user1 = seedRepo.RetrieveUser("admin@gmail.com");
+            BlogUser user2 = seedRepo.RetrieveUser("admin2@gmail.com");
+           /* BlogUser user1 = new BlogUser();
             user1.user_name = "admin@gmail.com";
             user1.CategoryBlogUsers = new List<CategoryBlogUser>();
             user1.AuthoredPosts = new List<Post>();
@@ -235,7 +255,7 @@ namespace Articles.Data
             BlogUser user2 = new BlogUser();
             user2.user_name = "admin2@gmail.com";
             user2.CategoryBlogUsers = new List<CategoryBlogUser>();
-            user2.AuthoredPosts = new List<Post>();
+            user2.AuthoredPosts = new List<Post>();*/
 
            
            // context.Update(user1);
@@ -314,11 +334,10 @@ namespace Articles.Data
 
             context.Messages.Add(message1);
 
-            context.BlogUser.Add(user1);
-            context.BlogUser.Add(user2);
-            context.SaveChanges();
+     
+           
 
-            IBlogRepository seedRepo = new BlogRepository(context);
+           
             BlogUser me = seedRepo.RetrieveUser("andrewjones232@gmail.com");
             BlogUser sender = seedRepo.RetrieveUser("messagetest@gmail.com");
 
@@ -338,6 +357,8 @@ namespace Articles.Data
             testMessageViewModel.Subject = "test2 subject - vm";
             testMessageViewModel.Contents = "this was sent with the view model";
             testMessageViewModel.sendMessage(messageRepo);
+
+            context.SaveChanges();
         }
     }
 
