@@ -1,6 +1,9 @@
-﻿using Articles.Models;
+﻿using Articles.Controllers;
+using Articles.Models;
 using Articles.Models.Core;
 using Articles.Models.MessageViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -168,6 +171,35 @@ namespace TestLibrary
             MessageListViewModel viewModel = new UnauthorizedMessageListViewModel(mRepo.Object, user_name);
 
             Assert.That(viewModel.getMessages(), Is.EquivalentTo(testList));
+        }
+
+
+        [TestCase]
+        public void SendMessageActionReturnsErrorIfUnauthorized()
+        {
+            var mockMessageRepo = new Mock<IMessageRepository>();
+            var mockBlogRepo = new Mock<IBlogRepository>();
+
+            string user_name = "testUser@test.net";
+            string recipient_name = "testRecipient@test.net";
+
+            mockMessageRepo.Setup(r => r.CanMessage(user_name, recipient_name)).Returns(false);
+
+            var mockHttpContext = new Mock<HttpContext>();
+            mockHttpContext.Setup(c => c.User.Identity.Name).Returns(user_name);
+            
+
+            BlogController _testController = new BlogController(mockBlogRepo.Object, mockMessageRepo.Object);
+            _testController.ControllerContext = new ControllerContext();
+            _testController.ControllerContext.HttpContext = mockHttpContext.Object;
+            MessageCreationViewModel viewModel = new MessageCreationViewModel();
+            viewModel.RecipientName = recipient_name;
+
+            ViewResult testResult = (ViewResult) _testController.SendMessage(viewModel);
+            Assert.That(testResult.ViewData.ModelState.ErrorCount, Is.EqualTo(1));
+            
+
+            
         }
 
 
