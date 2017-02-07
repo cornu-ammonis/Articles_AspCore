@@ -547,5 +547,27 @@ namespace Articles.Controllers
         }
 
        // public IActionResult SendMessages 
+
+        public IActionResult MarkAsRead(int MessageId)
+        {
+            bool succeeded = _messageRepository.MarkAsRead(MessageId);
+
+            if(succeeded)
+            {
+                try
+                {
+                   return Redirect(Request.Headers["Referer"].ToString());
+                }
+                catch
+                {
+                    return RedirectToAction("YourMessages");
+                }
+            }
+
+            else
+            {
+                throw new InvalidOperationException("Message not found or more than one message found");
+            }
+        }
     }
 }
