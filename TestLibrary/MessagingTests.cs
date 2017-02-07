@@ -1,6 +1,9 @@
-﻿using Articles.Models;
+﻿using Articles.Controllers;
+using Articles.Models;
 using Articles.Models.Core;
 using Articles.Models.MessageViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -104,6 +107,102 @@ namespace TestLibrary
             Assert.That(testMessage.Sender, Is.EqualTo(sender));
             Assert.That(testMessage.Recipient, Is.EqualTo(receiver));
         }
+
+        [TestCase]
+        public void AllMessageListViewModelCallsAllMessagesRepositoryMethodAndPopulatesInternalProperty()
+        {
+            string user_name = "test";
+            Message testm1 = new Message();
+            testm1.Subject = "testm1";
+            Message testm2 = new Message();
+            testm2.Subject = "testm2";
+
+            List<Message> testList = new List<Message>();
+            testList.Add(testm1);
+            testList.Add(testm2);
+
+            var mRepo = new Mock<IMessageRepository>();
+            mRepo.Setup(r => r.RetrieveAllMessages(user_name)).Returns(testList);
+
+            MessageListViewModel testAllMessageViewModel = new AllMessageListViewModel(mRepo.Object, user_name);
+
+            Assert.That(testAllMessageViewModel.getMessages(), Is.EquivalentTo(testList));
+        }
+
+        [TestCase]
+        public void AuthorizedMessageListViewModelCallsAuthorizedMessagesRepositoryMethodAndPopulatesInternalProperty()
+        {
+            string user_name = "test";
+            Message testm1 = new Message();
+            testm1.Subject = "testm1";
+            Message testm2 = new Message();
+            testm2.Subject = "testm2";
+
+            List<Message> testList = new List<Message>();
+            testList.Add(testm1);
+            testList.Add(testm2);
+
+            var mRepo = new Mock<IMessageRepository>();
+            mRepo.Setup(r => r.RetrieveAuthorizedMessages(user_name)).Returns(testList);
+
+            MessageListViewModel viewModel = new AuthorizedMessageListViewModel(mRepo.Object, user_name);
+
+            
+
+            Assert.That(viewModel.getMessages(), Is.EquivalentTo(testList));
+        }
+
+        [TestCase]
+        public void UnauthorizedMessageListViewModelCallsUnauthorizedMessageRepositoryMethodAndPopulatesInternalProperty()
+        {
+            string user_name = "test";
+            Message testm1 = new Message();
+            testm1.Subject = "testm1";
+            Message testm2 = new Message();
+            testm2.Subject = "testm2";
+
+            List<Message> testList = new List<Message>();
+            testList.Add(testm1);
+            testList.Add(testm2);
+
+            var mRepo = new Mock<IMessageRepository>();
+            mRepo.Setup(r => r.RetrieveUnauthorizedMessages(user_name)).Returns(testList);
+
+            MessageListViewModel viewModel = new UnauthorizedMessageListViewModel(mRepo.Object, user_name);
+
+            Assert.That(viewModel.getMessages(), Is.EquivalentTo(testList));
+        }
+
+
+        [TestCase]
+        public void SendMessageActionReturnsErrorIfUnauthorized()
+        {
+            var mockMessageRepo = new Mock<IMessageRepository>();
+            var mockBlogRepo = new Mock<IBlogRepository>();
+
+            string user_name = "testUser@test.net";
+            string recipient_name = "testRecipient@test.net";
+
+            mockMessageRepo.Setup(r => r.CanMessage(user_name, recipient_name)).Returns(false);
+
+            var mockHttpContext = new Mock<HttpContext>();
+            mockHttpContext.Setup(c => c.User.Identity.Name).Returns(user_name);
+            
+
+            BlogController _testController = new BlogController(mockBlogRepo.Object, mockMessageRepo.Object);
+            _testController.ControllerContext = new ControllerContext();
+            _testController.ControllerContext.HttpContext = mockHttpContext.Object;
+            MessageCreationViewModel viewModel = new MessageCreationViewModel();
+            viewModel.RecipientName = recipient_name;
+
+            ViewResult testResult = (ViewResult) _testController.SendMessage(viewModel);
+            Assert.That(testResult.ViewData.ModelState.ErrorCount, Is.EqualTo(1));
+            
+
+            
+        }
+
+
 
     }
 }

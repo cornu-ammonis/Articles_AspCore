@@ -578,6 +578,8 @@ namespace Articles.Models
             }
         }
 
+
+        //creates association between blocking user (user_name) and blocked user (user_to_block)
         public void BlockUser(string user_name, string user_to_block)
         {
             //checks that there is no user matching current user who already blocks target user 
@@ -621,6 +623,7 @@ namespace Articles.Models
             }
         }
 
+        //removes association between blocking user (user_name) and blocked user (user_to_block)
         public void UnblockUser(string user_name, string user_to_unblock)
         {
             //checks current user blocks target user
@@ -643,6 +646,8 @@ namespace Articles.Models
             }
         }
 
+
+        //checks if user_name blocks author_name
         public async Task<bool> CheckIfBlockedAsync(string user_name, string author_name)
         {
             return await db.BlogUser.AnyAsync(bu => bu.user_name == user_name
@@ -657,6 +662,8 @@ namespace Articles.Models
             bu.UsersThisUserBlocks.Any(ua => ua.userBlocked.user_name == author_name));
         }
 
+
+        //persists authorization association between user_name and user_to_authorize 
         public void AuthorizeUser(string user_name, string user_to_authorize)
         {
             if(!CheckIfAuthorized(user_name, user_to_authorize))
@@ -694,18 +701,21 @@ namespace Articles.Models
             }
         }
 
+        //checks authorization relationship between user_name and author_name
         public async Task<bool> CheckIfAuthorizedAsync(string user_name, string author_name)
         {
             return await db.BlogUser.AnyAsync(bu => bu.user_name == user_name
            && bu.UsersThisUserAuthorizes.Any(ua => ua.userAuthorized.user_name == author_name));
         }
 
+        //checks authorization relationship between user_name and author_name
         public bool CheckIfAuthorized(string user_name, string author_name)
         {
             return db.BlogUser.Any(bu => bu.user_name == user_name
             && bu.UsersThisUserAuthorizes.Any(ua => ua.userAuthorized.user_name == author_name));
         }
 
+        //changes user setting for whether user can receive messages from unauthorized users 
         public void EnablePublicMessaging(string user_name)
         {
             if(!this.CheckIfPublicMessaging(user_name))
@@ -717,6 +727,7 @@ namespace Articles.Models
             }
         }
 
+        //changes user setting for whether user can receive messages from unauthorized users 
         public void DisablePublicMessaging(string user_name)
         {
             if(this.CheckIfPublicMessaging(user_name))
@@ -729,11 +740,13 @@ namespace Articles.Models
         }
 
 
+        //checks whether user_name may receive messages from unauthorized users 
         public bool CheckIfPublicMessaging(string user_name)
         {
             return db.BlogUser.Single(u => u.user_name == user_name).publicMessaging;
         }
 
+        //checks whether user_name may receive messages from unauthorized users 
         public async Task<bool> CheckIfPublicMessagingAsync(string user_name)
         {
             BlogUser user = await db.BlogUser.SingleAsync(u => u.user_name == user_name);
