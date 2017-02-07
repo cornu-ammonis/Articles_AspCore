@@ -203,6 +203,19 @@ namespace TestLibrary
         }
 
 
+        [TestCase]
+        public void MarkAsReadMessageMethodChangesReadPropertyToTrue()
+        {
+            Message message = new Message();
+
+
+            message.markAsRead();
+
+
+            Assert.That(message.Read, Is.EqualTo(true));
+        }
+
+
 
     }
 }

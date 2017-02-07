@@ -19,5 +19,8 @@ namespace Articles.Models.Core
 
         BlogUser RetrieveUserForMessaging(string user_name);
 
+
+        bool MarkAsRead(int messageId);
+        Task<bool> CheckIfReadAsync(int messageId);
     }
 }
