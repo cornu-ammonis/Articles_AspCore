@@ -147,5 +147,10 @@ namespace Articles.Models
            
         }
 
+        public async Task<bool> CheckIfRead(int messageId)
+        {
+            return await db.Messages.AnyAsync(m => m.MessageId == messageId && m.Read);
+        }
+
     }
 }
