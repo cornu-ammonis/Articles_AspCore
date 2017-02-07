@@ -12,6 +12,7 @@ namespace Articles.Models.Core
          List<Message> RetrieveAllMessages(string user_name);
          List<Message> RetrieveUnauthorizedMessages(string user_name);
         List<Message> RetrieveAuthorizedMessages(string user_name);
+        List<Message> RetrieveUnreadMessages(string user_name);
 
         bool CanMessage(string sender_name, string recipient_name);
 
