@@ -14,6 +14,7 @@ namespace Articles.Models.Core
         List<Message> RetrieveAuthorizedMessages(string user_name);
         List<Message> RetrieveSentMessages(string user_name);
         List<Message> RetrieveMessagesBetweenUsers(string user_name_1, string user_name_2);
+        List<Message> RetrieveUnreadMessages(string user_name);
 
         bool CanMessage(string sender_name, string recipient_name);
 

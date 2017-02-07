@@ -103,6 +103,21 @@ namespace Articles.Models
             return messageList;
         }
 
+        public List<Message> RetrieveUnreadMessages(string user_name)
+        {
+            List<Message> messageList = new List<Message>();
+            messageList =
+                (from m in db.Messages
+                 where m.Recipient.user_name == user_name &&
+                 m.Read == false
+                 orderby m.SentTime descending
+                 select m).Include<Message, BlogUser>(m => m.Sender)
+                    .Include<Message, BlogUser>(m => m.Recipient)
+                    .ToList();
+
+            return messageList;
+        }
+
         //checks whether specified sender may message specified recipient, according to user names
         public bool CanMessage(string sender_name, string recipient_name)
         {
