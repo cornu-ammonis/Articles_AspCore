@@ -129,5 +129,23 @@ namespace Articles.Models
         }
 
 
+        public bool MarkAsRead(int messageId)
+        {
+            try
+            {
+                Message toModify = db.Messages.Single(m => m.MessageId == messageId);
+                db.Messages.Update(toModify);
+                toModify.markAsRead();
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+           
+        }
+
     }
 }
