@@ -33,5 +33,11 @@ namespace Articles.Models.Core
         public Message()
         {
         }
+
+
+        public void markAsRead()
+        {
+            Read = true;
+        }
     }
 }
