@@ -19,5 +19,7 @@ namespace Articles.Models.Core
 
         BlogUser RetrieveUserForMessaging(string user_name);
 
+
+        void MarkAsRead(int messageId);
     }
 }
