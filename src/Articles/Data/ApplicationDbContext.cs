@@ -18,22 +18,21 @@ namespace Articles.Data
             : base(options)
         { }
 
-
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet <Tag> Tags { get; set; }
+        public DbSet<Tag> Tags { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<BlogUser> BlogUser { get; set; }
         public DbSet<CategoryBlogUser> CategoryBlogUser { get; set; }
         public DbSet<PostUserSave> PostUserSaves { get; set; }
         public DbSet<PostUserLike> PostUserLikes { get; set; }
-       public DbSet<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
+        public DbSet<UserAuthorSubscribe> UserAuthorSubscribes { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<UserBlocksUser> UserBlocksUsers { get; set; }
         public DbSet<UserAuthorizesUser> UserAuthorizesUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
 
-        
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -171,11 +170,11 @@ namespace Articles.Data
             builder.Entity<Message>()
                 .HasOne(m => m.Recipient)
                 .WithMany(u => u.ReceivedMessages);
-                
+
 
         }
 
-        
+
     }
 
     public static class DbContextExtensions
@@ -193,7 +192,7 @@ namespace Articles.Data
 
             Category second_seed_category = new Category();
             second_seed_category.Description = "a second category for fewer posts";
-            second_seed_category.Name ="Anime";
+            second_seed_category.Name = "Anime";
             second_seed_category.UrlSlug = "anime";
             context.Categories.Add(second_seed_category);
 
@@ -247,25 +246,25 @@ namespace Articles.Data
 
             BlogUser user1 = seedRepo.RetrieveUser("admin@gmail.com");
             BlogUser user2 = seedRepo.RetrieveUser("admin2@gmail.com");
-           /* BlogUser user1 = new BlogUser();
-            user1.user_name = "admin@gmail.com";
-            user1.CategoryBlogUsers = new List<CategoryBlogUser>();
-            user1.AuthoredPosts = new List<Post>();
+            /* BlogUser user1 = new BlogUser();
+             user1.user_name = "admin@gmail.com";
+             user1.CategoryBlogUsers = new List<CategoryBlogUser>();
+             user1.AuthoredPosts = new List<Post>();
 
-            BlogUser user2 = new BlogUser();
-            user2.user_name = "admin2@gmail.com";
-            user2.CategoryBlogUsers = new List<CategoryBlogUser>();
-            user2.AuthoredPosts = new List<Post>();*/
+             BlogUser user2 = new BlogUser();
+             user2.user_name = "admin2@gmail.com";
+             user2.CategoryBlogUsers = new List<CategoryBlogUser>();
+             user2.AuthoredPosts = new List<Post>();*/
 
-           
-           // context.Update(user1);
+
+            // context.Update(user1);
             //context.Update(user2);
 
             string generic_short_description = "<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <p>";
             string generic_description = generic_short_description + "<p> this is a second paragraph which will only display with the full post";
 
 
-            for (int i = 1; i <42; i++)
+            for (int i = 1; i < 42; i++)
             {
                 Post post = new Post();
                 post.Title = "seed post" + i.ToString();
@@ -280,14 +279,14 @@ namespace Articles.Data
                     pt.TagId = tag.TagId;
                     pt.Post = post;
                     pt.PostId = post.PostId;
-                    
+
                     post.PostTags.Add(pt);
                     context.Add(pt);
                 }
 
                 if (i < 12)
                 {
-                   
+
                     post.Category = seed_cat;
                     user1.AuthoredPosts.Add(post);
                 }
@@ -296,12 +295,13 @@ namespace Articles.Data
                     post.Category = second_seed_category;
                     user2.AuthoredPosts.Add(post);
                 }
-                else if(i < 32)
+                else if (i < 32)
                 {
                     post.Category = third_seed_category;
                     user2.AuthoredPosts.Add(post);
                 }
-                else if(i < 38) {
+                else if (i < 38)
+                {
 
                     post.Category = fourth_seed_category;
                     user2.AuthoredPosts.Add(post);
@@ -311,7 +311,7 @@ namespace Articles.Data
                     post.Category = fifth_seed_category;
                     user2.AuthoredPosts.Add(post);
                 }
-                
+
 
                 post.ShortDescription = generic_short_description;
                 post.Description = generic_description;
@@ -334,10 +334,6 @@ namespace Articles.Data
 
             context.Messages.Add(message1);
 
-     
-           
-
-           
             BlogUser me = seedRepo.RetrieveUser("andrewjones232@gmail.com");
             BlogUser sender = seedRepo.RetrieveUser("messagetest@gmail.com");
 
@@ -360,7 +356,19 @@ namespace Articles.Data
 
             context.SaveChanges();
         }
-    }
+        /*
+        public static void SeedMessages(this ApplicationDbContext context)
+        {
 
-    
+            IBlogRepository repo = new BlogRepository(context);
+
+            BlogUser user1 = repo.RetrieveUser("user1");
+            BlogUser user2 = repo.RetrieveUser("user2");
+            BlogUser user3 = repo.RetrieveUser("user3");
+            BlogUser user4 = repo.RetrieveUser("user4");
+
+        }
+        */
+
+    }
 }

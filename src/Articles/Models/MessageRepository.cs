@@ -70,6 +70,39 @@ namespace Articles.Models
             return messageList;
         }
 
+        public List<Message> RetrieveSentMessages(string user_name)
+        {
+            List<Message> messageList = new List<Message>();
+            messageList = 
+                (from m in db.Messages
+                 where m.Sender.user_name == user_name
+                 orderby m.SentTime descending
+                 select m)
+                 .Include<Message, BlogUser>(m => m.Sender)
+                 .Include<Message, BlogUser>(m => m.Recipient)
+                 .ToList();
+
+            return messageList;
+        }
+
+        public List<Message> RetrieveMessagesBetweenUsers(string user_name_1, string user_name_2)
+        {
+            List<Message> messageList = new List<Message>();
+            messageList = 
+                (from m in db.Messages
+                 where m.Sender.user_name == user_name_1 
+                    && m.Recipient.user_name == user_name_2
+                 where m.Sender.user_name == user_name_2
+                    && m.Recipient.user_name == user_name_1
+                 orderby m.SentTime descending
+                 select m)
+                 .Include<Message, BlogUser>(m => m.Sender)
+                 .Include<Message, BlogUser>(m => m.Recipient)
+                 .ToList();
+
+            return messageList;
+        }
+
         //checks whether specified sender may message specified recipient, according to user names
         public bool CanMessage(string sender_name, string recipient_name)
         {

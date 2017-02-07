@@ -13,14 +13,10 @@ namespace Articles.Models.MessageViewModels
         public string AuthorName { get; set; }
         public string RecipientName { get; set; }
 
-
         public void sendMessage(IMessageRepository messageRepository)
         {
             Message toSend = new Message(this, messageRepository);
             messageRepository.SendMessage(toSend);
         }
-
-
-        
     }
 }
