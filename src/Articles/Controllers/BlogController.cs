@@ -597,5 +597,45 @@ namespace Articles.Controllers
                 throw new InvalidOperationException("Message not found or more than one message found");
             }
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult MessageSpecifiedUser(string userName)
+        {
+            if(!_messageRepository.CanMessage(User.Identity.Name, userName))
+            {
+                MessageCreationViewModel vm = new MessageCreationViewModel();
+                ModelState.AddModelError(String.Empty, "you arent allowed to message this person!");
+                return View("SendMessage", vm);
+            }
+            MessageCreationViewModel viewModel = new MessageCreationUserSpecifiedViewModel(userName);
+
+            return View("SendMessage", viewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult MessageSpecifiedUser([Bind(include: "RecipientName, Subject, Contents")] MessageCreationViewModel viewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                if (_messageRepository.CanMessage(User.Identity.Name, viewModel.RecipientName))
+                {
+                    viewModel.sendMessage(_messageRepository);
+                    return RedirectToAction("YourMessages");
+                }
+                else
+                {
+                    ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
+                    return View(viewModel);
+                }
+            }
+            else
+            {
+                viewModel = new MessageCreationViewModel();
+                ModelState.AddModelError(String.Empty, "something went wrong with model binding");
+                return RedirectToAction("SendMesssage");
+            }
+        }
     }
 }
