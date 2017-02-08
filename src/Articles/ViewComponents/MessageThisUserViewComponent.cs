@@ -20,14 +20,22 @@ namespace Articles.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(string potentialRecipientName)
         {
          
-            if (await _messageRepository.CanMessageAsync(User.Identity.Name, potentialRecipientName))
+            if(User.Identity.IsAuthenticated)
             {
-                return View("MessageThisUser", potentialRecipientName);
+                if (await _messageRepository.CanMessageAsync(User.Identity.Name, potentialRecipientName))
+                {
+                    return View("MessageThisUser", potentialRecipientName);
+                }
+                else
+                {
+                    return View("Empty");
+                }
             }
             else
             {
                 return View("Empty");
             }
+            
                
         }
 
