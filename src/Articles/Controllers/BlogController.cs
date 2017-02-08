@@ -569,5 +569,26 @@ namespace Articles.Controllers
                 throw new InvalidOperationException("Message not found or more than one message found");
             }
         }
+
+        public IActionResult MarkAsUnread(int MessageId)
+        {
+            bool succeeded = _messageRepository.MarkAsUnread(MessageId);
+
+            if(succeeded)
+            {
+                try
+                {
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+                catch
+                {
+                    return RedirectToAction("YourMessages");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Message not found or more than one message found");
+            }
+        }
     }
 }
