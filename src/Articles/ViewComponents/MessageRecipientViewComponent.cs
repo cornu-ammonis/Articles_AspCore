@@ -5,35 +5,30 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Articles.Models;
 using Articles.Models.Core;
+using Articles.Models.MessageViewModels;
 
 namespace Articles.ViewComponents
 {
-    public class AuthorAuthorizeViewComponent : ViewComponent
+    public class MessageRecipientViewComponent : ViewComponent
     {
-        IBlogRepository _blogRepository;
+        IMessageRepository _messageRepository;
 
-        public AuthorAuthorizeViewComponent(IBlogRepository blogRepository)
+        public MessageRecipientViewComponent(IMessageRepository messageRepository)
         {
-            _blogRepository = blogRepository;
+            _messageRepository = messageRepository;
         }
-        public async Task<IViewComponentResult> InvokeAsync(string author_name)
+        public async Task<IViewComponentResult> InvokeAsync(MessageCreationViewModel viewModel)
         {
-            if (User.Identity.IsAuthenticated && RouteData.Values["action"].ToString().ToLower().Equals("postsbyauthor"))
+         
+            if(viewModel.RecipientName == null)
             {
-                bool isAuthorized = await _blogRepository.CheckIfAuthorizedAsync(User.Identity.Name, author_name);
-                if (isAuthorized)
-                {
-                    return View("UnAuthorize", author_name);
-                }
-                else
-                {
-                    return View("Authorize", author_name);
-                }
+                return View("ShowRecipientFormInput");
             }
             else
             {
-                return View("Empty");
+                return View("DontShowRecipientFormInput", viewModel);
             }
+               
         }
 
     }
