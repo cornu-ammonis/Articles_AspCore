@@ -610,7 +610,32 @@ namespace Articles.Controllers
             }
             MessageCreationViewModel viewModel = new MessageCreationUserSpecifiedViewModel(userName);
 
-            return View(viewModel);
+            return View("SendMessage", viewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult MessageSpecifiedUser([Bind(include: "RecipientName, Subject, Contents")] MessageCreationViewModel viewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                if (_messageRepository.CanMessage(User.Identity.Name, viewModel.RecipientName))
+                {
+                    viewModel.sendMessage(_messageRepository);
+                    return RedirectToAction("YourMessages");
+                }
+                else
+                {
+                    ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
+                    return View(viewModel);
+                }
+            }
+            else
+            {
+                viewModel = new MessageCreationViewModel();
+                ModelState.AddModelError(String.Empty, "something went wrong with model binding");
+                return RedirectToAction("SendMesssage");
+            }
         }
     }
 }
