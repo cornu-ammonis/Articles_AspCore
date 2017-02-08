@@ -597,5 +597,20 @@ namespace Articles.Controllers
                 throw new InvalidOperationException("Message not found or more than one message found");
             }
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult MessageSpecifiedUser(string userName)
+        {
+            if(!_messageRepository.CanMessage(User.Identity.Name, userName))
+            {
+                MessageCreationViewModel vm = new MessageCreationViewModel();
+                ModelState.AddModelError(String.Empty, "you arent allowed to message this person!");
+                return View("SendMessage", vm);
+            }
+            MessageCreationViewModel viewModel = new MessageCreationUserSpecifiedViewModel(userName);
+
+            return View(viewModel);
+        }
     }
 }
