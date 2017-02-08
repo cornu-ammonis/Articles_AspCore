@@ -138,6 +138,26 @@ namespace Articles.Models
             }
         }
 
+        public async Task<bool> CanMessageAsync(string sender_name, string recipient_name)
+        {
+            if(await CheckIfBlockedAsync(recipient_name, sender_name))
+            {
+                return false;
+            }
+            else if (await CheckIfPublicMessagingAsync(recipient_name))
+            {
+                return true;
+            }
+            else if (await CheckIfAuthorizedAsync(recipient_name, sender_name))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
        public BlogUser RetrieveUserForMessaging(string user_name)
         {
             return RetrieveUser(user_name);
