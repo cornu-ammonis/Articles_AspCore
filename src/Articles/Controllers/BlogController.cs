@@ -513,6 +513,13 @@ namespace Articles.Controllers
             return View("Messages", viewModel);
         }
 
+        [Authorize]
+        public IActionResult YourUnreadMessages()
+        {
+            MessageListViewModel viewModel = new UnreadMessageListViewModel(_messageRepository, User.Identity.Name);
+            return View("Messages", viewModel);
+        }
+
         [HttpGet]
         [Authorize]
         public IActionResult SendMessage()
