@@ -48,6 +48,7 @@
                                     asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a> 
             @await Component.InvokeAsync("Subscribe", new { author = Model.Author })
 
+            @await Component.InvokeAsync("MessageThisUser", new {potentialRecipientName = Model.Author.user_name })
         </div>
 
     </div>

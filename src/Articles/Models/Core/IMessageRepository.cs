@@ -17,6 +17,7 @@ namespace Articles.Models.Core
         List<Message> RetrieveUnreadMessages(string user_name);
 
         bool CanMessage(string sender_name, string recipient_name);
+        Task<bool> CanMessageAsync(string sender_name, string recipient_name);
 
         BlogUser RetrieveUserForMessaging(string user_name);
 
