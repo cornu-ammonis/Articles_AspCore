@@ -39,5 +39,10 @@ namespace Articles.Models.Core
         {
             Read = true;
         }
+
+        public void markAsUnread()
+        {
+            Read = false;
+        }
     }
 }

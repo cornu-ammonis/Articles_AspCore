@@ -216,6 +216,16 @@ namespace TestLibrary
         }
 
 
+        [TestCase]
+        public void MarkAsUnreadMessageMethodChangesReadPropertyToFalse()
+        {
+            Message message = new Message();
+
+            message.markAsUnread();
+
+            Assert.That(message.Read, Is.EqualTo(false));
+        }
+
 
     }
 }
