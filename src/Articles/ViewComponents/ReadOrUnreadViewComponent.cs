@@ -20,11 +20,11 @@ namespace Articles.ViewComponents
 
             if (message.Read)
             {
-                return View("MarkUnreadButton", message);
+                return View("ReadMessage", message);
             }
             else
             {
-                return View("MarkReadButton", message);
+                return View("UnreadMessage", message);
             }
         }
 
