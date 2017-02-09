@@ -1,6 +1,4 @@
 ﻿@model Articles.Models.Core.Message
 
-<div><b>sent by:</b> @Model.Sender.user_name <b>sent on:</b> @Model.SentTime @await Component.InvokeAsync("MarkAsReadOrUnreadButton", Model.MessageId) </div> 
+@await Component.InvokeAsync("ReadOrUnread", new { message = Model })
 
-<div><b>subject:</b> @Model.Subject</div>
-<div><p>@Model.Contents</p></div>
