@@ -33,9 +33,7 @@ namespace Articles.Controllers
         private readonly IBlogRepository _blogRepository;
         private readonly IMessageRepository _messageRepository;
 
-       
-
-        //cnstructer for  dependency injection, registered in the startup.cs service. repository DI is configured her to use a 
+        //constructer for  dependency injection, registered in the startup.cs service. repository DI is configured her to use a 
         //scoped lifetime, which means one instance is used in all cases within one request, and a new instance is created each request 
         public BlogController(IBlogRepository blogRepository, IMessageRepository messageRepository)
         {
@@ -485,7 +483,7 @@ namespace Articles.Controllers
         }
 
 
-       [Authorize]
+        [Authorize]
         public IActionResult YourMessages() 
         {
             MessageListViewModel viewModel = new AllMessageListViewModel(_messageRepository, User.Identity.Name);
@@ -520,6 +518,16 @@ namespace Articles.Controllers
             return View("Messages", viewModel);
         }
 
+        
+        [Authorize]
+        public IActionResult MessagesBetweenUsers(string user_name, string user_name2)
+        {
+            string otherUserName;
+            otherUserName = (user_name == User.Identity.Name) ? user_name2 : user_name;
+            MessageListViewModel viewModel = new MessagesBetweenUsersViewModel(_messageRepository, User.Identity.Name, otherUserName);
+            return View("Messages", viewModel);
+        }
+
         [HttpGet]
         [Authorize]
         public IActionResult SendMessage()
@@ -531,7 +539,6 @@ namespace Articles.Controllers
                 return PartialView(viewModel);
             }
             return View(viewModel);
-           
         }
 
         [HttpPost]

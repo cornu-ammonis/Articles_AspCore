@@ -2,6 +2,7 @@
 
 <div><b>sent by:</b> @Model.Sender.user_name <b>sent on:</b> @Model.SentTime @await Component.InvokeAsync("MarkAsReadOrUnreadButton", Model.MessageId) </div>
 
-<div><b>subject:</b> @Model.Subject</div>
+<div><b>subject:</b> @Model.Subject <a asp-action="MessagesBetweenUsers" asp-controller="Blog" asp-route-user_name=@Model.Sender.user_name asp-route-user_name2=@Model.Recipient.user_name> View Conversation</a>
+ </div>
 <div><p>@Model.Contents</p></div>
 
