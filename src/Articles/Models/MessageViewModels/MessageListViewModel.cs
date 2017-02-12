@@ -22,5 +22,7 @@ namespace Articles.Models.MessageViewModels
             return messageList;
         }
 
+        public string user_name { get; set; }
+
     }
 }
