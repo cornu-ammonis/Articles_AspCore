@@ -10,6 +10,7 @@
 <div><a asp-action="YourAuthorizedMessages" asp-controller="Blog">Authorized Messages</a></div>
 <div><a asp-action="YourSentMessages" asp-controller="Blog">Sent Messages</a></div>
 <div><a asp-action="YourUnreadMessages" asp-controller="Blog">Unread Messages</a></div>
+<div class="emptyDivForSpacing">&nbsp</div>
 
 @foreach(Message m in Model.getMessages())
 {
