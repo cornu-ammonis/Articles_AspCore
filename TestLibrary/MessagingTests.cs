@@ -173,6 +173,27 @@ namespace TestLibrary
             Assert.That(viewModel.getMessages(), Is.EquivalentTo(testList));
         }
 
+        [TestCase]
+        public void UnreadMessageListViewModelCallsUnreadMessageRepositoryMethodAndPopulatesInternalProperty()
+        {
+            string user_name = "test";
+            Message testm1 = new Message();
+            testm1.Subject = "testm1";
+            Message testm2 = new Message();
+            testm2.Subject = "testm2";
+
+            List<Message> testList = new List<Message>();
+            testList.Add(testm1);
+            testList.Add(testm2);
+
+            var mRepo = new Mock<IMessageRepository>();
+            mRepo.Setup(r => r.RetrieveUnreadMessages(user_name)).Returns(testList);
+
+            MessageListViewModel viewModel = new UnreadMessageListViewModel(mRepo.Object, user_name);
+
+            Assert.That(viewModel.getMessages(), Is.EquivalentTo(testList));
+        }
+
 
         [TestCase]
         public void SendMessageActionReturnsErrorIfUnauthorized()
