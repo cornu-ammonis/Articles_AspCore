@@ -20,10 +20,24 @@ namespace Articles.ViewComponents
 
             if (message.Read)
             {
-                return View("ReadMessage", message);
+
+                //does not render full contents if greater than certain length
+                if(message.Contents.Length > 50)
+                {
+                    return View("ReadMessageHiddenContents", message);
+                }
+                else
+                {
+                    return View("ReadMessage", message);
+                }
+                
             }
             else
             {
+                if(message.Contents.Length > 50)
+                {
+                    return View("UnreadMessageHiddenContents", message);
+                }
                 return View("UnreadMessage", message);
             }
         }
