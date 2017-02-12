@@ -18,11 +18,15 @@ namespace Articles.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(Message message)
         {
 
+            //if the contents of a message contains more characters than this number, it will display a "show more" link instead
+            //of the full contents
+            int maxContentLengthToDisplay = 50;
+
             if (message.Read)
             {
 
                 //does not render full contents if greater than certain length
-                if(message.Contents.Length > 50)
+                if(message.Contents.Length > maxContentLengthToDisplay)
                 {
                     return View("ReadMessageHiddenContents", message);
                 }
@@ -34,7 +38,7 @@ namespace Articles.ViewComponents
             }
             else
             {
-                if(message.Contents.Length > 50)
+                if(message.Contents.Length > maxContentLengthToDisplay)
                 {
                     return View("UnreadMessageHiddenContents", message);
                 }
