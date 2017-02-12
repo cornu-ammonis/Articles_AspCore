@@ -25,5 +25,8 @@ namespace Articles.Models.Core
         bool MarkAsRead(int messageId);
         bool MarkAsUnread(int messageId);
         Task<bool> CheckIfReadAsync(int messageId);
+
+
+        Message retrieveSpecifiedMessage(int messageId);
     }
 }

@@ -204,5 +204,12 @@ namespace Articles.Models
             return await db.Messages.AnyAsync(m => m.MessageId == messageId && m.Read);
         }
 
+
+        public Message retrieveSpecifiedMessage(int messageId)
+        {
+            return db.Messages.Include<Message, BlogUser>(m => m.Sender).Include<Message, BlogUser>(m => m.Recipient)
+                .SingleOrDefault(m => m.MessageId == messageId);
+        }
+
     }
 }

@@ -44,5 +44,10 @@ namespace Articles.Models.Core
         {
             Read = false;
         }
+
+        public string MessageDivId()
+        {
+            return "message" + this.MessageId;
+        }
     }
 }
