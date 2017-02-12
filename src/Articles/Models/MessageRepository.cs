@@ -90,10 +90,10 @@ namespace Articles.Models
             List<Message> messageList = new List<Message>();
             messageList = 
                 (from m in db.Messages
-                 where m.Sender.user_name == user_name_1 
-                    && m.Recipient.user_name == user_name_2
-                 where m.Sender.user_name == user_name_2
-                    && m.Recipient.user_name == user_name_1
+                 where (m.Sender.user_name == user_name_1 
+                    && m.Recipient.user_name == user_name_2)
+                 || (m.Sender.user_name == user_name_2
+                    && m.Recipient.user_name == user_name_1)
                  orderby m.SentTime descending
                  select m)
                  .Include<Message, BlogUser>(m => m.Sender)
