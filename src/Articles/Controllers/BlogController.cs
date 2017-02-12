@@ -644,5 +644,21 @@ namespace Articles.Controllers
                 return RedirectToAction("SendMesssage");
             }
         }
+
+
+        [Authorize]
+        public IActionResult ReadMessageViewMore(int messageId)
+        {
+            Message toDisplay = _messageRepository.retrieveSpecifiedMessage(messageId);
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("~/Views/Shared/Components/ReadOrUnread/ReadMessage.cshtml", toDisplay);
+            } 
+
+            else
+            {
+                return View("~/Views/Shared/Components/ReadOrUnread/ReadMessage.cshtml", toDisplay);
+            }
+        }
     }
 }
