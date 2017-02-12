@@ -25,9 +25,7 @@ namespace Articles.Controllers
     {
         public IActionResult Index()
         {
-
-
-            return View();
+            return RedirectToAction("Posts");
         }
 
         private readonly IBlogRepository _blogRepository;
@@ -654,6 +652,28 @@ namespace Articles.Controllers
             {
                 return PartialView("~/Views/Shared/Components/ReadOrUnread/ReadMessage.cshtml", toDisplay);
             } 
+
+            else
+            {
+                return View("~/Views/Shared/Components/ReadOrUnread/ReadMessage.cshtml", toDisplay);
+            }
+        }
+
+        [Authorize]
+        public IActionResult UnreadMessageViewMore(int messageId)
+        {
+            Message toDisplay = _messageRepository.retrieveSpecifiedMessage(messageId);
+
+            //marks message as read if active user is the recipient
+            if (toDisplay.Recipient.user_name == User.Identity.Name)
+            {
+                _messageRepository.MarkAsRead(messageId);
+            }
+
+            if(Request.IsAjaxRequest())
+            {
+                return PartialView("~/Views/Shared/Components/ReadOrUnread/ReadMessage.cshtml", toDisplay);
+            }
 
             else
             {
