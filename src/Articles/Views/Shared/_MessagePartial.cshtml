@@ -1,4 +1,4 @@
 ﻿@model Articles.Models.Core.Message
 
 @await Component.InvokeAsync("ReadOrUnread", new { message = Model })
-
+<a asp-action="MessagesBetweenUsers" asp-controller="Blog" asp-route-user_name=@Model.Sender.user_name asp-route-user_name2=@Model.Recipient.user_name>View Conversation</a>

@@ -518,11 +518,13 @@ namespace Articles.Controllers
             return View("Messages", viewModel);
         }
 
-        [HttpGet]
+        
         [Authorize]
-        public IActionResult MessagesBetweenUsers(string user_name)
+        public IActionResult MessagesBetweenUsers(string user_name, string user_name2)
         {
-            MessageListViewModel viewModel = new MessagesBetweenUsersViewModel(_messageRepository, User.Identity.Name, user_name);
+            string otherUserName;
+            otherUserName = (user_name == User.Identity.Name) ? user_name2 : user_name;
+            MessageListViewModel viewModel = new MessagesBetweenUsersViewModel(_messageRepository, User.Identity.Name, otherUserName);
             return View("Messages", viewModel);
         }
 
