@@ -101,7 +101,7 @@ namespace Articles.Controllers
 
             string current_username = User.Identity.Name;
             ListViewModel viewModel = new SubscribedListViewModel(_blogRepository, p, current_username);
-            ViewBag.Title = String.Format("{0} posts by authors to which user {1} subscribes", 
+            ViewBag.Title = String.Format("{0} posts by authors to whom user {1} subscribes", 
                 viewModel.TotalPosts, current_username);
             return View("List", viewModel);
         }
