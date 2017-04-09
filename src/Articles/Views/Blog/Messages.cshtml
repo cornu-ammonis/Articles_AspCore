@@ -1,22 +1,22 @@
 @model  Articles.Models.MessageViewModels.MessageListViewModel
+<div id="content">
+    <div id="sendMessage">
+        <a asp-action="sendMessage" asp-controller="Blog" data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#sendMessage">
+            [+] send a message
+        </a>
+    </div>
 
-<div id="sendMessage">
-<a asp-action="sendMessage" asp-controller="Blog" data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#sendMessage">
-    [+] send a message
-</a>
+    <div><a asp-action="YourUnauthorizedMessages" asp-controller="Blog">Unauthorized Messages</a> </div>
+    <div><a asp-action="YourAuthorizedMessages" asp-controller="Blog">Authorized Messages</a></div>
+    <div><a asp-action="YourSentMessages" asp-controller="Blog">Sent Messages</a></div>
+    <div><a asp-action="YourUnreadMessages" asp-controller="Blog">Unread Messages</a></div>
+    <div class="emptyDivForSpacing">&nbsp</div>
+
+    @foreach (Message m in Model.getMessages())
+    {
+        @Html.Partial("_MessagePartial", m)
+
+    }
+
+
 </div>
-
-<div><a asp-action="YourUnauthorizedMessages" asp-controller="Blog">Unauthorized Messages</a> </div>
-<div><a asp-action="YourAuthorizedMessages" asp-controller="Blog">Authorized Messages</a></div>
-<div><a asp-action="YourSentMessages" asp-controller="Blog">Sent Messages</a></div>
-<div><a asp-action="YourUnreadMessages" asp-controller="Blog">Unread Messages</a></div>
-<div class="emptyDivForSpacing">&nbsp</div>
-
-@foreach(Message m in Model.getMessages())
-{
-    @Html.Partial("_MessagePartial", m)
-
-}
-
-
-
