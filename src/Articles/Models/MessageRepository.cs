@@ -121,6 +121,12 @@ namespace Articles.Models
         //checks whether specified sender may message specified recipient, according to user names
         public bool CanMessage(string sender_name, string recipient_name)
         {
+
+            if (!db.BlogUser.Any(u => u.user_name == recipient_name))
+            {
+                return false;
+            }
+
             if(CheckIfBlocked(recipient_name, sender_name)) {
                 return false;
             }
