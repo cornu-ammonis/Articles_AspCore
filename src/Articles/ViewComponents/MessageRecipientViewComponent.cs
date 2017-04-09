@@ -26,7 +26,19 @@ namespace Articles.ViewComponents
             }
             else
             {
-                return View("DontShowRecipientFormInput", viewModel);
+
+                //if the user has input a user they are not allowed the message, the model state 
+                //will be invalid, and in that case we want to show recipient input 
+                //so that they may change it.
+                if(ViewData.ModelState.IsValid)
+                {
+                    return View("DontShowRecipientFormInput", viewModel);
+                }
+                else
+                {
+                    return View("ShowRecipientFormInput");
+                }
+                
             }
                
         }
