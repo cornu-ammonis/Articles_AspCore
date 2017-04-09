@@ -47,7 +47,7 @@
             <span>Author:</span> <a asp-action="PostsByAuthor" asp-controller="Blog"
                                     asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a> 
             @await Component.InvokeAsync("Subscribe", new { author = Model.Author })
-
+            &nbsp
             @await Component.InvokeAsync("MessageThisUser", new {potentialRecipientName = Model.Author.user_name })
         </div>
 
