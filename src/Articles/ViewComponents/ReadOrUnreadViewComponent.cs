@@ -38,7 +38,7 @@ namespace Articles.ViewComponents
             }
             else
             {
-                if(message.Contents.Length > maxContentLengthToDisplay)
+                if(message.Contents != null && message.Contents.Length > maxContentLengthToDisplay)
                 {
                     return View("UnreadMessageHiddenContents", message);
                 }
