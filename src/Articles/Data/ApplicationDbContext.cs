@@ -323,6 +323,7 @@ namespace Articles.Data
             }
 
             Message message1 = new Message();
+            message1.Contents = "this now has contents";
             user1.SentMessages = new List<Message>();
             user2.ReceivedMessages = new List<Message>();
 
