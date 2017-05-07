@@ -1,20 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F59900A1-244C-47F1-A423-B324EECE6CC4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{21D15093-45B5-455E-9BDE-5B4D8A399675}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Articles", "src\Articles\Articles.xproj", "{07EB5875-31C9-499B-BA5A-00E83432DAD8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{49AA160F-B5D1-4596-8BCF-D300F83CC1EA}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TestLibrary", "TestLibrary\TestLibrary.xproj", "{2F425228-F34D-4424-8100-90552D216A77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Articles", "src\Articles\Articles.csproj", "{07EB5875-31C9-499B-BA5A-00E83432DAD8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLibrary", "TestLibrary\TestLibrary.csproj", "{2F425228-F34D-4424-8100-90552D216A77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
