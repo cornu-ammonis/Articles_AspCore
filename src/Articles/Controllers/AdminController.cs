@@ -25,7 +25,7 @@ namespace Articles.Controllers
         }
 
 
-        public IActionResult ListPosts()
+        public IActionResult ListPostsAdmin()
         {
             AdminPostsListViewModel viewModel = new AdminPostsListViewModel(_adminRepository);
             return View(viewModel);
