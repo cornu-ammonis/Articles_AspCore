@@ -17,6 +17,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Articles.Models.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace Articles
 {
@@ -85,13 +86,42 @@ namespace Articles
             services.AddScoped<ILinkRepository, LinkRepository>();
         }
 
+        public static async Task SeedRoles(IServiceProvider serviceProvider)
+        {
+            RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            //UserManager<ApplicationUser> userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            //var user = new ApplicationUser { UserName = "andrewjones232@gmail.com", Email = "andrewjones232@gmail.com" };
+            //var result = await userManager.CreateAsync(user, "P@ssword1");
+            bool alreadyExists = await roleManager.RoleExistsAsync("Administrator");
+            //var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            //var res = await userManager.ConfirmEmailAsync(user, code);
+
+            if (!alreadyExists)
+            {
+                IdentityRole newRole = new IdentityRole("Administrator");
+                await roleManager.CreateAsync(newRole);
+            }
+
+            //await userManager.AddToRoleAsync(user, "Administrator");
+        }
+
+        public static async Task SeedUser(IServiceProvider serviceProvider)
+        {
+            UserManager<ApplicationUser> userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await userManager.FindByEmailAsync("andrewjones232@gmail.com");
+            if (user != null)
+            {
+                await userManager.AddToRoleAsync(user, "Administrator");
+            }
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-          //obsolete for 1.1  app.UseApplicationInsightsRequestTelemetry();
+            //obsolete for 1.1  app.UseApplicationInsightsRequestTelemetry();
 
             if (env.IsDevelopment())
             {
@@ -104,24 +134,26 @@ namespace Articles
                 app.UseExceptionHandler("/Home/Error");
             }
 
-          //obsolate for 1.1  app.UseApplicationInsightsExceptionTelemetry();
+            //obsolate for 1.1  app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
-           /* app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Uploads")),
-                RequestPath = new PathString("/StaticFiles")
-            }); */
+            /* app.UseStaticFiles(new StaticFileOptions()
+             {
+                 FileProvider = new PhysicalFileProvider(
+             Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Uploads")),
+                 RequestPath = new PathString("/StaticFiles")
+             }); */
 
 
             app.UseIdentity();
-            app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed(app.ApplicationServices);
+            // app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
+            // SeedRoles(app.ApplicationServices).Wait();
 
+            SeedUser(app.ApplicationServices).Wait();
 
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-            
-            app.UseMvc(routes =>
+           // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+
+           app.UseMvc(routes =>
             {
                 /*
                 routes.MapRoute(name: "Author",
@@ -137,13 +169,13 @@ namespace Articles
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
 
-               
 
 
-            /*
-                routes.MapRoute(
-                    name: "tag",
-                    template: "{controller=Blog}/{action=Tag}/{tag?}");*/
+
+                /*
+                    routes.MapRoute(
+                        name: "tag",
+                        template: "{controller=Blog}/{action=Tag}/{tag?}");*/
             }
             );
         }
