@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Articles.Models.MessageViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Articles.Data
 {
@@ -41,6 +42,14 @@ namespace Articles.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+
+           
+            // identity
+            /*builder.Entity<ApplicationUser>().Property(r => r.Id)
+               .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            builder.Entity<Role>().Property(r => r.Id)
+               .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity); */
+
             builder.Entity<PostTag>()
                 .HasKey(t => new { t.PostId, t.TagId });
 
@@ -180,20 +189,14 @@ namespace Articles.Data
 
     public static class DbContextExtensions
     {
-        public async static Task Seed(this ApplicationDbContext context, IServiceProvider serviceProvider)
+        
+        public static void Seed(this ApplicationDbContext context)
         {
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
 
-            RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-            bool alreadyExists = await roleManager.RoleExistsAsync("Administrator");
-            if (!alreadyExists)
-            {
-                IdentityRole newRole = new IdentityRole("Administrator");
-               await roleManager.CreateAsync(newRole);
-            }
+           
 
             Category seed_cat = new Category();
             seed_cat.Description = "A category crrated for seeding";
