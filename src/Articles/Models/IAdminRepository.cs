@@ -8,5 +8,6 @@ namespace Articles.Models
     public interface IAdminRepository
     {
         IList<Post> ListAllPosts();
+        IList<Post> ListAllPostsDescendingDate();
     }
 }

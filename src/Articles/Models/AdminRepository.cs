@@ -21,5 +21,10 @@ namespace Articles.Models
                 .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
                 .ThenInclude(posttag => posttag.Tag).ToList();
         }
+
+        public IList<Post> ListAllPostsDescendingDate()
+        {
+            return null;
+        }
     }
 }
