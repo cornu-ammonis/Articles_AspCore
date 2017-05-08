@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Articles.Models.AdminViewModels
 {
-    public class AdminPostsListViewModel
+    public abstract class AdminPostsListViewModel
     {
         public AdminPostsListViewModel(IAdminRepository adminRepo)
         {
-            this.PopulatePostList(adminRepo.ListAllPosts());
+
         }
 
         public IList<Post> posts { get; set; }
