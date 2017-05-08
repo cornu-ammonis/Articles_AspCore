@@ -15,7 +15,7 @@ namespace Articles.Models
         }
         public IList<Post> ListAllPosts()
         {
-            return null;
+            return db.Posts.ToList();
         }
     }
 }
