@@ -1,4 +1,6 @@
 ﻿using Articles.Data;
+using Articles.Models.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,9 @@ namespace Articles.Models
         }
         public IList<Post> ListAllPosts()
         {
-            return db.Posts.ToList();
+            return db.Posts.Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag).ToList();
         }
     }
 }
