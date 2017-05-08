@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Articles.Models;
+using Articles.Models.AdminViewModels;
 
 namespace Articles.Controllers
 {
@@ -26,7 +27,8 @@ namespace Articles.Controllers
 
         public IActionResult ListPosts()
         {
-            return View();
+            AdminPostsListViewModel viewModel = new AdminPostsListViewModel(_adminRepository);
+            return View(viewModel);
         }
     }
 }
