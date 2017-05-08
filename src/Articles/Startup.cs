@@ -41,7 +41,8 @@ namespace Articles
 
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
-                builder.AddUserSecrets();
+               // builder.AddUserSecrets();
+                builder.AddUserSecrets<Startup>();
             }
 
             builder.AddEnvironmentVariables();
@@ -84,6 +85,7 @@ namespace Articles
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<ILinkRepository, LinkRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
         }
 
         public static async Task SeedRoles(IServiceProvider serviceProvider)
