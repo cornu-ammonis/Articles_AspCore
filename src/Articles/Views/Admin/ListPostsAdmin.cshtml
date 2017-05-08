@@ -1,0 +1,11 @@
+﻿@model Articles.Models.AdminViewModels.AdminPostsListViewModel
+
+<div id="content">
+
+    <h1>@ViewBag.Title</h1>
+    
+    @foreach (Post post in Model.posts)
+    {
+        @Html.Partial("_AdminPost", post)
+    }
+</div>
