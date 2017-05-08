@@ -22,5 +22,11 @@ namespace Articles.Controllers
         {
             return View();
         }
+
+
+        public IActionResult ListPosts()
+        {
+            return View();
+        }
     }
 }
