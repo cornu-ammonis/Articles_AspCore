@@ -3,6 +3,8 @@
 <div id="content">
 
     <h1>@ViewBag.Title</h1>
+
+    <a asp-action="ListPostsDescendingDate" asp-controller="Admin">Sort By Date Descending</a>
     
     @foreach (Post post in Model.posts)
     {
