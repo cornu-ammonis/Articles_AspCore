@@ -84,6 +84,7 @@ namespace Articles
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<ILinkRepository, LinkRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
         }
 
         public static async Task SeedRoles(IServiceProvider serviceProvider)
