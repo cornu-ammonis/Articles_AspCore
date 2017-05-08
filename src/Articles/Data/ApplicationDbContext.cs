@@ -9,6 +9,7 @@ using Articles.Models.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Articles.Models.MessageViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Articles.Data
 {
@@ -179,10 +180,20 @@ namespace Articles.Data
 
     public static class DbContextExtensions
     {
-        public static void Seed(this ApplicationDbContext context)
+        public async static Task Seed(this ApplicationDbContext context, IServiceProvider serviceProvider)
         {
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
+
+
+            RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            bool alreadyExists = await roleManager.RoleExistsAsync("Administrator");
+            if (!alreadyExists)
+            {
+                IdentityRole newRole = new IdentityRole("Administrator");
+               await roleManager.CreateAsync(newRole);
+            }
 
             Category seed_cat = new Category();
             seed_cat.Description = "A category crrated for seeding";
