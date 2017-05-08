@@ -7,6 +7,11 @@ namespace Articles.Models.AdminViewModels
 {
     public class AdminPostsListViewModel
     {
+        public AdminPostsListViewModel(IAdminRepository adminRepo)
+        {
+            this.PopulatePostList(adminRepo.ListAllPosts());
+        }
+
         public IList<Post> posts { get; set; }
 
 
