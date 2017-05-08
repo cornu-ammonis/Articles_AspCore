@@ -24,7 +24,14 @@ namespace Articles.Models
 
         public IList<Post> ListAllPostsDescendingDate()
         {
-            return null;
+            IList<Post> postq = 
+                (from p in db.Posts
+                 orderby p.PostedOn descending
+                 select p)
+                .Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag).ToList();
+            return postq;
         }
     }
 }
