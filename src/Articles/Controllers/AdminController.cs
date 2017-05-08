@@ -30,5 +30,11 @@ namespace Articles.Controllers
             AdminPostsListViewModel viewModel = new AdminPostsListViewModel(_adminRepository);
             return View(viewModel);
         }
+
+        public IActionResult ListPostsDescendingDate()
+        {
+            AdminPostsListViewModel viewModel = new AdminPostDescendingDateViewModel(_adminRepository);
+            return View("ListPostsAdmin", viewModel);
+        }
     }
 }
