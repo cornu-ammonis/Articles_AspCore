@@ -192,11 +192,9 @@ namespace Articles.Data
         
         public static void Seed(this ApplicationDbContext context)
         {
+
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
-
-
-           
 
             Category seed_cat = new Category();
             seed_cat.Description = "A category crrated for seeding";
