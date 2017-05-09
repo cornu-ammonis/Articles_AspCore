@@ -13,6 +13,7 @@ namespace Articles.Models.AdminViewModels
         }
 
         public IList<Post> posts { get; set; }
+        public string SortedBy { get; set; }
 
 
         protected virtual void PopulatePostList(IList<Post> posts)
