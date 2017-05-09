@@ -42,5 +42,12 @@ namespace Articles.Controllers
             _adminRepository.UnpublishPost(postId);
              return Redirect(Request.Headers["Referer"].ToString());
         }
+
+        public IActionResult PublishPost(int postId)
+        {
+            _adminRepository.PublishPost(postId);
+            return Redirect(Request.Headers["Referer"].ToString());
+
+        }
     }
 }
