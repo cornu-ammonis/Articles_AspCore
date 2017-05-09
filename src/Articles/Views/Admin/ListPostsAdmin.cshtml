@@ -7,6 +7,7 @@
     <h1>@ViewBag.Title</h1>
 
     <div class="row">
+        <!--sort by title header button-->
         <div class="col-md-2">
             <div class="post-category">
                 <b>
@@ -14,12 +15,22 @@
                 </b>
             </div>
         </div>
+        
+        <!--sort by category button at top of column-->
+        <div class="col-md-2">
+            <b>
+                @Html.Partial("_SortByCategoryButton", Model)
+            </b>
+        </div>
 
+        <!-- sort of date button-->
         <div class="col-md-2">
             <b>
                 @Html.Partial("_SortByDateButton", Model)
             </b>
         </div>
+
+        
     </div>
     
    
