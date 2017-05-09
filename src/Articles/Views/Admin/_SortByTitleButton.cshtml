@@ -1,10 +1,10 @@
 @model Articles.Models.AdminViewModels.AdminPostsListViewModel
 
-@if (Model.SortedBy == "TitleDescending")
+@if (Model.SortedBy == "TitleAscending")
 {
-    <a asp-action="ListPostsAscendingTitle" asp-controller="Admin">Sort By Title</a>
+    <a asp-action="ListPostsDescendingTitle" asp-controller="Admin">Sort By Title</a>
 }
 else
 {
-    <a asp-action="ListPostsDescendingTitle" asp-controller="Admin">Sort By Title</a>
+    <a asp-action="ListPostsAscendingTitle" asp-controller="Admin">Sort By Title</a>
 }
