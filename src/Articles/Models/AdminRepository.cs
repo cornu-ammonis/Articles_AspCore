@@ -100,6 +100,23 @@ namespace Articles.Models
             return postq;
         }
 
+        // returns list of all posts ordered by title ascending with
+        // associated navigation properties included
+        public IList<Post> ListAllPostsAscendingTitle()
+        {
+            IList<Post> postq = 
+                (from p in db.Posts
+                 orderby p.Title ascending
+                 select p)
+                .Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag)
+                .ToList();
+
+            return postq;
+
+        }
+
         public void UnpublishPost(int postId)
         {
             Post post = db.Posts.First(p => p.PostId == postId);
