@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 
 namespace Articles.Models.AdminViewModels
 {
-    public class AdminPostsDescendingDateViewModel : AdminPostsListViewModel
+    public class AdminPostDescendingDateViewModel : AdminPostsListViewModel
     {
-        public AdminPostsDescendingDateViewModel (IAdminRepository adminRepo)
+        public AdminPostDescendingDateViewModel (IAdminRepository adminRepo)
             : base(adminRepo)
         {
             this.PopulatePostList(adminRepo.ListAllPostsDescendingDate());
-            this.SortedBy = "DateDescending"; // used by view logic
         }
     }
 }
