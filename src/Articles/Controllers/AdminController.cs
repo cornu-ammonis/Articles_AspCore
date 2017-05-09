@@ -40,6 +40,13 @@ namespace Articles.Controllers
             return View("ListPostsAdmin", viewModel);
         }
 
+        // displays list of posts sorted by posted date ascending
+        public IActionResult ListPostsAscendingDate()
+        {
+            AdminPostsListViewModel viewModel = new AdminPostAscendingDateViewModel(_adminRepository);
+            return View("ListPostsAdmin", viewModel);
+        }
+
 
         // changes the specified post so that the database properly reflects it as unpublished
         public IActionResult UnpublishPost(int postId)
