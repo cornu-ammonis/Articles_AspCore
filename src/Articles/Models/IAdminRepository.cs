@@ -11,5 +11,6 @@ namespace Articles.Models
         IList<Post> ListAllPostsDescendingDate();
 
         void UnpublishPost(int postId);
+        void PublishPost(int postId);
     }
 }
