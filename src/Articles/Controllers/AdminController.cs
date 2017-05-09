@@ -37,14 +37,14 @@ namespace Articles.Controllers
         // lists posts sorted by posted date descending
         public IActionResult ListPostsDescendingDate()
         {
-            AdminPostsListViewModel viewModel = new AdminPostDescendingDateViewModel(_adminRepository);
+            AdminPostsListViewModel viewModel = new AdminPostsDescendingDateViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
 
         // displays list of posts sorted by posted date ascending
         public IActionResult ListPostsAscendingDate()
         {
-            AdminPostsListViewModel viewModel = new AdminPostAscendingDateViewModel(_adminRepository);
+            AdminPostsListViewModel viewModel = new AdminPostsAscendingDateViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
 

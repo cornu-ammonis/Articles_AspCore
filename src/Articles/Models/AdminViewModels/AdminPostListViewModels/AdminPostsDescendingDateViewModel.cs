@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Articles.Models.AdminViewModels
 {
-    public class AdminPostDescendingDateViewModel : AdminPostsListViewModel
+    public class AdminPostsDescendingDateViewModel : AdminPostsListViewModel
     {
-        public AdminPostDescendingDateViewModel (IAdminRepository adminRepo)
+        public AdminPostsDescendingDateViewModel (IAdminRepository adminRepo)
             : base(adminRepo)
         {
             this.PopulatePostList(adminRepo.ListAllPostsDescendingDate());
