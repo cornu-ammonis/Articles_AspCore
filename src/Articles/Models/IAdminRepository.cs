@@ -9,5 +9,7 @@ namespace Articles.Models
     {
         IList<Post> ListAllPosts();
         IList<Post> ListAllPostsDescendingDate();
+
+        void UnpublishPost(int postId);
     }
 }
