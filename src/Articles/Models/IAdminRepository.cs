@@ -12,10 +12,10 @@ namespace Articles.Models
         IList<Post> ListAllPostsAscendingDate();
         IList<Post> ListAllPostsDescendingAuthorName();
         IList<Post> ListAllPostsAscendingAuthorName();
-        IList<Post> ListAllPostsAscendingTitle();
         IList<Post> ListAllPostsDescendingTitle();
-        IList<Post> ListAllPostsAscendingCategory();
+        IList<Post> ListAllPostsAscendingTitle();
         IList<Post> ListAllPostsDescendingCategory();
+        IList<Post> ListAllPostsAscendingCategory();
 
         void UnpublishPost(int postId);
         void PublishPost(int postId);
