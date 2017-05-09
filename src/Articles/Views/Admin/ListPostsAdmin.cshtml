@@ -1,10 +1,45 @@
 ﻿@model Articles.Models.AdminViewModels.AdminPostsListViewModel
 
+
+
 <div id="content">
 
     <h1>@ViewBag.Title</h1>
 
-    <a asp-action="ListPostsDescendingDate" asp-controller="Admin">Sort By Date Descending</a>
+    <div class="row">
+        <!--sort by title header button-->
+        <div class="col-md-2">
+            <div class="post-category">
+                <b>
+                    @Html.Partial("_SortByTitleButton", Model)
+                </b>
+            </div>
+        </div>
+        
+        <!--sort by category button at top of column-->
+        <div class="col-md-2">
+            <b>
+                @Html.Partial("_SortByCategoryButton", Model)
+            </b>
+        </div>
+
+        <div class="col-md-2">
+            <b>
+                @Html.Partial("_SortByAuthorButton", Model)
+            </b>
+        </div>
+
+        <!-- sort of date button-->
+        <div class="col-md-2">
+            <b>
+                @Html.Partial("_SortByDateButton", Model)
+            </b>
+        </div>
+
+        
+    </div>
+    
+   
     
     @foreach (Post post in Model.posts)
     {
