@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Articles.Models;
 using Articles.Models.AdminViewModels;
+using Articles.Models.AdminViewModels.AdminPostListViewModels;
 
 namespace Articles.Controllers
 {
@@ -47,6 +48,11 @@ namespace Articles.Controllers
             return View("ListPostsAdmin", viewModel);
         }
 
+        public IActionResult ListPostsDescendingTitle()
+        {
+            AdminPostsListViewModel viewModel = new AdminPostsDescendingTitleViewModel(_adminRepository);
+            return View("ListPostsAdmin", viewModel);
+        }
 
         // changes the specified post so that the database properly reflects it as unpublished
         public IActionResult UnpublishPost(int postId)
