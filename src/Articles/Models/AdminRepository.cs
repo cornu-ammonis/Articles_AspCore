@@ -33,5 +33,13 @@ namespace Articles.Models
                 .ThenInclude(posttag => posttag.Tag).ToList();
             return postq;
         }
+
+        public void UnpublishPost(int postId)
+        {
+            Post post = db.Posts.First(p => p.PostId == postId);
+            db.Posts.Update(post);
+            post.Published = false;
+            db.SaveChanges();
+        }
     }
 }
