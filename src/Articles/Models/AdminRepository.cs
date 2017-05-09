@@ -15,6 +15,8 @@ namespace Articles.Models
         {
             db = context;
         }
+
+        // lists all posts in no guaranteed order
         public IList<Post> ListAllPosts()
         {
             return db.Posts.Include<Post, Category>(p => p.Category)
@@ -22,6 +24,9 @@ namespace Articles.Models
                 .ThenInclude(posttag => posttag.Tag).ToList();
         }
 
+
+        // returns list of all posts ordered by date descending, with associated navigation properties
+        // included
         public IList<Post> ListAllPostsDescendingDate()
         {
             IList<Post> postq = 
@@ -34,6 +39,8 @@ namespace Articles.Models
             return postq;
         }
 
+        // returns list of all posts ordered by date ascending, with associated navigation properties
+        // included
         public IList<Post> ListAllPostsAscendingDate()
         {
             IList<Post> postq = 
@@ -47,11 +54,28 @@ namespace Articles.Models
             return postq;
         }
 
+        // returns list of all posts ordered by author name descending, with associated
+        // navigation properties included
         public IList<Post> ListAllPostsDescendingAuthorName()
         {
             IList<Post> postq = 
                 (from p in db.Posts
                  orderby p.Author.user_name descending
+                 select p)
+                .Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag).ToList();
+
+            return postq;
+        }
+
+        // returns list of all posts ordered by author name ascending, with associated
+        // navigation properties included
+        public IList<Post> ListAllPostsAscendingAuthorName()
+        {
+            IList<Post> postq = 
+                (from p in db.Posts
+                 orderby p.Author.user_name ascending
                  select p)
                 .Include<Post, Category>(p => p.Category)
                 .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
