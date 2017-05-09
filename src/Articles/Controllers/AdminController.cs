@@ -39,7 +39,8 @@ namespace Articles.Controllers
 
         public IActionResult UnpublishPost(int postId)
         {
-            return View();
+            _adminRepository.UnpublishPost(postId);
+             return Redirect(Request.Headers["Referer"].ToString());
         }
     }
 }
