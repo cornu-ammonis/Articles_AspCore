@@ -1,0 +1,10 @@
+﻿@model Articles.Models.Post
+
+@if(Model.Published)
+{
+    <a asp-action="UnpublishPost" asp-controller="Admin" asp-route-postId=@Model.PostId><b>unpublish</b></a>
+}
+else
+{ 
+<a asp-action="PublishPost" asp-controller="Admin" asp-route-postId=@Model.PostId><b>publish</b></a>
+}

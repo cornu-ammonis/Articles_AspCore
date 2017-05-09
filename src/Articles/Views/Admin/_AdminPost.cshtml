@@ -45,7 +45,7 @@
             </div>
 
             &nbsp
-            <a asp-action="UnpublishPost" asp-controller="Admin" asp-route-postId="@Model.PostId">Unpublish</a> &nbsp
+            @Html.Partial("_PublishOrUnpublish", Model)
         </div> <!--end of row-->
             <!--Posted date-->
             
