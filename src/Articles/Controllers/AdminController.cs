@@ -72,6 +72,12 @@ namespace Articles.Controllers
             return View("ListPostsAdmin", viewModel);
         }
 
+        public IActionResult ListPostsDescendingAuthor()
+        {
+            AdminPostsListViewModel viewModel = new AdminPostsDescendingAuthorViewModel(_adminRepository);
+            return View("ListPostsAdmin", viewModel);
+        }
+
         // changes the specified post so that the database properly reflects it as unpublished
         public IActionResult UnpublishPost(int postId)
         {
