@@ -53,7 +53,6 @@ namespace Articles.Controllers
         {
             _adminRepository.PublishPost(postId);
             return Redirect(Request.Headers["Referer"].ToString());
-
         }
     }
 }
