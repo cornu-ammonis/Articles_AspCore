@@ -36,5 +36,18 @@ namespace Articles.Controllers
             AdminPostsListViewModel viewModel = new AdminPostDescendingDateViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
+
+        public IActionResult UnpublishPost(int postId)
+        {
+            _adminRepository.UnpublishPost(postId);
+             return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        public IActionResult PublishPost(int postId)
+        {
+            _adminRepository.PublishPost(postId);
+            return Redirect(Request.Headers["Referer"].ToString());
+
+        }
     }
 }
