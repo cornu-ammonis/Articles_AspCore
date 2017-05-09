@@ -6,7 +6,8 @@
 
     <h1>@ViewBag.Title</h1>
 
-    <a asp-action="ListPostsDescendingDate" asp-controller="Admin">Sort By Date Descending</a>
+    @Html.Partial("_SortByDateButton", Model)
+   
     
     @foreach (Post post in Model.posts)
     {
