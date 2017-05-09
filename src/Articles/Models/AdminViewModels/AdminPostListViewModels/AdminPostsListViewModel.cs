@@ -15,7 +15,7 @@ namespace Articles.Models.AdminViewModels
         public IList<Post> posts { get; set; }
 
         // used by view logic to determine how current page is sorted
-        // "Unsorted", "DateDescending", "DateAscending"
+        // "Unsorted", "DateDescending", "DateAscending", "TitleDescending"
         public string SortedBy { get; set; }
 
 

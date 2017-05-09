@@ -11,7 +11,7 @@ namespace Articles.Models.AdminViewModels.AdminPostListViewModels
             :base(adminRepo)
         {
             this.PopulatePostList(adminRepo.ListAllPostsDescendingTitle());
-            this.SortedBy = "DescendingTitle";
+            this.SortedBy = "TitleDescending";
         }
     }
 }
