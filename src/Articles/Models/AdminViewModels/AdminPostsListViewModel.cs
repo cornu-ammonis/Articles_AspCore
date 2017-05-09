@@ -9,10 +9,13 @@ namespace Articles.Models.AdminViewModels
     {
         public AdminPostsListViewModel(IAdminRepository adminRepo)
         {
-
+       
         }
 
         public IList<Post> posts { get; set; }
+
+        // used by view logic to determine how current page is sorted
+        // "Unsorted", "DateDescending", "DateAscending"
         public string SortedBy { get; set; }
 
 

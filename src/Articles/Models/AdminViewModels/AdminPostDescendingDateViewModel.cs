@@ -11,6 +11,7 @@ namespace Articles.Models.AdminViewModels
             : base(adminRepo)
         {
             this.PopulatePostList(adminRepo.ListAllPostsDescendingDate());
+            this.SortedBy = "DateDescending"; // used by view logic
         }
     }
 }
