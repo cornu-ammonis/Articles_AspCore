@@ -65,6 +65,13 @@ namespace Articles.Controllers
             AdminPostsListViewModel viewModel = new AdminPostsDescendingCategoryViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
+
+        public IActionResult ListPostsAscendingCategory()
+        {
+            AdminPostsListViewModel viewModel = new AdminPostsAscendingCategoryViewModel(_adminRepository);
+            return View("ListPostsAdmin", viewModel);
+        }
+
         // changes the specified post so that the database properly reflects it as unpublished
         public IActionResult UnpublishPost(int postId)
         {
