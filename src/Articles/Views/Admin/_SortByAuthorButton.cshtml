@@ -1,0 +1,10 @@
+@model Articles.Models.AdminViewModels.AdminPostsListViewModel
+
+@if (Model.SortedBy == "AuthorAscending")
+{
+    <a asp-action="ListPostsDescendingAuthor" asp-controller="Admin">Sort By Author</a>
+}
+else
+{
+    <a asp-action="ListPostsAscendingAuthor" asp-controller="Admin">Sort By Author</a>
+}

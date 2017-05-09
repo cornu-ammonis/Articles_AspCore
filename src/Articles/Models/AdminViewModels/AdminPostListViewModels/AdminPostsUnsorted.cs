@@ -7,10 +7,12 @@ namespace Articles.Models.AdminViewModels
 {
     public class AdminPostsUnsorted : AdminPostsListViewModel
     {
+
         public AdminPostsUnsorted(IAdminRepository adminRepo)
             : base(adminRepo)
         {
             this.PopulatePostList(adminRepo.ListAllPosts());
+            this.SortedBy = "Unsorted"; // used by view logic
         }
     }
 }
