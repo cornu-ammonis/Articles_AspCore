@@ -125,13 +125,28 @@ namespace Articles.Models
                 (from p in db.Posts
                  orderby p.Category.Name descending
                  select p)
-                 .Include<Post, Category>(p => p.Category)
+                .Include<Post, Category>(p => p.Category)
                 .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
                 .ThenInclude(posttag => posttag.Tag)
                 .ToList();
 
             return postq;
+        }
 
+        // returns all posts ordered by category name ascending with 
+        // associated navigation properties included
+        public IList<Post> ListAllPostsAscendingCategory()
+        {
+            IList<Post> postq = 
+                (from p in db.Posts
+                 orderby p.Category.Name ascending
+                 select p)
+                .Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag)
+                .ToList();
+
+            return postq;
         }
 
         public void UnpublishPost(int postId)
