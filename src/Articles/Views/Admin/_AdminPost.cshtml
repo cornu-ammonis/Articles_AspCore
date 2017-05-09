@@ -30,20 +30,7 @@
                 </div>
             </div>
 
-        <div class="col-md-2">
-            <!--Tags-->
-            <div class="post-tags">
-                <span>
-                    @foreach (PostTag pt in Model.PostTags)
-                {
-                    <a asp-action="Tag" asp-controller="Blog" asp-route-tag=@pt.Tag.UrlSlug> @pt.Tag.Name</a>
-                }
-            </span>
-            &nbsp
-
-        </div>
-       
-            </div>
+     
            
             <div class="col-md-2">
                 <a asp-action="PostsByAuthor" asp-controller="Blog"
