@@ -152,13 +152,15 @@ namespace Articles.Models
 
         public IList<Post> ListPostsForSearch(string search)
         {
-            IList<Post> postq = 
+            IList<Post> postq =
                 (from p in db.Posts
-                 where p.Title.Contains(search) ||
-                 p.Category.Name.Equals(search) ||
+                 where p.Title.Contains(search) ||   // title contains search
+                 search.Contains(p.Title) ||         // search contains title
+                 p.Category.Name.Contains(search) || // category name contains search
+                 search.Contains(p.Category.Name) || // search contains category name
                  // any of the tag names contain the search or search contains any tag names
                  p.PostTags.Any(pt => pt.Tag.Name.Contains(search) || search.Contains(pt.Tag.Name))
-                 || search.Contains(p.Author.user_name)
+                 || search.Contains(p.Author.user_name) // search contains author name
                  orderby p.PostedOn descending
                  select p)
                 .Include<Post, Category>(p => p.Category)
