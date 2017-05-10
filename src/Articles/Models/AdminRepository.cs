@@ -150,6 +150,9 @@ namespace Articles.Models
         }
 
 
+        // lists all posts which in some way match the search string.
+        // NOTE: this defaults to sorting by date, but future implementations
+        // should permit for the selection of alternative sorting methods 
         public IList<Post> ListPostsForSearch(string search)
         {
             IList<Post> postq =
@@ -161,7 +164,7 @@ namespace Articles.Models
                  // any of the tag names contain the search or search contains any tag names
                  p.PostTags.Any(pt => pt.Tag.Name.Contains(search) || search.Contains(pt.Tag.Name))
                  || search.Contains(p.Author.user_name) // search contains author name
-                 orderby p.PostedOn descending
+                 orderby p.PostedOn descending          // DEFAULT - sort by date
                  select p)
                 .Include<Post, Category>(p => p.Category)
                 .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
