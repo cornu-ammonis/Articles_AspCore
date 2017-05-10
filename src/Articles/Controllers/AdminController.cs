@@ -97,5 +97,12 @@ namespace Articles.Controllers
             _adminRepository.PublishPost(postId);
             return Redirect(Request.Headers["Referer"].ToString());
         }
+
+
+        public IActionResult Search(string s)
+        {
+            AdminPostsListViewModel viewModel = new AdminPostsSearch(_adminRepository, s);
+            return View("ListPostsAdmin", viewModel);
+        }
     }
 }
