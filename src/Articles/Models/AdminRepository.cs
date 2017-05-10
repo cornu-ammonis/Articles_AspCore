@@ -149,6 +149,26 @@ namespace Articles.Models
             return postq;
         }
 
+
+        public IList<Post> ListPostsForSearch(string search)
+        {
+            IList<Post> postq = 
+                (from p in db.Posts
+                 where p.Title.Contains(search) ||
+                 p.Category.Name.Equals(search) ||
+                 // any of the tag names contain the search or search contains any tag names
+                 p.PostTags.Any(pt => pt.Tag.Name.Contains(search) || search.Contains(pt.Tag.Name))
+                 || search.Contains(p.Author.user_name)
+                 orderby p.PostedOn descending
+                 select p)
+                .Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag)
+                .ToList();
+
+            return postq;
+        }
+
         public void UnpublishPost(int postId)
         {
             Post post = db.Posts.First(p => p.PostId == postId);
