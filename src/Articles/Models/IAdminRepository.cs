@@ -17,6 +17,8 @@ namespace Articles.Models
         IList<Post> ListAllPostsDescendingCategory();
         IList<Post> ListAllPostsAscendingCategory();
 
+        IList<Post> ListPostsForSearch(string search);
+
         void UnpublishPost(int postId);
         void PublishPost(int postId);
     }
