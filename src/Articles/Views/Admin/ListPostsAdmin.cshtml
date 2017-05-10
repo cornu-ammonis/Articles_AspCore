@@ -1,48 +1,81 @@
 ﻿@model Articles.Models.AdminViewModels.AdminPostsListViewModel
 
 
+@{
+    Layout = null;
+}
 
-<div id="content">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
 
-    <h1>@ViewBag.Title</h1>
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-    <div class="row">
-        <!--sort by title header button-->
-        <div class="col-md-2">
-            <div class="post-category">
-                <b>
-                    @Html.Partial("_SortByTitleButton", Model)
-                </b>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+
+    <!-- <script src="Url.Content("~/Scripts/app.js")"></script>
+           <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+
+    Stylesheets -->
+    <link rel="stylesheet" type="text/css"
+          href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.css")" />
+    <link rel="stylesheet" type="text/css"
+          href="@Url.Content("~/lib/bootstrap/dist/css/themes/simple/style.css")" />
+
+
+</head>
+
+<body>
+    <div id="main">
+
+        <div id="site_content">
+            @Html.Partial("_Search")
+            <div id="content">
+
+                <h1>@Model.posts.Count Posts</h1>
+
+                <div class="row">
+                    <!--sort by title header button-->
+                    <div class="col-md-2">
+                        <div class="post-category">
+                            <b>
+                                @Html.Partial("_SortByTitleButton", Model)
+                            </b>
+                        </div>
+                    </div>
+
+                    <!--sort by category button at top of column-->
+                    <div class="col-md-2">
+                        <b>
+                            @Html.Partial("_SortByCategoryButton", Model)
+                        </b>
+                    </div>
+
+                    <div class="col-md-2">
+                        <b>
+                            @Html.Partial("_SortByAuthorButton", Model)
+                        </b>
+                    </div>
+
+                    <!-- sort of date button-->
+                    <div class="col-md-2">
+                        <b>
+                            @Html.Partial("_SortByDateButton", Model)
+                        </b>
+                    </div>
+
+
+                </div>
+
+
+
+                @foreach (Post post in Model.posts)
+            {
+                    @Html.Partial("_AdminPost", post)
+                }
             </div>
         </div>
-        
-        <!--sort by category button at top of column-->
-        <div class="col-md-2">
-            <b>
-                @Html.Partial("_SortByCategoryButton", Model)
-            </b>
-        </div>
-
-        <div class="col-md-2">
-            <b>
-                @Html.Partial("_SortByAuthorButton", Model)
-            </b>
-        </div>
-
-        <!-- sort of date button-->
-        <div class="col-md-2">
-            <b>
-                @Html.Partial("_SortByDateButton", Model)
-            </b>
-        </div>
-
-        
     </div>
-    
-   
-    
-    @foreach (Post post in Model.posts)
-    {
-        @Html.Partial("_AdminPost", post)
-    }
-</div>
+</body>
