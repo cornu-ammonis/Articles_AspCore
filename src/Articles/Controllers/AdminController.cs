@@ -48,36 +48,42 @@ namespace Articles.Controllers
             return View("ListPostsAdmin", viewModel);
         }
 
+        // displays list of posts sorted by title in descending order
         public IActionResult ListPostsDescendingTitle()
         {
             AdminPostsListViewModel viewModel = new AdminPostsDescendingTitleViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
 
+        // displays list of posts sorted by title in ascending order
         public IActionResult ListPostsAscendingTitle()
         {
             AdminPostsListViewModel viewModel = new AdminPostsAscendingTitleViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
 
+        // displays list of posts sorted by category name in descending order
         public IActionResult ListPostsDescendingCategory()
         {
             AdminPostsListViewModel viewModel = new AdminPostsDescendingCategoryViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
 
+        // displays list of posts sorted by category name in ascending order
         public IActionResult ListPostsAscendingCategory()
         {
             AdminPostsListViewModel viewModel = new AdminPostsAscendingCategoryViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
 
+        // displays list of posts sorted by author name in descending order
         public IActionResult ListPostsDescendingAuthor()
         {
             AdminPostsListViewModel viewModel = new AdminPostsDescendingAuthorViewModel(_adminRepository);
             return View("ListPostsAdmin", viewModel);
         }
 
+        // displays list of posts sorted by author name in ascending order
         public IActionResult ListPostsAscendingAuthor()
         {
             AdminPostsListViewModel viewModel = new AdminPostsAscendingAuthorViewModel(_adminRepository);
@@ -98,7 +104,7 @@ namespace Articles.Controllers
             return Redirect(Request.Headers["Referer"].ToString());
         }
 
-
+        // displays posts which match search string @param s in some way 
         public IActionResult Search(string s)
         {
             AdminPostsListViewModel viewModel = new AdminPostsSearch(_adminRepository, s);
