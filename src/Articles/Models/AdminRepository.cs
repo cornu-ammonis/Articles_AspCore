@@ -149,6 +149,31 @@ namespace Articles.Models
             return postq;
         }
 
+
+        // lists all posts which in some way match the search string.
+        // NOTE: this defaults to sorting by date, but future implementations
+        // should permit for the selection of alternative sorting methods 
+        public IList<Post> ListPostsForSearch(string search)
+        {
+            IList<Post> postq =
+                (from p in db.Posts
+                 where p.Title.Contains(search) ||   // title contains search
+                 search.Contains(p.Title) ||         // search contains title
+                 p.Category.Name.Contains(search) || // category name contains search
+                 search.Contains(p.Category.Name) || // search contains category name
+                 // any of the tag names contain the search or search contains any tag names
+                 p.PostTags.Any(pt => pt.Tag.Name.Contains(search) || search.Contains(pt.Tag.Name))
+                 || search.Contains(p.Author.user_name) // search contains author name
+                 orderby p.PostedOn descending          // DEFAULT - sort by date
+                 select p)
+                .Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author).Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag)
+                .ToList();
+
+            return postq;
+        }
+
         public void UnpublishPost(int postId)
         {
             Post post = db.Posts.First(p => p.PostId == postId);
