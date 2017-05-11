@@ -14,6 +14,11 @@ namespace Articles.Models.AdminViewModels
             PopulateCategoriesList(adminRepository.ListAllCategories());
         }
 
+        public AdminCategoriesListViewModel()
+        {
+
+        }
+
         // populate the viewModel's categories list
         // @param _categories - list of categories to display
         protected virtual void PopulateCategoriesList(IList<Category> _categories)
