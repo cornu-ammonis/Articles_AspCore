@@ -19,6 +19,8 @@ namespace Articles.Models
 
         IList<Post> ListPostsForSearch(string search);
 
+        IList<Category> ListAllCategories();
+
         void UnpublishPost(int postId);
         void PublishPost(int postId);
     }
