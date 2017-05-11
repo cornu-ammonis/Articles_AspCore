@@ -189,5 +189,37 @@ namespace Articles.Models
             post.Published = true;
             db.SaveChanges();
         }
+
+
+
+
+
+        // CATEGORIES
+
+        public IList<Category> ListCategoriesForSearch(string search)
+        {
+            IList<Category> cquery =
+                (from c in db.Categories
+                 where c.Name.Contains(search) ||
+                 search.Contains(c.Name)
+                 orderby c.Name ascending
+                 select c)
+                 .Include<Category, IList<Post>>(c => c.Posts)
+                 .ToList();
+
+            return cquery;
+        }
+
+        public IList<Category> ListAllCategories()
+        {
+            IList<Category> cquery =
+                (from c in db.Categories
+                 orderby c.Name ascending
+                 select c)
+                 .Include<Category, IList<Post>>(c => c.Posts)
+                 .ToList();
+
+            return cquery;
+        }
     }
 }

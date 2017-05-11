@@ -1,0 +1,21 @@
+﻿@model Articles.Models.Category
+
+
+<div>
+    <div class="row">
+        <div class="col-md-3">
+
+            <a asp-action="Category" asp-controller="Blog" asp-route-category=@Model.UrlSlug>
+            <b>@Model.Name</b>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            @Model.Posts.Count Posts
+        </div>
+        
+    
+        
+    </div>
+
+</div>

@@ -1,0 +1,46 @@
+﻿@model Articles.Models.AdminViewModels.AdminCategoriesListViewModel
+
+
+@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+
+    <!-- <script src="Url.Content("~/Scripts/app.js")"></script>
+           <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+
+    Stylesheets -->
+    <link rel="stylesheet" type="text/css"
+          href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.css")" />
+    <link rel="stylesheet" type="text/css"
+          href="@Url.Content("~/lib/bootstrap/dist/css/themes/simple/style.css")" />
+
+
+</head>
+
+<body>
+    <div id="main">
+
+        <div id="site_content">
+            @Html.Partial("_SearchCategories")
+            <div id="content">
+
+                <h1>@Model.categories.Count Categories</h1>
+
+                @foreach (Category cat in Model.categories)
+                {
+                    @Html.Partial("_AdminCategory", cat)
+                }
+            </div>
+        </div>
+    </div>
+</body>
