@@ -204,6 +204,7 @@ namespace Articles.Models
                 (from c in db.Categories
                  orderby c.Name ascending
                  select c)
+                 .Include<Category, IList<Post>>(c => c.Posts)
                  .ToList();
 
             return cquery;
