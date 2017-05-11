@@ -189,5 +189,24 @@ namespace Articles.Models
             post.Published = true;
             db.SaveChanges();
         }
+
+
+
+
+
+        // CATEGORIES
+
+
+
+        public IList<Category> ListAllCategories()
+        {
+            IList<Category> cquery =
+                (from c in db.Categories
+                 orderby c.Name ascending
+                 select c)
+                 .ToList();
+
+            return cquery;
+        }
     }
 }
