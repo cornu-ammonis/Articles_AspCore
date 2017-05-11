@@ -110,5 +110,11 @@ namespace Articles.Controllers
             AdminPostsListViewModel viewModel = new AdminPostsSearch(_adminRepository, s);
             return View("ListPostsAdmin", viewModel);
         }
+
+        public IActionResult ListCategories ()
+        {
+            AdminCategoriesListViewModel viewModel = new AdminCategoriesListViewModel(_adminRepository);
+            return View("ListCategoriesAdmin", viewModel);
+        }
     }
 }
