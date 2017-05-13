@@ -11,7 +11,7 @@
             <div class="col-md-2">
                 <div class="post-category">
                     
-                        <a asp-action="UnexpandPost" asp-controller="Admin" asp-route-postId=@Model.PostId 
+                        <a asp-action="UnexpandPost" asp-controller="Admin" asp-route-postId=@Model.PostId
                            data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#@Model.UrlSlug">[-]</a>
                         <a asp-action="Post" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
                            asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug>@Model.Title</a>

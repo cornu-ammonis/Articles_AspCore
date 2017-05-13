@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Articles.Models;
 using Articles.Models.AdminViewModels;
 using Articles.Models.AdminViewModels.AdminPostListViewModels;
+using myExtensions;
 
 namespace Articles.Controllers
 {
@@ -102,6 +103,28 @@ namespace Articles.Controllers
         {
             _adminRepository.PublishPost(postId);
             return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        public IActionResult ExpandPost(int postId)
+        {
+            Post post = _adminRepository.RetrievePostById(postId);
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_AdminPostExpanded", post);
+            }
+            else
+            {
+                return View("_AdminPostExpanded", post);
+            }
+            
+        }
+
+        // NOTE: does not check if is ajaxrequest because this should not be accessible 
+        // by a client not using ajax. 
+        public IActionResult UnexpandPost (int postId)
+        {
+            Post post = _adminRepository.RetrievePostById(postId);
+            return PartialView("_AdminPost", post);
         }
 
         // displays posts which match search string @param s in some way 
