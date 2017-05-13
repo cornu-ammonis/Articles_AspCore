@@ -16,6 +16,7 @@
 
                 <h1>@Model.categories.Count Categories</h1>
 
+
                 @foreach (Category cat in Model.categories)
                 {
                     @Html.Partial("_AdminCategory", cat)
