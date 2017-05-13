@@ -134,6 +134,11 @@ namespace Articles.Controllers
             return View("ListPostsAdmin", viewModel);
         }
 
+        
+        /* *************
+         * CATEGORIES
+         * *************/
+
         public IActionResult ListCategories ()
         {
             AdminCategoriesListViewModel viewModel = new AdminCategoriesListViewModel(_adminRepository);
