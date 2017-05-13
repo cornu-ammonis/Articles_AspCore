@@ -1,0 +1,65 @@
+﻿@model Articles.Models.Post
+
+
+<div class="post" id="@Model.UrlSlug">
+    <div class="post-meta">
+        <div class="row">
+
+            <!--Heading-->
+            
+
+            <div class="col-md-2">
+                <div class="post-category">
+                    
+                        <a asp-action="ExpandPost" asp-controller="Admin" asp-route-postId=@Model.PostId>[+]</a>
+                        <a asp-action="Post" asp-controller="Blog" asp-route-year=@Model.PostedOn.Year
+                           asp-route-month=@Model.PostedOn.Month asp-route-ti=@Model.UrlSlug>@Model.Title</a>
+                    
+                </div>
+            </div>
+
+        
+
+
+       
+           <!--&nbsp --> 
+            <div class="col-md-2">
+                <!--Category-->
+                <div class="post-category">
+
+                    <a asp-action="Category" asp-controller="Blog" asp-route-category=@Model.Category.UrlSlug>@Model.Category.Name</a>
+                </div>
+            </div>
+
+     
+           
+            <div class="col-md-2">
+                <a asp-action="PostsByAuthor" asp-controller="Blog"
+                   asp-route-author=@Model.Author.user_name>@Model.Author.user_name</a>&nbsp
+            </div>
+
+            <div class="col-md-2">
+                <div class="post-tags">
+                    &nbsp&nbsp
+                    @Model.PostedOn.Month/@Model.PostedOn.Date.Day/ @Model.PostedOn.Year
+                </div>
+            </div>
+
+
+            <div class="col-md-2">
+                <div class="post-tags">
+                    
+                    @Html.Partial("_PublishOrUnpublish", Model)
+                </div>
+            </div>
+        </div> <!--end of row-->
+         
+        <div class="post-body">
+            @Html.Raw(Model.Description)
+        </div>
+            
+
+        </div>
+
+
+</div>
