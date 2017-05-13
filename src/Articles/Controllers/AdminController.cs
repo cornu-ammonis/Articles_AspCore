@@ -150,5 +150,19 @@ namespace Articles.Controllers
             AdminCategoriesListViewModel viewModel = new AdminCategoriesSearchListViewModel(_adminRepository, s);
             return View("ListCategoriesAdmin", viewModel);
         }
+
+        [HttpGet]
+        public IActionResult CreateCategory()
+        {
+            CategoryCreationViewModel vm = new CategoryCreationViewModel();
+            return View(vm);
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateCategory([Bind(include: "CategoryName, Description")] CategoryCreationViewModel viewModel)
+        {
+            return View("Index");
+        }
     }
 }
