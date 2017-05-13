@@ -232,5 +232,16 @@ namespace Articles.Models
 
             return cquery;
         }
+
+        // adds a new category to the database. throws an exception if that category
+        // already exists. assumes all needed category properties are initialized elsewhere.
+        public void AddNewCategoryToDatabase(Category category)
+        {
+            if (db.Categories.Contains(category))
+                throw new InvalidOperationException("Attempted to add extant category to database");
+
+            db.Categories.Add(category);
+            db.SaveChanges();
+        }
     }
 }

@@ -23,6 +23,8 @@ namespace Articles.Models
 
         IList<Category> ListAllCategories();
 
+        void AddNewCategoryToDatabase(Category category);
+
         void UnpublishPost(int postId);
         void PublishPost(int postId);
 
