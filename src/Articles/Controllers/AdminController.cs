@@ -162,7 +162,25 @@ namespace Articles.Controllers
         [HttpPost]
         public IActionResult CreateCategory([Bind(include: "CategoryName, Description")] CategoryCreationViewModel viewModel)
         {
-            return View("Index");
+            if (ModelState.IsValid)
+            {
+                // succeeded, go back to list
+                if (viewModel.CreateAndPersistCategory(_adminRepository))
+                    return RedirectToAction("ListCategories");
+
+                // failed, display message
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "a category with that name already exists");
+                    return View(viewModel);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "something went wrong with model binding");
+                return View(viewModel);
+            }
+
         }
     }
 }
