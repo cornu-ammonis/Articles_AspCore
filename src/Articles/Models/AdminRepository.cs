@@ -190,6 +190,9 @@ namespace Articles.Models
             db.SaveChanges();
         }
 
+
+        // retrieves post specified by postId and includes navigation properties.
+        // will throw an error if no post is found matching the postId
         public Post RetrievePostById(int postId)
         {
             return db.Posts
