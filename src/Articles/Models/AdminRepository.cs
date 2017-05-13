@@ -190,7 +190,15 @@ namespace Articles.Models
             db.SaveChanges();
         }
 
-
+        public Post RetrievePostById(int postId)
+        {
+            return db.Posts
+                .Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author)
+                .Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag)
+                .First(p => p.PostId == postId);
+        }
 
 
 
