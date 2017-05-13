@@ -25,5 +25,8 @@ namespace Articles.Models
 
         void UnpublishPost(int postId);
         void PublishPost(int postId);
+
+        // returns post specified by postId, must include relevant navigation properties by default
+        Post RetrievePostById(int postId);
     }
 }

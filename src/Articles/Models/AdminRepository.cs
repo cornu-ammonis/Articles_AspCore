@@ -191,6 +191,17 @@ namespace Articles.Models
         }
 
 
+        // retrieves post specified by postId and includes navigation properties.
+        // will throw an error if no post is found matching the postId
+        public Post RetrievePostById(int postId)
+        {
+            return db.Posts
+                .Include<Post, Category>(p => p.Category)
+                .Include<Post, BlogUser>(p => p.Author)
+                .Include<Post, List<PostTag>>(p => p.PostTags)
+                .ThenInclude(posttag => posttag.Tag)
+                .First(p => p.PostId == postId);
+        }
 
 
 
