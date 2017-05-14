@@ -199,5 +199,16 @@ namespace Articles.Controllers
             AdminUserListViewModel viewModel = new AdminUserListSearch(_adminRepository, s);
             return View("ListUsersAdmin", viewModel);
         }
+
+
+        public IActionResult BanUser (string username)
+        {
+            if (username == null || username.Length < 1)
+                throw new InvalidOperationException("username parameter empty");
+            _adminRepository.BanUser(username);
+
+            // redirects to referring list view 
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
     }
 }
