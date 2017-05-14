@@ -8,6 +8,7 @@ using Articles.Models;
 using Articles.Models.AdminViewModels;
 using Articles.Models.AdminViewModels.AdminPostListViewModels;
 using myExtensions;
+using Articles.Models.AdminViewModels.AdminUserListViewModels;
 
 namespace Articles.Controllers
 {
@@ -181,6 +182,15 @@ namespace Articles.Controllers
                 return View(viewModel);
             }
 
+        }
+
+
+
+
+        public IActionResult ListUsers()
+        {
+            AdminUserListViewModel viewModel = new AdminUserListAlphabetical(_adminRepository);
+            return View("AdminListUsers", viewModel);
         }
     }
 }
