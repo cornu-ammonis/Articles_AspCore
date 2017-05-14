@@ -1,0 +1,26 @@
+﻿@model Articles.Models.AdminViewModels.AdminUserListViewModel
+
+
+@{
+    Layout = "AdminLayout";
+}
+
+
+
+<body>
+    <div id="main">
+
+        <div id="site_content">
+            @Html.Partial("_SearchUsers")
+            <div id="content">
+
+                <h1>@Model.Users.Count Users</h1>
+
+                @foreach (BlogUser user in Model.Users)
+                {
+                    @Html.Partial("_AdminUser", user)
+                }
+            </div>
+        </div>
+    </div>
+</body>

@@ -8,6 +8,7 @@ using Articles.Models;
 using Articles.Models.AdminViewModels;
 using Articles.Models.AdminViewModels.AdminPostListViewModels;
 using myExtensions;
+using Articles.Models.AdminViewModels.AdminUserListViewModels;
 
 namespace Articles.Controllers
 {
@@ -181,6 +182,44 @@ namespace Articles.Controllers
                 return View(viewModel);
             }
 
+        }
+
+
+
+        // displays a list of users sorted alphabetically
+        public IActionResult ListUsers()
+        {
+            AdminUserListViewModel viewModel = new AdminUserListAlphabetical(_adminRepository);
+            return View("ListUsersAdmin", viewModel);
+        }
+
+        // displays a list of users for search @param s , sorted alphabetically
+        public IActionResult SearchUsers(string s)
+        {
+            AdminUserListViewModel viewModel = new AdminUserListSearch(_adminRepository, s);
+            return View("ListUsersAdmin", viewModel);
+        }
+
+
+        public IActionResult BanUser (string username)
+        {
+            if (username == null || username.Length < 1)
+                throw new InvalidOperationException("username parameter empty");
+            _adminRepository.BanUser(username);
+
+            // redirects to referring list view 
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        public IActionResult UnbanUser (string username)
+        {
+            if (username == null || username.Length < 1)
+                throw new InvalidOperationException("username parameter empty");
+
+            _adminRepository.UnbanUser(username);
+
+            // redirects to referring list view 
+            return Redirect(Request.Headers["Referer"].ToString());
         }
     }
 }

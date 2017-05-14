@@ -243,5 +243,78 @@ namespace Articles.Models
             db.Categories.Add(category);
             db.SaveChanges();
         }
+
+
+
+        // returns a list of blog users sorted alphabetically ascending. 
+        // includes list of their posts and those who subscribe to them for display in 
+        // console.
+        public IList<BlogUser> ListUsersAlphabetically()
+        {
+            IList<BlogUser> bquery =
+                (from u in db.BlogUser
+                 orderby u.user_name ascending
+                 select u)
+                 .Include<BlogUser, IList<Post>>(u => u.AuthoredPosts)
+                 .Include<BlogUser, IList<UserAuthorSubscribe>>(u => u.UsersSubscribingToThisUser)
+                 .ToList();
+
+            return bquery;
+        }
+        
+        
+        // returns a list of blog users sorted alphabetically 
+        // where the user name matches the search string in some way.
+        // must include list of their posts and who subscribes to them for display 
+        // in admin console
+        public IList<BlogUser> ListUsersForSearch(string search)
+        {
+            IList<BlogUser> bquery =
+                (from u in db.BlogUser
+                 where u.user_name.Equals(search) ||
+                 u.user_name.Contains(search) ||
+                 search.Contains(u.user_name)
+                 orderby u.user_name ascending
+                 select u)
+                 .Include<BlogUser, IList<Post>>(u => u.AuthoredPosts)
+                 .Include<BlogUser, IList<UserAuthorSubscribe>>(u => u.UsersSubscribingToThisUser)
+                 .ToList();
+
+            return bquery;
+        }
+
+
+        // bans user specified by username and throws exception if user
+        // not found or if already banned
+        public void BanUser(string username)
+        {
+            if (!db.BlogUser.Any(u => u.user_name == username))
+                throw new InvalidOperationException("attempted to ban username which cannot be found in database");
+
+            BlogUser user = db.BlogUser.First(u => u.user_name == username);
+            if (user.isBanned)
+                throw new InvalidOperationException("attempted to ban user who is already banned");
+
+            db.BlogUser.Update(user);
+            user.isBanned = true;
+            db.SaveChanges();
+        }
+
+        public void UnbanUser(string username)
+        {
+            if (!db.BlogUser.Any(u => u.user_name == username))
+                throw new InvalidOperationException("attempted to unban username which cannot be found in database");
+
+            BlogUser user = db.BlogUser.First(u => u.user_name == username);
+            if (!user.isBanned)
+                throw new InvalidOperationException("attempted to unban user who is not banned");
+
+            db.BlogUser.Update(user);
+            user.isBanned = false;
+            db.SaveChanges();
+        }
+
+
+        // TO DO : MakeAdmin and RevokeAdmin action methods
     }
 }
