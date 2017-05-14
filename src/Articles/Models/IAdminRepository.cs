@@ -42,6 +42,6 @@ namespace Articles.Models
         // where the user name matches the search string in some way.
         // must include list of their posts and who subscribes to them for display 
         // in admin console
-        IList<BlogRepository> ListUsersForSearch(string search);
+        IList<BlogUser> ListUsersForSearch(string search);
     }
 }
