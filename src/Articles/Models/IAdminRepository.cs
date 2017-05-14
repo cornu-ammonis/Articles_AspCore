@@ -37,5 +37,11 @@ namespace Articles.Models
         // includes list of their posts and those who subscribe to them for display in 
         // console.
         IList<BlogUser> ListUsersAlphabetically();
+
+        // returns a list of blog users sorted alphabetically 
+        // where the user name matches the search string in some way.
+        // must include list of their posts and who subscribes to them for display 
+        // in admin console
+        IList<BlogRepository> ListUsersForSearch(string search);
     }
 }

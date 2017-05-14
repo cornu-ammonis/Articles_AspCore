@@ -261,5 +261,26 @@ namespace Articles.Models
 
             return bquery;
         }
+        
+        
+        // returns a list of blog users sorted alphabetically 
+        // where the user name matches the search string in some way.
+        // must include list of their posts and who subscribes to them for display 
+        // in admin console
+        public IList<BlogUser> ListUsersForSearch(string search)
+        {
+            IList<BlogUser> bquery =
+                (from u in db.BlogUser
+                 where u.user_name.Equals(search) ||
+                 u.user_name.Contains(search) ||
+                 search.Contains(u.user_name)
+                 orderby u.user_name ascending
+                 select u)
+                 .Include<BlogUser, IList<Post>>(u => u.AuthoredPosts)
+                 .Include<BlogUser, IList<UserAuthorSubscribe>>(u => u.UsersSubscribingToThisUser)
+                 .ToList();
+
+            return bquery;
+        }
     }
 }
