@@ -210,5 +210,16 @@ namespace Articles.Controllers
             // redirects to referring list view 
             return Redirect(Request.Headers["Referer"].ToString());
         }
+
+        public IActionResult UnbanUser (string username)
+        {
+            if (username == null || username.Length < 1)
+                throw new InvalidOperationException("username parameter empty");
+
+            _adminRepository.UnbanUser(username);
+
+            // redirects to referring list view 
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
     }
 }
