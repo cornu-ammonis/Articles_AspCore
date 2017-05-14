@@ -43,5 +43,8 @@ namespace Articles.Models
         // must include list of their posts and who subscribes to them for display 
         // in admin console
         IList<BlogUser> ListUsersForSearch(string search);
+
+        void BanUser(string username);
+        void UnbanUser(string username);
     }
 }

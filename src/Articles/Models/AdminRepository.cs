@@ -282,5 +282,22 @@ namespace Articles.Models
 
             return bquery;
         }
+
+
+        // bans user specified by username and throws exception if user
+        // not found or if already banned
+        public void BanUser(string username)
+        {
+            if (!db.BlogUser.Any(u => u.user_name == username))
+                throw new InvalidOperationException("attempted to ban username which cannot be found in database");
+
+            BlogUser user = db.BlogUser.First(u => u.user_name == username);
+            if (user.isBanned)
+                throw new InvalidOperationException("attempted to ban user who is already banned");
+
+            db.BlogUser.Update(user);
+            user.isBanned = true;
+            db.SaveChanges();
+        }
     }
 }
