@@ -186,10 +186,17 @@ namespace Articles.Controllers
 
 
 
-
+        // displays a list of users sorted alphabetically
         public IActionResult ListUsers()
         {
             AdminUserListViewModel viewModel = new AdminUserListAlphabetical(_adminRepository);
+            return View("ListUsersAdmin", viewModel);
+        }
+
+        // displays a list of users for search @param s , sorted alphabetically
+        public IActionResult SearchUsers(string s)
+        {
+            AdminUserListViewModel viewModel = new AdminUserListSearch(_adminRepository, s);
             return View("ListUsersAdmin", viewModel);
         }
     }
