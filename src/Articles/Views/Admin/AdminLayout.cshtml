@@ -1,0 +1,40 @@
+﻿
+@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+
+    <!-- <script src="Url.Content("~/Scripts/app.js")"></script>
+           <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+
+    Stylesheets -->
+    <link rel="stylesheet" type="text/css"
+          href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.css")" />
+    <link rel="stylesheet" type="text/css"
+          href="@Url.Content("~/lib/bootstrap/dist/css/themes/simple/style.css")" />
+
+
+</head>
+
+<body>
+    <div id="main">
+        <div id="menubar">
+            <ul id="menu">
+                <li><a asp-action="ListPostsAdmin" asp-controller="Admin">Posts</a></li>
+                <li><a asp-action="ListCategories" asp-controller="Admin">Categories</a></li>
+            </ul>
+        </div>
+        
+        @RenderBody()
+
+    </div>
+</body>

@@ -134,6 +134,11 @@ namespace Articles.Controllers
             return View("ListPostsAdmin", viewModel);
         }
 
+        
+        /* *************
+         * CATEGORIES
+         * *************/
+
         public IActionResult ListCategories ()
         {
             AdminCategoriesListViewModel viewModel = new AdminCategoriesListViewModel(_adminRepository);
@@ -144,6 +149,38 @@ namespace Articles.Controllers
         {
             AdminCategoriesListViewModel viewModel = new AdminCategoriesSearchListViewModel(_adminRepository, s);
             return View("ListCategoriesAdmin", viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult CreateCategory()
+        {
+            CategoryCreationViewModel vm = new CategoryCreationViewModel();
+            return View(vm);
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateCategory([Bind(include: "CategoryName, Description")] CategoryCreationViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                // succeeded, go back to list
+                if (viewModel.CreateAndPersistCategory(_adminRepository))
+                    return RedirectToAction("ListCategories");
+
+                // failed, display message
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "a category with that name already exists");
+                    return View(viewModel);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "something went wrong with model binding");
+                return View(viewModel);
+            }
+
         }
     }
 }
