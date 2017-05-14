@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Articles.Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,5 +31,11 @@ namespace Articles.Models
 
         // returns post specified by postId, must include relevant navigation properties by default
         Post RetrievePostById(int postId);
+
+
+        // returns a list of blog users sorted alphabetically ascending. 
+        // includes list of their posts and those who subscribe to them for display in 
+        // console.
+        IList<BlogUser> ListUsersAlphabetically();
     }
 }

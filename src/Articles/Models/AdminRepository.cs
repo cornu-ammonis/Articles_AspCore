@@ -243,5 +243,23 @@ namespace Articles.Models
             db.Categories.Add(category);
             db.SaveChanges();
         }
+
+
+
+        // returns a list of blog users sorted alphabetically ascending. 
+        // includes list of their posts and those who subscribe to them for display in 
+        // console.
+        public IList<BlogUser> ListUsersAlphabetically()
+        {
+            IList<BlogUser> bquery =
+                (from u in db.BlogUser
+                 orderby u.user_name ascending
+                 select u)
+                 .Include<BlogUser, IList<Post>>(u => u.AuthoredPosts)
+                 .Include<BlogUser, IList<UserAuthorSubscribe>>(u => u.UsersSubscribingToThisUser)
+                 .ToList();
+
+            return bquery;
+        }
     }
 }
