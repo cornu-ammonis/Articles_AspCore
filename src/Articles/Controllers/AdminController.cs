@@ -190,7 +190,7 @@ namespace Articles.Controllers
         public IActionResult ListUsers()
         {
             AdminUserListViewModel viewModel = new AdminUserListAlphabetical(_adminRepository);
-            return View("AdminListUsers", viewModel);
+            return View("ListUsersAdmin", viewModel);
         }
     }
 }
