@@ -257,6 +257,7 @@ namespace Articles.Data
             IBlogRepository seedRepo = new BlogRepository(context);
 
             BlogUser user1 = seedRepo.RetrieveUser("admin@gmail.com");
+            user1.isBanned = true;
             seedRepo.EnablePublicMessaging(user1.user_name);
             BlogUser user2 = seedRepo.RetrieveUser("admin2@gmail.com");
             /* BlogUser user1 = new BlogUser();

@@ -15,6 +15,10 @@ namespace Articles.Models.Core
         public int subscribers_count { get; set; } = 0;
         public bool publicMessaging { get; set; } = false;
 
+        // true if banned, will prevent authoring posts and messages
+        // TO DO: change post and message authoring backend
+        public bool isBanned { get; set; } = false;
+
         public List<CategoryBlogUser> CategoryBlogUsers { get; set; }
         // public List<Post> BlogUserPosts { get; set; }
         public List<Post> AuthoredPosts { get; set; }

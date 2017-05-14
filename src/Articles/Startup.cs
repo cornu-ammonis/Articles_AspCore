@@ -148,8 +148,8 @@ namespace Articles
 
 
             app.UseIdentity();
-           // app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
-            // SeedRoles(app.ApplicationServices).Wait();
+            app.ApplicationServices.GetRequiredService<ApplicationDbContext>().Seed();
+            SeedRoles(app.ApplicationServices).Wait();
             SeedUser(app.ApplicationServices).Wait();
 
            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
