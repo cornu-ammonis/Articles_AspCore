@@ -313,5 +313,8 @@ namespace Articles.Models
             user.isBanned = false;
             db.SaveChanges();
         }
+
+
+        // TO DO : MakeAdmin and RevokeAdmin action methods
     }
 }
