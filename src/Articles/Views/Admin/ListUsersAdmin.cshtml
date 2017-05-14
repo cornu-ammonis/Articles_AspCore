@@ -16,8 +16,6 @@
 
                 <h1>@Model.Users.Count Users</h1>
 
-                <p>  <a asp-action="CreateCategory" asp-controller="Admin">Create New Category</a></p>
-
                 @foreach (BlogUser user in Model.Users)
                 {
                     @Html.Partial("_AdminUser", user)
