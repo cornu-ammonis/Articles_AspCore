@@ -194,6 +194,7 @@ namespace Articles.Data
         {
 
             context.Database.EnsureDeleted();
+            context.Database.Migrate();
             context.Database.EnsureCreated();
 
             Category seed_cat = new Category();
