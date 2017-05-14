@@ -299,5 +299,18 @@ namespace Articles.Models
             user.isBanned = true;
             db.SaveChanges();
         }
+
+        public void UnbanUser(string username)
+        {
+            if (!db.BlogUser.Any(u => u.user_name == username))
+                throw new InvalidOperationException("attempted to unban username which cannot be found in database");
+
+            BlogUser user = db.BlogUser.First(u => u.user_name == username);
+            if (!user.isBanned)
+                throw new InvalidOperationException("attempted to unban user who is not banned");
+
+            db.BlogUser.Update(user);
+            db.SaveChanges();
+        }
     }
 }
