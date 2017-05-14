@@ -1,0 +1,28 @@
+﻿@model Articles.Models.AdminViewModels.AdminUserListViewModel
+
+
+@{
+    Layout = "AdminLayout";
+}
+
+
+
+<body>
+    <div id="main">
+
+        <div id="site_content">
+            <!--Html.Partial("_SearchCategories") -->
+            <div id="content">
+
+                <h1>@Model.Users.Count Users</h1>
+
+                <p>  <a asp-action="CreateCategory" asp-controller="Admin">Create New Category</a></p>
+
+                @foreach (BlogUser user in Model.Users)
+                {
+                    @Html.Partial("_AdminUser", user)
+                }
+            </div>
+        </div>
+    </div>
+</body>
