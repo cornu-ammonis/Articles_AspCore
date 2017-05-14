@@ -9,11 +9,11 @@
 
     @if (Model.isBanned)
     {
-        <div class="col-md-3"> <a asp-action="UnbanUser" asp-controller="Blog" asp-route-username=@Model.user_name><b>Unban User</b></a></div>
+        <div class="col-md-3"> <a asp-action="UnbanUser" asp-controller="Admin" asp-route-username=@Model.user_name><b>Unban User</b></a></div>
     }
     else
     { 
-        <div class="col-md-3"> <a asp-action="BanUser" asp-controller="Blog" asp-route-username=@Model.user_name><b>Ban User</b></a></div>
+        <div class="col-md-3"> <a asp-action="BanUser" asp-controller="Admin" asp-route-username=@Model.user_name><b>Ban User</b></a></div>
     }
     
 </div>
