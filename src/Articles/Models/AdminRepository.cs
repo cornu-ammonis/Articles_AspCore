@@ -310,6 +310,7 @@ namespace Articles.Models
                 throw new InvalidOperationException("attempted to unban user who is not banned");
 
             db.BlogUser.Update(user);
+            user.isBanned = false;
             db.SaveChanges();
         }
     }
