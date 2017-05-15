@@ -317,7 +317,20 @@ namespace Articles.Models
             db.SaveChanges();
         }
         
-        
+        // grants admin priveges to the user specified by email
+        // NOTE : if we stop using emails for usernames, this may break
+        public async void MakeAdminAsync (string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+               await _userManager.AddToRoleAsync(user, "Administrator");
+            }
+            else
+            {
+                throw new InvalidOperationException("attempted grant admin to username which cannot be found in database");
+            }
+        }
         // TO DO : MakeAdmin and RevokeAdmin action methods
     }
 }
