@@ -1,5 +1,6 @@
 ﻿using Articles.Data;
 using Articles.Models.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,11 @@ namespace Articles.Models
     public class AdminRepository : IAdminRepository
     {
         public ApplicationDbContext db;
-        public AdminRepository(ApplicationDbContext context)
+        public UserManager<ApplicationUser> _userManager;
+        public AdminRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             db = context;
+            _userManager = userManager;
         }
 
         // lists all posts in no guaranteed order
@@ -313,8 +316,8 @@ namespace Articles.Models
             user.isBanned = false;
             db.SaveChanges();
         }
-
-
+        
+        
         // TO DO : MakeAdmin and RevokeAdmin action methods
     }
 }
