@@ -229,5 +229,17 @@ namespace Articles.Controllers
             // redirect to page from which user was made admin 
             return Redirect(Request.Headers["Referer"].ToString());
         }
+
+        public async Task<IActionResult> RevokeAdmin (string username)
+        {
+            // user attempted to revoke own admin privileges
+            if (User.Identity.Name.Equals(username))
+                throw new InvalidOperationException("You tried to revoke your own admin status!");
+
+            await _adminRepository.RevokeAdminAsync(username);
+
+            // redirect to page from which user revoked admin 
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
     }
 }
