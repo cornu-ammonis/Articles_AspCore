@@ -21,7 +21,7 @@ namespace Articles.ViewComponents
                 return View("MakeNotAdminButton", username);
 
             else
-                return View("MakeAdminButton", username);           
+                return View("RevokeAdminButton", username);           
         }
     }
 }
