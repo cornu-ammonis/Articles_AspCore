@@ -352,6 +352,21 @@ namespace Articles.Models
 
             return await _userManager.IsInRoleAsync(user, "Administrator");
         }
+
+        public async Task RevokeAdminAsync(string username)
+        {
+            ApplicationUser user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                throw new InvalidOperationException("attempted to RevokeAdmin a user who could not be found");
+
+            bool isAlreadyAdmin = await _userManager.IsInRoleAsync(user, "Administrator");
+
+            if (!isAlreadyAdmin)
+                throw new InvalidOperationException("attempted to RevokeAdmin a non-admin user");
+
+            await _userManager.RemoveFromRoleAsync(user, "Administrator");
+        }
         // TO DO : MakeAdmin and RevokeAdmin action methods
     }
 }
