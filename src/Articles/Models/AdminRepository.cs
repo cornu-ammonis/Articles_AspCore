@@ -318,17 +318,25 @@ namespace Articles.Models
         }
         
         // grants admin priveges to the user specified by email
+        // Parameters:
+        //     username:
+        //       username of the user to escalate to admin
         public async void MakeAdminAsync (string username)
         {
+            //retrieve user by username
             var user = await _userManager.FindByNameAsync(username);
             if (user != null)
             {
+                // check if user is already an administrator and throw exception if they are 
                 bool isAlreadyInRole = await _userManager.IsInRoleAsync(user, "Administrator");
                 if (isAlreadyInRole)
                     throw new InvalidOperationException("Attempted to grant role to user who already has that role");
 
+                // add to role
                 await _userManager.AddToRoleAsync(user, "Administrator");
             }
+
+            // else user was null, throw exception because user wasnt found
             else
             {
                 throw new InvalidOperationException("attempted grant admin to username which cannot be found in database");
