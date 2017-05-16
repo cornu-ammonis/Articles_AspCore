@@ -3,18 +3,19 @@
 <div class="row">
     <div class="col-md-3"> <a asp-action="PostsByAuthor" asp-controller="Blog" asp-route-author=@Model.user_name>@Model.user_name</a></div>
 
-    <div class="col-md-3"> @Model.AuthoredPosts.Count posts </div>
+    <div class="col-md-2"> @Model.AuthoredPosts.Count posts </div>
 
-    <div class="col-md-3"> @Model.UsersSubscribingToThisUser.Count subscribers </div>
+    <div class="col-md-2"> @Model.UsersSubscribingToThisUser.Count subscribers </div>
 
     @if (Model.isBanned)
     {
-        <div class="col-md-3"> <a asp-action="UnbanUser" asp-controller="Admin" asp-route-username=@Model.user_name><b>Unban User</b></a></div>
+        <div class="col-md-2"> <a asp-action="UnbanUser" asp-controller="Admin" asp-route-username=@Model.user_name><b>Unban User</b></a></div>
     }
     else
     { 
-        <div class="col-md-3"> <a asp-action="BanUser" asp-controller="Admin" asp-route-username=@Model.user_name><b>Ban User</b></a></div>
+        <div class="col-md-2"> <a asp-action="BanUser" asp-controller="Admin" asp-route-username=@Model.user_name><b>Ban User</b></a></div>
     }
     
+    <div class="col-md-2"> @await Component.InvokeAsync("MakeUserAdminButton", Model.user_name) </div>
 </div>
 

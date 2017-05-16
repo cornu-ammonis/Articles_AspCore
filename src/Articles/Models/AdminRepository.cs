@@ -1,5 +1,6 @@
 ﻿using Articles.Data;
 using Articles.Models.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,11 @@ namespace Articles.Models
     public class AdminRepository : IAdminRepository
     {
         public ApplicationDbContext db;
-        public AdminRepository(ApplicationDbContext context)
+        public UserManager<ApplicationUser> _userManager;
+        public AdminRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             db = context;
+            _userManager = userManager;
         }
 
         // lists all posts in no guaranteed order
@@ -313,8 +316,57 @@ namespace Articles.Models
             user.isBanned = false;
             db.SaveChanges();
         }
+        
+        // grants admin priveges to the user specified by email
+        // Parameters:
+        //     username:
+        //       username of the user to escalate to admin
+        public async Task MakeAdminAsync (string username)
+        {
+            //retrieve user by username
+            var user = await _userManager.FindByNameAsync(username);
+            if (user != null)
+            {
+                // check if user is already an administrator and throw exception if they are 
+                bool isAlreadyInRole = await _userManager.IsInRoleAsync(user, "Administrator");
+                if (isAlreadyInRole)
+                    throw new InvalidOperationException("Attempted to grant role to user who already has that role");
 
+                // add to role
+                await _userManager.AddToRoleAsync(user, "Administrator");
+            }
 
+            // else user was null, throw exception because user wasnt found
+            else
+            {
+                throw new InvalidOperationException("attempted grant admin to username which cannot be found in database");
+            }
+        }
+
+        public async Task<bool> CheckIfAdminAsync(string username)
+        {
+            ApplicationUser user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                throw new InvalidOperationException("attempted to CheckIfAdmin a user who could not be found");
+
+            return await _userManager.IsInRoleAsync(user, "Administrator");
+        }
+
+        public async Task RevokeAdminAsync(string username)
+        {
+            ApplicationUser user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                throw new InvalidOperationException("attempted to RevokeAdmin a user who could not be found");
+
+            bool isAlreadyAdmin = await _userManager.IsInRoleAsync(user, "Administrator");
+
+            if (!isAlreadyAdmin)
+                throw new InvalidOperationException("attempted to RevokeAdmin a non-admin user");
+
+            await _userManager.RemoveFromRoleAsync(user, "Administrator");
+        }
         // TO DO : MakeAdmin and RevokeAdmin action methods
     }
 }
