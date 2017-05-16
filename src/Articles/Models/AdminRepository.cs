@@ -318,10 +318,9 @@ namespace Articles.Models
         }
         
         // grants admin priveges to the user specified by email
-        // NOTE : if we stop using emails for usernames, this may break
         public async void MakeAdminAsync (string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByNameAsync(email);
             if (user != null)
             {
                await _userManager.AddToRoleAsync(user, "Administrator");
