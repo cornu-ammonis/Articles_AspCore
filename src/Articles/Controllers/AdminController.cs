@@ -221,5 +221,13 @@ namespace Articles.Controllers
             // redirects to referring list view 
             return Redirect(Request.Headers["Referer"].ToString());
         }
+
+        public async Task<IActionResult> MakeAdmin (string username)
+        {
+            await _adminRepository.MakeAdminAsync(username);
+
+            // redirect to page from which user was made admin 
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
     }
 }
