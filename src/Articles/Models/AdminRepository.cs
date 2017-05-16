@@ -321,7 +321,7 @@ namespace Articles.Models
         // Parameters:
         //     username:
         //       username of the user to escalate to admin
-        public async void MakeAdminAsync (string username)
+        public async Task MakeAdminAsync (string username)
         {
             //retrieve user by username
             var user = await _userManager.FindByNameAsync(username);
