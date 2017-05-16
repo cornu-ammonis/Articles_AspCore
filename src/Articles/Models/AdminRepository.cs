@@ -342,6 +342,16 @@ namespace Articles.Models
                 throw new InvalidOperationException("attempted grant admin to username which cannot be found in database");
             }
         }
+
+        public async Task<bool> CheckIfAdminAsync(string username)
+        {
+            ApplicationUser user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                throw new InvalidOperationException("attempted to CheckIfAdmin a user who could not be found");
+
+            return await _userManager.IsInRoleAsync(user, "Administrator");
+        }
         // TO DO : MakeAdmin and RevokeAdmin action methods
     }
 }
