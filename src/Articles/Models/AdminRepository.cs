@@ -323,7 +323,11 @@ namespace Articles.Models
             var user = await _userManager.FindByNameAsync(username);
             if (user != null)
             {
-               await _userManager.AddToRoleAsync(user, "Administrator");
+                bool isAlreadyInRole = await _userManager.IsInRoleAsync(user, "Administrator");
+                if (isAlreadyInRole)
+                    throw new InvalidOperationException("Attempted to grant role to user who already has that role");
+
+                await _userManager.AddToRoleAsync(user, "Administrator");
             }
             else
             {
