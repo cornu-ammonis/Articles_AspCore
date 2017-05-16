@@ -18,10 +18,10 @@ namespace Articles.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(string username)
         {
             if (await _adminRepo.CheckIfAdminAsync(username))
-                return View("MakeNotAdminButton", username);
+                return View("RevokeAdminButton", username);
 
             else
-                return View("RevokeAdminButton", username);           
+                return View("MakeAdminButton", username);           
         }
     }
 }
