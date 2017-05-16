@@ -46,5 +46,7 @@ namespace Articles.Models
 
         void BanUser(string username);
         void UnbanUser(string username);
+
+        Task MakeAdminAsync(string username);
     }
 }
