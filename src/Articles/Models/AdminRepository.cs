@@ -337,7 +337,7 @@ namespace Articles.Models
             return await _userManager.IsInRoleAsync(user, "Administrator");
         }
 
-        // grants admin priveges to the user specified by their username
+        // grants admin privileges to the user specified by their username
         // Parameters:
         //     username:
         //       username of the user to escalate to admin
@@ -363,7 +363,10 @@ namespace Articles.Models
             }
         }
 
-
+        // revokes admin privileges for user specified by username
+        // Parameters:
+        //    username:
+        //      username identifying the user whose admin privileges to revoke
         public async Task RevokeAdminAsync(string username)
         {
             ApplicationUser user = await _userManager.FindByNameAsync(username);
