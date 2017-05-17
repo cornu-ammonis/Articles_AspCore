@@ -19,7 +19,7 @@ namespace Articles.ViewComponents
         {
             // don't display "revoke admin" to the admin accessing this page 
             if (User.Identity.Name == username)
-                return View("Empty");
+                return View("EmptySelf");
            
             try
             {
