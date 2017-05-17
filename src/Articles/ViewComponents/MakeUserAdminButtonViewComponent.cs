@@ -31,9 +31,11 @@ namespace Articles.ViewComponents
             // some seed method users around. 
             try
             {
+                // checks if this user is an admin, displays Revoke Admin if they are 
                 if (await _adminRepo.CheckIfAdminAsync(username))
                     return View("RevokeAdminButton", username);
 
+                // else they aren't already an admin, displays Make Admin button
                 else
                     return View("MakeAdminButton", username);
             }
