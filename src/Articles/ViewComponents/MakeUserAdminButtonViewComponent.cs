@@ -17,6 +17,10 @@ namespace Articles.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(string username)
         {
+            // don't display "revoke admin" to the admin accessing this page 
+            if (User.Identity.Name == username)
+                return View("Empty");
+           
             try
             {
                 if (await _adminRepo.CheckIfAdminAsync(username))
