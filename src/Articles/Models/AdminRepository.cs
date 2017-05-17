@@ -316,7 +316,27 @@ namespace Articles.Models
             user.isBanned = false;
             db.SaveChanges();
         }
-        
+
+
+        // checks if user has the role "Administrator"
+        // NOTE : will throw an exception if this is called using a BlogUser name
+        //    for which there is not a corresponding identity account. this should 
+        //    only be a concern in the dev environment, where the seed method creates 
+        //    such a scenario
+        //
+        // Parameters:
+        //     username:
+        //        the username of the user to check for administrator role. 
+        public async Task<bool> CheckIfAdminAsync(string username)
+        {
+            ApplicationUser user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                throw new InvalidOperationException("attempted to CheckIfAdmin a user who could not be found");
+
+            return await _userManager.IsInRoleAsync(user, "Administrator");
+        }
+
         // grants admin priveges to the user specified by email
         // Parameters:
         //     username:
@@ -341,25 +361,6 @@ namespace Articles.Models
             {
                 throw new InvalidOperationException("attempted grant admin to username which cannot be found in database");
             }
-        }
-
-        // checks if user has the role "Administrator"
-        // NOTE : will throw an exception if this is called using a BlogUser name
-        //    for which there is not a corresponding identity account. this should 
-        //    only be a concern in the dev environment, where the seed method creates 
-        //    such a scenario
-        //
-        // Parameters:
-        //     username:
-        //        the username of the user to check for administrator role. 
-        public async Task<bool> CheckIfAdminAsync(string username)
-        {
-            ApplicationUser user = await _userManager.FindByNameAsync(username);
-
-            if (user == null)
-                throw new InvalidOperationException("attempted to CheckIfAdmin a user who could not be found");
-
-            return await _userManager.IsInRoleAsync(user, "Administrator");
         }
 
         public async Task RevokeAdminAsync(string username)
