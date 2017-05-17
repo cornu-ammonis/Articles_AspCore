@@ -13,6 +13,8 @@ namespace Articles.Models
     {
         public ApplicationDbContext db;
         public UserManager<ApplicationUser> _userManager;
+
+        // requests an ApplicationDbContext and UserManager instance 
         public AdminRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             db = context;
@@ -177,6 +179,9 @@ namespace Articles.Models
             return postq;
         }
 
+        // unpublishes post specified by postId
+        // NOTE: will throw exception if there is no post with
+        // corresponding PostId
         public void UnpublishPost(int postId)
         {
             Post post = db.Posts.First(p => p.PostId == postId);
@@ -185,6 +190,9 @@ namespace Articles.Models
             db.SaveChanges();
         }
 
+        // publishes post specified by paramter postId
+        // NOTE: will throw an exception if there is no post with
+        // corresponding PostId
         public void PublishPost(int postId)
         {
             Post post = db.Posts.First(p => p.PostId == postId);
