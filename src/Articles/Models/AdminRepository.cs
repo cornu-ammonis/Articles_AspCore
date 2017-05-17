@@ -291,30 +291,40 @@ namespace Articles.Models
         // not found or if already banned
         public void BanUser(string username)
         {
+            // user not in database; throw an exception
             if (!db.BlogUser.Any(u => u.user_name == username))
                 throw new InvalidOperationException("attempted to ban username which cannot be found in database");
 
+            // retrieve user from database
             BlogUser user = db.BlogUser.First(u => u.user_name == username);
+
+            // they are already banned; throw an exception (something wrong with view logic if this happens)
             if (user.isBanned)
                 throw new InvalidOperationException("attempted to ban user who is already banned");
 
-            db.BlogUser.Update(user);
-            user.isBanned = true;
-            db.SaveChanges();
+            db.BlogUser.Update(user); // mark user entity for tracking
+            user.isBanned = true;     // ban the user
+            db.SaveChanges();         // persist to database
         }
 
+        // unbans user specified by username and throws exceptoin of user
+        // not found or if not already banned
         public void UnbanUser(string username)
         {
+            // user not in database; raise an exception
             if (!db.BlogUser.Any(u => u.user_name == username))
                 throw new InvalidOperationException("attempted to unban username which cannot be found in database");
 
+            //retrieve user from database
             BlogUser user = db.BlogUser.First(u => u.user_name == username);
-            if (!user.isBanned)
+            
+            // they aren't already banned; throw an exception (something wrong with view logic if this happens)
+            if (!user.isBanned) 
                 throw new InvalidOperationException("attempted to unban user who is not banned");
 
-            db.BlogUser.Update(user);
-            user.isBanned = false;
-            db.SaveChanges();
+            db.BlogUser.Update(user); // mark user entity for tracking
+            user.isBanned = false;    // unban user
+            db.SaveChanges();         // persist changes to database
         }
 
 
