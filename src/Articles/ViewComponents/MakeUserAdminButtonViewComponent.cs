@@ -31,7 +31,7 @@ namespace Articles.ViewComponents
             }
             catch 
             {
-                return View("Empty");
+                return View("EmptyNoIdentity");
             }
                     
         }
