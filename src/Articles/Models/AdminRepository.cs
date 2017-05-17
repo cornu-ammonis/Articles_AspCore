@@ -337,7 +337,7 @@ namespace Articles.Models
             return await _userManager.IsInRoleAsync(user, "Administrator");
         }
 
-        // grants admin priveges to the user specified by email
+        // grants admin priveges to the user specified by their username
         // Parameters:
         //     username:
         //       username of the user to escalate to admin
@@ -362,6 +362,7 @@ namespace Articles.Models
                 throw new InvalidOperationException("attempted grant admin to username which cannot be found in database");
             }
         }
+
 
         public async Task RevokeAdminAsync(string username)
         {
