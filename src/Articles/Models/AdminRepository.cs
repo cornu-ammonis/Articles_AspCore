@@ -343,6 +343,15 @@ namespace Articles.Models
             }
         }
 
+        // checks if user has the role "Administrator"
+        // NOTE : will throw an exception if this is called using a BlogUser name
+        //    for which there is not a corresponding identity account. this should 
+        //    only be a concern in the dev environment, where the seed method creates 
+        //    such a scenario
+        //
+        // Parameters:
+        //     username:
+        //        the username of the user to check for administrator role. 
         public async Task<bool> CheckIfAdminAsync(string username)
         {
             ApplicationUser user = await _userManager.FindByNameAsync(username);
