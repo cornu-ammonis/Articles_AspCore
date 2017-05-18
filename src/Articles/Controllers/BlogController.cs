@@ -550,7 +550,10 @@ namespace Articles.Controllers
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
+                if (_messageRepository.IsBanned(User.Identity.Name))
+                    ModelState.AddModelError(String.Empty, "You are banned from messaging");
+                else // not banned from messaging overall, not permitted to message this person
+                    ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
                 return View(viewModel);
             }
            
