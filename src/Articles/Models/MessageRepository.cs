@@ -122,7 +122,11 @@ namespace Articles.Models
         // Updated 5/18/17 - now returns false if the sender is banned
         public bool CanMessage(string sender_name, string recipient_name)
         {
+            // returns false if the user is banned
+            if (IsBanned(sender_name))
+                return false;
 
+            
             if (!db.BlogUser.Any(u => u.user_name == recipient_name))
             {
                 return false;
