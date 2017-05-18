@@ -16,7 +16,10 @@ namespace Articles.Models.Core
         List<Message> RetrieveMessagesBetweenUsers(string user_name_1, string user_name_2);
         List<Message> RetrieveUnreadMessages(string user_name);
 
+        bool IsBanned(string username);
         bool CanMessage(string sender_name, string recipient_name);
+
+        bool IsBannedAsync(string username);
         Task<bool> CanMessageAsync(string sender_name, string recipient_name);
 
         BlogUser RetrieveUserForMessaging(string user_name);
