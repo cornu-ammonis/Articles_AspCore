@@ -176,6 +176,23 @@ namespace Articles.Models
             return user.isBanned;
         }
 
+        // checks whether the specified user is banned. 
+        // if the username cannot be found, will throw an exception
+        // if there's more than one username, will throw an exceptoin
+        //
+        // Parameters:
+        //     username
+        //       username entry in BlogUser table for user to check if banned
+        public async Task<bool> IsBannedAsync(string username)
+        {
+            BlogUser user = await db.BlogUser.FirstOrDefaultAsync(u => u.user_name.Equals(username));
+
+            if (user == null)
+                throw new InvalidOperationException("cannot find username for IsBanned");
+
+            return user.isBanned;
+
+        }
         public async Task<bool> CanMessageAsync(string sender_name, string recipient_name)
         {
             if(await CheckIfBlockedAsync(recipient_name, sender_name))
