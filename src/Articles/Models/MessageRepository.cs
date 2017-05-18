@@ -120,32 +120,42 @@ namespace Articles.Models
 
         //checks whether specified sender may message specified recipient, according to user names
         // Updated 5/18/17 - now returns false if the sender is banned
+        // Parameters:
+        //    sender_name:
+        //        user_name entry in BlogUser table for user attempting to send message
+        //    recipient_name:
+        //        user_name entry in BlogUser table for user to whom message may or may not be sent
         public bool CanMessage(string sender_name, string recipient_name)
         {
             // returns false if the user is banned
             if (IsBanned(sender_name))
                 return false;
 
-            
+            //returns false if recipient not found
             if (!db.BlogUser.Any(u => u.user_name == recipient_name))
             {
                 return false;
             }
 
+            // if blocked, returns false
             if(CheckIfBlocked(recipient_name, sender_name)) {
                 return false;
             }
+            // if not blocked and recipient has public messaging, returns true
             else if (CheckIfPublicMessaging(recipient_name))
             {
                 return true;
             }
+            // if not blocked and recipient does not have public messaging but 
+            // has authorized sender, returns true
             else if (CheckIfAuthorized(recipient_name, sender_name))
             {
                 return true;
             }
             else
             {
-                return false;
+                // recipient does not have public messaging and has not authorized user.
+                return false; 
             }
         }
 
