@@ -19,7 +19,7 @@ namespace Articles.Models.Core
         bool IsBanned(string username);
         bool CanMessage(string sender_name, string recipient_name);
 
-        bool IsBannedAsync(string username);
+        Task<bool> IsBannedAsync(string username);
         Task<bool> CanMessageAsync(string sender_name, string recipient_name);
 
         BlogUser RetrieveUserForMessaging(string user_name);
