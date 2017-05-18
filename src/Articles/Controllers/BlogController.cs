@@ -550,7 +550,10 @@ namespace Articles.Controllers
             }
             else
             {
-                ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
+                if (_messageRepository.IsBanned(User.Identity.Name))
+                    ModelState.AddModelError(String.Empty, "You are banned from messaging");
+                else // not banned from messaging overall, not permitted to message this person
+                    ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
                 return View(viewModel);
             }
            
@@ -610,7 +613,10 @@ namespace Articles.Controllers
             if(!_messageRepository.CanMessage(User.Identity.Name, userName))
             {
                 MessageCreationViewModel vm = new MessageCreationViewModel();
-                ModelState.AddModelError(String.Empty, "you arent allowed to message this person!");
+                if (_messageRepository.IsBanned(User.Identity.Name))
+                    ModelState.AddModelError(String.Empty, "You are banned from sending messages");
+                else // not banned entirely, but not authorized to message this user 
+                    ModelState.AddModelError(String.Empty, "you arent allowed to message this person!");
                 return View("SendMessage", vm);
             }
             MessageCreationViewModel viewModel = new MessageCreationUserSpecifiedViewModel(userName);
@@ -631,7 +637,10 @@ namespace Articles.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
+                    if (_messageRepository.IsBanned(User.Identity.Name))
+                        ModelState.AddModelError(String.Empty, "You are banned from messaging");
+                    else // not banned entirely, but not authorized to message this user 
+                        ModelState.AddModelError(String.Empty, "you arent allowed to message this person");
                     return View(viewModel);
                 }
             }
