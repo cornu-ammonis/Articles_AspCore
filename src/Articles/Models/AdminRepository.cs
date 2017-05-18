@@ -13,6 +13,8 @@ namespace Articles.Models
     {
         public ApplicationDbContext db;
         public UserManager<ApplicationUser> _userManager;
+
+        // requests an ApplicationDbContext and UserManager instance 
         public AdminRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             db = context;
@@ -177,6 +179,9 @@ namespace Articles.Models
             return postq;
         }
 
+        // unpublishes post specified by postId
+        // NOTE: will throw exception if there is no post with
+        // corresponding PostId
         public void UnpublishPost(int postId)
         {
             Post post = db.Posts.First(p => p.PostId == postId);
@@ -185,6 +190,9 @@ namespace Articles.Models
             db.SaveChanges();
         }
 
+        // publishes post specified by paramter postId
+        // NOTE: will throw an exception if there is no post with
+        // corresponding PostId
         public void PublishPost(int postId)
         {
             Post post = db.Posts.First(p => p.PostId == postId);
@@ -210,6 +218,14 @@ namespace Articles.Models
 
         // CATEGORIES
 
+
+        // lists categories whose whose names match the search string, 
+        // ordered by category name ascending. match is defined as the name contains
+        // the search string, or the search string contains the name
+        //
+        // Parameters:
+        //    search:
+        //       string used to select categories from database
         public IList<Category> ListCategoriesForSearch(string search)
         {
             IList<Category> cquery =
@@ -224,6 +240,8 @@ namespace Articles.Models
             return cquery;
         }
 
+        // lists all categories in the database sorted
+        // by name ascending
         public IList<Category> ListAllCategories()
         {
             IList<Category> cquery =
@@ -291,33 +309,63 @@ namespace Articles.Models
         // not found or if already banned
         public void BanUser(string username)
         {
+            // user not in database; throw an exception
             if (!db.BlogUser.Any(u => u.user_name == username))
                 throw new InvalidOperationException("attempted to ban username which cannot be found in database");
 
+            // retrieve user from database
             BlogUser user = db.BlogUser.First(u => u.user_name == username);
+
+            // they are already banned; throw an exception (something wrong with view logic if this happens)
             if (user.isBanned)
                 throw new InvalidOperationException("attempted to ban user who is already banned");
 
-            db.BlogUser.Update(user);
-            user.isBanned = true;
-            db.SaveChanges();
+            db.BlogUser.Update(user); // mark user entity for tracking
+            user.isBanned = true;     // ban the user
+            db.SaveChanges();         // persist to database
         }
 
+        // unbans user specified by username and throws exceptoin of user
+        // not found or if not already banned
         public void UnbanUser(string username)
         {
+            // user not in database; raise an exception
             if (!db.BlogUser.Any(u => u.user_name == username))
                 throw new InvalidOperationException("attempted to unban username which cannot be found in database");
 
+            //retrieve user from database
             BlogUser user = db.BlogUser.First(u => u.user_name == username);
-            if (!user.isBanned)
+            
+            // they aren't already banned; throw an exception (something wrong with view logic if this happens)
+            if (!user.isBanned) 
                 throw new InvalidOperationException("attempted to unban user who is not banned");
 
-            db.BlogUser.Update(user);
-            user.isBanned = false;
-            db.SaveChanges();
+            db.BlogUser.Update(user); // mark user entity for tracking
+            user.isBanned = false;    // unban user
+            db.SaveChanges();         // persist changes to database
         }
-        
-        // grants admin priveges to the user specified by email
+
+
+        // checks if user has the role "Administrator"
+        // NOTE : will throw an exception if this is called using a BlogUser name
+        //    for which there is not a corresponding identity account. this should 
+        //    only be a concern in the dev environment, where the seed method creates 
+        //    such a scenario
+        //
+        // Parameters:
+        //     username:
+        //        the username of the user to check for administrator role. 
+        public async Task<bool> CheckIfAdminAsync(string username)
+        {
+            ApplicationUser user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                throw new InvalidOperationException("attempted to CheckIfAdmin a user who could not be found");
+
+            return await _userManager.IsInRoleAsync(user, "Administrator");
+        }
+
+        // grants admin privileges to the user specified by their username
         // Parameters:
         //     username:
         //       username of the user to escalate to admin
@@ -343,16 +391,10 @@ namespace Articles.Models
             }
         }
 
-        public async Task<bool> CheckIfAdminAsync(string username)
-        {
-            ApplicationUser user = await _userManager.FindByNameAsync(username);
-
-            if (user == null)
-                throw new InvalidOperationException("attempted to CheckIfAdmin a user who could not be found");
-
-            return await _userManager.IsInRoleAsync(user, "Administrator");
-        }
-
+        // revokes admin privileges for user specified by username
+        // Parameters:
+        //    username:
+        //      username identifying the user whose admin privileges to revoke
         public async Task RevokeAdminAsync(string username)
         {
             ApplicationUser user = await _userManager.FindByNameAsync(username);
@@ -367,6 +409,6 @@ namespace Articles.Models
 
             await _userManager.RemoveFromRoleAsync(user, "Administrator");
         }
-        // TO DO : MakeAdmin and RevokeAdmin action methods
+        
     }
 }

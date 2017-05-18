@@ -19,19 +19,30 @@ namespace Articles.ViewComponents
         {
             // don't display "revoke admin" to the admin accessing this page 
             if (User.Identity.Name == username)
-                return View("Empty");
+                return View("EmptySelf");
            
+
+            // this catches an exception which arises if a "BlogUser" entry exists without a
+            // corresponding entry in the .net identity tables. 
+            // this *should* only happen in the case where the seed method creates mock users 
+            // to author posts for the purposes of developing the site. this should never happen
+            // in production, but I'll leave the try/catch so that it's clear whats happening if
+            // this does arise in production, and to handle the case where we forget and leave 
+            // some seed method users around. 
             try
             {
+                // checks if this user is an admin, displays Revoke Admin if they are 
                 if (await _adminRepo.CheckIfAdminAsync(username))
                     return View("RevokeAdminButton", username);
 
+                // else they aren't already an admin, displays Make Admin button
                 else
                     return View("MakeAdminButton", username);
             }
             catch 
             {
-                return View("Empty");
+                // display message that this "BlogUser" isnt fully registered
+                return View("EmptyNoIdentity");
             }
                     
         }
