@@ -195,6 +195,10 @@ namespace Articles.Models
         }
         public async Task<bool> CanMessageAsync(string sender_name, string recipient_name)
         {
+            // user is banned; return false
+            if (await IsBannedAsync(sender_name))
+                return false;
+
             if(await CheckIfBlockedAsync(recipient_name, sender_name))
             {
                 return false;
