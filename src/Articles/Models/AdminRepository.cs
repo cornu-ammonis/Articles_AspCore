@@ -218,6 +218,14 @@ namespace Articles.Models
 
         // CATEGORIES
 
+
+        // lists categories whose whose names match the search string, 
+        // ordered by category name ascending. match is defined as the name contains
+        // the search string, or the search string contains the name
+        //
+        // Parameters:
+        //    search:
+        //       string used to select categories from database
         public IList<Category> ListCategoriesForSearch(string search)
         {
             IList<Category> cquery =
