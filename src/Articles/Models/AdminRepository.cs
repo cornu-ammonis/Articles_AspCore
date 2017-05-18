@@ -240,6 +240,8 @@ namespace Articles.Models
             return cquery;
         }
 
+        // lists all categories in the database sorted
+        // by name ascending
         public IList<Category> ListAllCategories()
         {
             IList<Category> cquery =
@@ -407,6 +409,6 @@ namespace Articles.Models
 
             await _userManager.RemoveFromRoleAsync(user, "Administrator");
         }
-        // TO DO : MakeAdmin and RevokeAdmin action methods
+        
     }
 }
